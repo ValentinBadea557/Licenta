@@ -83,19 +83,29 @@ public class ResourceAdminController implements Initializable {
             );
 
     public void defineResButton(ActionEvent actionEvent) {
-        System.out.println(ResourceName.getText().toString());
-        System.out.println(SpinnerQuantity.getEditor().getText().toString());
-        if(ShareableYes.isSelected()){
-            System.out.println("Yes");
-        }else if(ShareableNo.isSelected()){
-            System.out.println("No");
+        if(ResourceName.getText()==null || ResourceName.getText().trim().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Incomplete fields");
+            alert.setContentText("You must complete the name of the resource!");
+            alert.showAndWait();
+        }else if(ResourceDescription.getText()==null || ResourceDescription.getText().trim().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Incomplete fields");
+            alert.setContentText("Description missing!");
+            alert.showAndWait();
+        }else{
+            String name=ResourceName.getText().toString();
+            int number=SpinnerQuantity.getValue();
+            String description=ResourceDescription.getText().toString();
+            boolean s = false;
+            if(ShareableYes.isSelected()){
+                s=true;
+            }else if(ShareableNo.isSelected()){
+                s=false;
+            }
+
+            System.out.println(name+" "+number+" "+Boolean.toString(s)+" "+description);
         }
-        System.out.println(ResourceDescription.getText().toString());
     }
 
-//    @FXML
-//    void defineResourceAction(ActionEvent event) {
-//        String a=SpinnerQuantity.getEditor().getText();
-//        System.out.println(a);
-//    }
 }

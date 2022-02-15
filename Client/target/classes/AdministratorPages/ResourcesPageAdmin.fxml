@@ -54,7 +54,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Spinner fx:id="SpinnerQuantity" editable="true" GridPane.rowIndex="1">
+            <Spinner fx:id="SpinnerQuantity" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="80.0" />
                </GridPane.margin>
