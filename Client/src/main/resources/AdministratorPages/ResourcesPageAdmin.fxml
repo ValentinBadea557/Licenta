@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<Pane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.admin.ResourceAdminController">
+   <children>
+      <Label layoutX="235.0" prefHeight="30.0" prefWidth="113.0" text="Resources">
+         <font>
+            <Font name="System Bold" size="23.0" />
+         </font>
+      </Label>
+      <Line endX="296.0" layoutX="305.0" layoutY="34.0" startX="-304.0" />
+      <Label layoutX="14.0" layoutY="35.0" text="Define new resources:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <GridPane layoutX="3.0" layoutY="62.0" prefHeight="97.0" prefWidth="600.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="300.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="300.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Name:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="ResourceName">
+               <GridPane.margin>
+                  <Insets left="80.0" right="20.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Quantity:" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Spinner fx:id="SpinnerQuantity" editable="true" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="80.0" />
+               </GridPane.margin>
+            </Spinner>
+            <Label text="Shareable:" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="Description:" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="ShareableYes" mnemonicParsing="false" text="Yes" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="100.0" />
+               </GridPane.margin>
+            </RadioButton>
+            <RadioButton fx:id="ShareableNo" mnemonicParsing="false" text="No" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="180.0" right="20.0" />
+               </GridPane.margin>
+            </RadioButton>
+            <TextArea fx:id="ResourceDescription" prefHeight="67.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="90.0" right="20.0" />
+               </GridPane.margin>
+            </TextArea>
+         </children>
+      </GridPane>
+      <Label layoutX="231.0" layoutY="200.0" text="Current resources">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Button fx:id="defineResourceButton" layoutX="259.0" layoutY="159.0" mnemonicParsing="false" onAction="#defineResButton" prefHeight="27.0" prefWidth="88.0" text="Define ">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+      <TableView fx:id="ResourcesTable" layoutY="226.0" prefHeight="173.0" prefWidth="600.0">
+        <columns>
+          <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID" />
+          <TableColumn fx:id="nameColumn" minWidth="9.0" prefWidth="189.0" text="Name" />
+            <TableColumn fx:id="quantityColumn" minWidth="9.0" prefWidth="58.0" text="Quantity" />
+            <TableColumn fx:id="shareableColumn" minWidth="9.0" prefWidth="118.0" text="Shareable" />
+            <TableColumn fx:id="descriptionColumn" minWidth="9.0" prefWidth="188.0" text="Description" />
+        </columns>
+      </TableView>
+      <Line endX="296.0" layoutX="307.0" layoutY="200.0" startX="-304.0" />
+   </children>
+</Pane>
