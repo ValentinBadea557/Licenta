@@ -84,12 +84,12 @@ public class ResourceAdminController implements Initializable {
 
     public void defineResButton(ActionEvent actionEvent) {
         if(ResourceName.getText()==null || ResourceName.getText().trim().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Incomplete fields");
             alert.setContentText("You must complete the name of the resource!");
             alert.showAndWait();
         }else if(ResourceDescription.getText()==null || ResourceDescription.getText().trim().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Incomplete fields");
             alert.setContentText("Description missing!");
             alert.showAndWait();

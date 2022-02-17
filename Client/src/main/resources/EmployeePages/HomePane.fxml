@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ListView fx:id="listViewActiveProjects" layoutX="14.0" layoutY="73.0" prefHeight="247.0" prefWidth="371.0" />
+      <Label layoutX="123.0" layoutY="41.0" text="Active Projects">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="520.0" layoutY="34.0" text="Finished Projects">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <ListView fx:id="listViewFinishedProjects" layoutX="422.0" layoutY="73.0" prefHeight="247.0" prefWidth="371.0" />
+      <Label layoutX="27.0" layoutY="349.0" prefHeight="35.0" prefWidth="743.0" text="*click on the project's name to view more details such as tasks, resources etc.">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -89,14 +90,14 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Label>
-            <TextField prefHeight="25.0" prefWidth="173.0" promptText="Username" GridPane.rowIndex="3" />
-            <TextField promptText="Password" GridPane.rowIndex="5" />
-            <TextField promptText="Company" GridPane.rowIndex="7" />
-            <TextField promptText="Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField promptText="Surname" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-            <TextField promptText="Address" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <TextField promptText="Phone" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-            <TextField promptText="example@mta.ro" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <TextField fx:id="usernameField" prefHeight="25.0" prefWidth="173.0" promptText="Username" GridPane.rowIndex="3" />
+            <TextField fx:id="companyNameField" promptText="Company" GridPane.rowIndex="7" />
+            <TextField fx:id="firstNameField" promptText="Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="lastNameField" promptText="Surname" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <TextField fx:id="addressField" promptText="Address" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <TextField fx:id="phoneField" promptText="Phone" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <TextField fx:id="emailField" promptText="example@mta.ro" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <PasswordField fx:id="passwordField" promptText="Password" GridPane.rowIndex="5" />
          </children>
       </GridPane>
       <Label layoutX="107.0" layoutY="339.0" prefHeight="20.0" prefWidth="246.0" text="*All fields are required to continue" textFill="#fff600">
@@ -104,12 +105,12 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="backtologinbutton" layoutX="88.0" layoutY="399.0" mnemonicParsing="false" onAction="#backtologin" style="-fx-background-color: #ffffff;" text="Back to Log In">
+      <Button fx:id="backtologinbutton" layoutX="88.0" layoutY="389.0" mnemonicParsing="false" onAction="#backtologin" prefHeight="35.0" prefWidth="109.0" style="-fx-background-color: #ffffff;" text="Back to Log In">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button layoutX="416.0" layoutY="399.0" mnemonicParsing="false" style="-fx-background-color: #ffffff;" text="Register">
+      <Button fx:id="registerButton" layoutX="398.0" layoutY="389.0" mnemonicParsing="false" onAction="#registerAction" prefHeight="35.0" prefWidth="81.0" style="-fx-background-color: #ffffff;" text="Register">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.admin.ProjectAdminController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.admin.ProjectAdminController">
    <children>
-      <TableView fx:id="projectTable" layoutX="10.0" layoutY="83.0" prefHeight="254.0" prefWidth="576.0">
+      <TableView fx:id="projectTable" layoutX="10.0" layoutY="83.0" prefHeight="310.0" prefWidth="780.0">
         <columns>
           <TableColumn fx:id="nameColumn" prefWidth="110.0" text="Name" />
-          <TableColumn fx:id="leaderColumn" prefWidth="186.0" text="Leader" />
-            <TableColumn fx:id="startColumn" prefWidth="100.0" text="Start Time" />
-            <TableColumn fx:id="deadlineColumn" prefWidth="100.0" text="Deadline" />
-            <TableColumn fx:id="detailsColumn" prefWidth="84.0" text="Details" />
+          <TableColumn fx:id="leaderColumn" prefWidth="150.0" text="Leader" />
+            <TableColumn fx:id="startColumn" prefWidth="130.0" text="Start Time" />
+            <TableColumn fx:id="deadlineColumn" prefWidth="130.0" text="Deadline" />
+            <TableColumn fx:id="detailsColumn" prefWidth="358.4000244140625" text="Details" />
         </columns>
       </TableView>
-      <Label layoutX="40.0" layoutY="35.0" text="Search project:">
+      <Label layoutX="200.0" layoutY="35.0" text="Search project:">
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>
-      <TextField fx:id="searchProjectField" layoutX="160.0" layoutY="35.0" />
+      <TextField fx:id="searchProjectField" layoutX="326.0" layoutY="35.0" />
    </children>
 </Pane>

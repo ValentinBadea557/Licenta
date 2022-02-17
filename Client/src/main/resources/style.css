@@ -5,8 +5,15 @@
 
 
 .sidebaritem:hover{
-    -fx-color:white;
+    -fx-text-fill:white;
     -fx-border-color: WHITE;
     -fx-background-color: #1175A8;
     -fx-border-width: 0px 0px 0px 3px;
+}
+
+.sidebaritem2:hover{
+    -fx-text-fill:black;
+    -fx-border-color: BLACK;
+    -fx-background-color: #CEDCDA;
+    -fx-border-width: 0px 0px 0px 6px;
 }

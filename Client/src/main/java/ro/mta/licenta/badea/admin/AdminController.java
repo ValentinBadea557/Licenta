@@ -5,11 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -17,7 +20,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
-
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
     @FXML
     private StackPane adminstackpane;
@@ -44,6 +49,8 @@ public class AdminController implements Initializable {
     @FXML
     private Button topresources;
 
+    @FXML
+    private Button logoutButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
@@ -120,4 +127,16 @@ public class AdminController implements Initializable {
     }
 
 
+    public void logoutAction(ActionEvent actionEvent) {
+        try {
+            root = FXMLLoader.load(getClass().getResource("/LoginPage.fxml"));
+            stage=(Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            scene=new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
