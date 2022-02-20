@@ -25,7 +25,7 @@ public class EmployeeBasePageController implements Initializable {
     private Parent root;
 
     @FXML
-    private StackPane employeeStackPane;
+    private StackPane employeeStackPane ;
 
     @FXML
     private Label titleLabel;

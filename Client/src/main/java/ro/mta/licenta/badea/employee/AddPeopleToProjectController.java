@@ -10,7 +10,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.InputMethodEvent;
+import javafx.stage.Stage;
 import ro.mta.licenta.badea.models.ProjectModel;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.net.URL;
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddPeopleToProjectController implements Initializable {
+
+    @FXML
+    private Button testButton;
 
     @FXML
     private Button addSelectedButton;
@@ -54,55 +59,64 @@ public class AddPeopleToProjectController implements Initializable {
 
         /** Enable Search engine*/
 
-        int totalNrOfCoworkers=workers.size();
+        int totalNrOfCoworkers = workers.size();
         totalNrLabel.setText(String.valueOf(totalNrOfCoworkers));
 
         FilteredList<WorkerModel> filteredData = new FilteredList<>(workers, b -> true);
-        searchField.textProperty().addListener((observable,oldValue,newValue)->{
-            filteredData.setPredicate(workerModel ->{
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(workerModel -> {
 
-                if(newValue.isEmpty() || newValue.isBlank() || newValue==null){
-
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
                     return true;
                 }
-                String searchKeyword=newValue.toLowerCase();
-                if(workerModel.getFullName().toLowerCase().indexOf(searchKeyword) > -1){
+                String searchKeyword = newValue.toLowerCase();
+                if (workerModel.getFullName().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }else {
+                } else {
                     return false; //no match
                 }
             });
 
+            SortedList<WorkerModel> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tableCoworkers.comparatorProperty());
 
+            tableCoworkers.setItems(sortedData);
         });
-
-        SortedList<WorkerModel> sortedData=new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(tableCoworkers.comparatorProperty());
-
-        tableCoworkers.setItems(sortedData);
 
 
 
     }
 
     private ObservableList<WorkerModel> workers = FXCollections.observableArrayList(
-            new WorkerModel(1,"Badea Valentin"),
-            new WorkerModel(2,"Popescu Ion"),
-            new WorkerModel(3,"Badea Mihai"),
-            new WorkerModel(4,"Nancu Petrica"),
-            new WorkerModel(5,"Pesu Ciprian")
+            new WorkerModel(1, "Badea Valentin"),
+            new WorkerModel(2, "Popescu Ion"),
+            new WorkerModel(56, "Badea Mihai"),
+            new WorkerModel(4, "Nancu Petrica"),
+            new WorkerModel(5, "Pesu Ciprian")
     );
 
 
     public void addSelectedCoworkersAction(ActionEvent actionEvent) {
-        List<Integer> listaIDs=new ArrayList<>();
+        SelectedWorkersIDs listObject = new SelectedWorkersIDs();
+        ObservableList<WorkerModel> localWorkers;
+        localWorkers = tableCoworkers.getSelectionModel().getSelectedItems();
 
-        for (TablePosition<WorkerModel, ?> pos : tableCoworkers.getSelectionModel().getSelectedCells()) {
-
-            int row = pos.getRow();
-            TableColumn col=pos.getTableColumn();
-            System.out.println(col.getCellObservableValue(row));
-
+        int size = localWorkers.size();
+        for (int i = 0; i < size; i++) {
+            listObject.addWorker(localWorkers.get(i));
         }
+
+        for(int i=size-1;i>=0;i--){
+            workers.remove(localWorkers.get(i));
+        }
+
+        int newTotalValues = workers.size();
+        totalNrLabel.setText(String.valueOf(newTotalValues));
+
+    }
+
+    public void finishAction(ActionEvent actionEvent) {
+        Stage stage = (Stage) finishButton.getScene().getWindow();
+        stage.close();
     }
 }

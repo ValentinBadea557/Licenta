@@ -10,17 +10,26 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
+import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class CreateProjectOneController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    @FXML
+    private Pane paneMaster;
 
     @FXML
     private Button addCoworkerButton;
@@ -52,6 +61,8 @@ public class CreateProjectOneController implements Initializable {
     @FXML
     private ComboBox<String> startTimeField;
 
+    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
+
     @FXML
     void addCoworkersAction(ActionEvent actionEvent) {
         try {
@@ -62,7 +73,21 @@ public class CreateProjectOneController implements Initializable {
             primaryStage.setTitle("test");
             primaryStage.setScene(scene);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
-            primaryStage.show();
+            primaryStage.showAndWait();
+            /** Wait for the second stage to close*/
+
+            /** Copy the observable list*/
+            SelectedWorkersIDs lista=new SelectedWorkersIDs();
+            for(int i=0;i<lista.listaIDs.size();i++){
+                workers.add(lista.listaIDs.get(i));
+            }
+
+            /**Create a second list only with Names to populate the list view*/
+            ObservableList<String> listaNume=FXCollections.observableArrayList();
+            for(int i=0;i<workers.size();i++){
+                listaNume.add(workers.get(i).getFullName());
+            }
+            listCoworkers.setItems(listaNume);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,7 +96,6 @@ public class CreateProjectOneController implements Initializable {
 
     @FXML
     void deleteCoworkersAction(ActionEvent event) {
-
     }
 
     @Override
@@ -89,4 +113,10 @@ public class CreateProjectOneController implements Initializable {
                     "15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30",
                     "23:00","23:30"
             );
+
+    public void nextPageAction(ActionEvent actionEvent) throws Exception{
+       paneMaster.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("/EmployeePages/SecondCreateProjectPane.fxml")));
+
+    }
+
 }

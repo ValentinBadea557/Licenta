@@ -44,7 +44,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="finishButton" layoutX="172.0" layoutY="442.0" mnemonicParsing="false" text="Finish">
+      <Button fx:id="finishButton" layoutX="172.0" layoutY="442.0" mnemonicParsing="false" onAction="#finishAction" text="Finish">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

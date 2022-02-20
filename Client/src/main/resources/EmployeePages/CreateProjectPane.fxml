@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CreateProjectOneController">
+<Pane fx:id="paneMaster" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CreateProjectOneController">
    <children>
       <GridPane layoutX="32.0" layoutY="53.0" prefHeight="154.0" prefWidth="735.0">
         <columnConstraints>
@@ -120,7 +120,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="nextPageButton" layoutX="723.0" layoutY="421.0" mnemonicParsing="false">
+      <Button fx:id="nextPageButton" layoutX="723.0" layoutY="421.0" mnemonicParsing="false" onAction="#nextPageAction">
          <graphic>
             <ImageView fitHeight="37.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                <image>
