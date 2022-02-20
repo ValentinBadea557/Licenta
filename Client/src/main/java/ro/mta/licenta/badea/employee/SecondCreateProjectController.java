@@ -28,11 +28,6 @@ public class SecondCreateProjectController implements Initializable {
     @FXML
     private Pane paneMaster;
 
-    @FXML
-    private ListView<String> coworkersList;
-
-    @FXML
-    private ListView<String> listTeams;
 
     @FXML
     private StackPane stackPaneView;
@@ -40,7 +35,7 @@ public class SecondCreateProjectController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            Parent fxml= FXMLLoader.load(getClass().getResource("/MiniPages/AddTeamPage.fxml"));
+            Parent fxml= FXMLLoader.load(getClass().getResource("/MiniPages/AddRolesToWorkersPage.fxml"));
             stackPaneView.getChildren().removeAll();
             stackPaneView.getChildren().setAll(fxml);
         } catch (IOException e) {

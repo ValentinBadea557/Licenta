@@ -1,6 +1,7 @@
 package ro.mta.licenta.badea.models;
 
 public class EmployeeModel {
+    private int ID;
     private String username;
     private String password;
     private String FirstName;
@@ -9,6 +10,14 @@ public class EmployeeModel {
     private String address;
     private String mail;
     private int admin;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     public void setAdmin(int admin) {
         this.admin = admin;

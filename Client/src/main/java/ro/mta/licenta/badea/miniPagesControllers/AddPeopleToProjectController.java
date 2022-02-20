@@ -1,4 +1,4 @@
-package ro.mta.licenta.badea.employee;
+package ro.mta.licenta.badea.miniPagesControllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
