@@ -12,7 +12,7 @@
 
 <Pane fx:id="paneMaster" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.SecondCreateProjectController">
    <children>
-      <StackPane fx:id="stackPaneView" layoutX="390.0" layoutY="42.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: gray;" />
+      <StackPane fx:id="stackPaneView" layoutX="393.0" layoutY="26.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: gray;" />
       <Label layoutX="52.0" layoutY="39.0" text="Teams:">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -23,7 +23,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button layoutX="116.0" layoutY="35.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="25.0">
+      <Button fx:id="addTeamButton" layoutX="116.0" layoutY="35.0" mnemonicParsing="false" onAction="#addTeamAction" prefHeight="21.0" prefWidth="25.0">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -52,15 +52,24 @@
       </Button>
       <TableView fx:id="teamsTableView" layoutX="50.0" layoutY="72.0" prefHeight="154.0" prefWidth="294.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="ID" />
-          <TableColumn prefWidth="218.0" text="Team's Name" />
+          <TableColumn fx:id="idTeamColumn" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="teamNameColumn" prefWidth="218.0" text="Team's Name" />
         </columns>
       </TableView>
       <TableView fx:id="coworkersTableView" layoutX="53.0" layoutY="269.0" prefHeight="154.0" prefWidth="294.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="ID" />
-          <TableColumn prefWidth="218.0" text="Full Name" />
+          <TableColumn fx:id="idRolesColumn" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="fullNameRoleColumn" prefWidth="218.0" text="Full Name" />
         </columns>
       </TableView>
+      <Button fx:id="rightPageButton" layoutX="744.0" layoutY="440.0" mnemonicParsing="false" onAction="#rightPageAction" prefHeight="29.0" prefWidth="49.0">
+         <graphic>
+            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/rightarrow.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </Pane>

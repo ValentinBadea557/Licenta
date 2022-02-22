@@ -10,34 +10,32 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ro.mta.licenta.badea.models.ProjectModel;
+import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ProjectAdminController implements Initializable {
 
 
     @FXML
-    private TableColumn<ProjectModel, String> detailsColumn;
+    private TableColumn<ProjectTemporalModel, String> detailsColumn;
 
     @FXML
-    private TableColumn<ProjectModel, String> leaderColumn;
+    private TableColumn<ProjectTemporalModel, String> leaderColumn;
 
     @FXML
-    private TableColumn<ProjectModel, String> nameColumn;
+    private TableColumn<ProjectTemporalModel, String> nameColumn;
 
     @FXML
-    private TableColumn<ProjectModel, LocalDateTime> startColumn;
+    private TableColumn<ProjectTemporalModel, LocalDateTime> startColumn;
 
     @FXML
-    private TableColumn<ProjectModel, LocalDateTime> deadlineColumn;
+    private TableColumn<ProjectTemporalModel, LocalDateTime> deadlineColumn;
 
     @FXML
-    private TableView<ProjectModel> projectTable;
+    private TableView<ProjectTemporalModel> projectTable;
 
     @FXML
     private TextField searchProjectField;
@@ -54,7 +52,7 @@ public class ProjectAdminController implements Initializable {
 
         projectTable.setItems(projectModels);
 
-        FilteredList<ProjectModel> filteredData = new FilteredList<>(projectModels, b -> true);
+        FilteredList<ProjectTemporalModel> filteredData = new FilteredList<>(projectModels, b -> true);
 
         searchProjectField.textProperty().addListener((observable,oldValue,newValue)->{
             filteredData.setPredicate(projectModel ->{
@@ -74,15 +72,15 @@ public class ProjectAdminController implements Initializable {
             });
         });
 
-        SortedList<ProjectModel> sortedData=new SortedList<>(filteredData);
+        SortedList<ProjectTemporalModel> sortedData=new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(projectTable.comparatorProperty());
 
         projectTable.setItems(sortedData);
     }
 
 
-    private ObservableList<ProjectModel> projectModels = FXCollections.observableArrayList(
-            new ProjectModel("Soft","Valentin Badea", LocalDateTime.now(),LocalDateTime.now(),"descriere 1"),
-            new ProjectModel("Hard","Valentin Badea 2", LocalDateTime.now(),LocalDateTime.now(),"descriere 2")
+    private ObservableList<ProjectTemporalModel> projectModels = FXCollections.observableArrayList(
+            new ProjectTemporalModel("Soft","Valentin Badea", LocalDateTime.now(),LocalDateTime.now(),"descriere 1"),
+            new ProjectTemporalModel("Hard","Valentin Badea 2", LocalDateTime.now(),LocalDateTime.now(),"descriere 2")
     );
 }

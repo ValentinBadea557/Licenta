@@ -6,61 +6,57 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ResourceModel {
-    private SimpleIntegerProperty id;
-    private SimpleStringProperty denumire;
-    private SimpleIntegerProperty cantitate;
-    private SimpleBooleanProperty shareable;
-    private SimpleStringProperty descriere;
+    private int id;
+    private String denumire;
+    private int cantitate;
+    private boolean shareable;
+    private String descriere;
 
     public ResourceModel(int id,String name,int quantity,boolean sh,String description){
-        this.id=new SimpleIntegerProperty(id);
-        this.denumire=new SimpleStringProperty(name);
-        this.cantitate=new SimpleIntegerProperty(id);
-        this.shareable=new SimpleBooleanProperty(sh);
-        this.descriere=new SimpleStringProperty(description);
-    }
-
-    public void setShareable(boolean shareable) {
-        this.shareable.set(shareable);
-    }
-
-    public void setID(int ID) {
-        this.id.set(ID);
-    }
-
-    public void setDenumire(String denumire) {
-        this.denumire.set(denumire);
-    }
-
-    public void setCantitate(int cantitate) {
-        this.cantitate.set(cantitate);
+        this.id=id;
+        this.denumire=name;
+        this.cantitate=quantity;
+        this.shareable=sh;
+        this.descriere=description;
     }
 
     public void setDescriere(String descriere) {
-        this.descriere.set(descriere);
+        this.descriere = descriere;
     }
 
-    public int getID() {
-        return id.get();
+    public void setCantitate(int cantitate) {
+        this.cantitate = cantitate;
     }
 
-    public SimpleBooleanProperty shareableProperty() {
-        return shareable;
+    public void setDenumire(String denumire) {
+        this.denumire = denumire;
     }
 
-    public SimpleIntegerProperty cantitateProperty() {
-        return cantitate;
+    public void setShareable(boolean shareable) {
+        this.shareable = shareable;
     }
 
-    public SimpleIntegerProperty idProperty() {
-        return id;
+    public String getDescriere() {
+        return descriere;
     }
 
-    public SimpleStringProperty denumireProperty() {
+    public String getDenumire() {
         return denumire;
     }
 
-    public SimpleStringProperty descriereProperty() {
-        return descriere;
+    public int getCantitate() {
+        return cantitate;
+    }
+
+    public boolean isShareable() {
+        return shareable;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

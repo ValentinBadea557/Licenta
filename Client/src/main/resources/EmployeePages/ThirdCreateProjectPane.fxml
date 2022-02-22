@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.ThirdCreateProjectController">
+   <children>
+      <Label layoutX="45.0" layoutY="16.0" text="Create task:">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tableTasksView" layoutX="316.0" layoutY="15.0" prefHeight="124.0" prefWidth="235.0" AnchorPane.leftAnchor="316.0" AnchorPane.rightAnchor="256.0">
+        <columns>
+          <TableColumn fx:id="taskNameColumn" prefWidth="234.20001220703125" text="Normal Tasks" />
+        </columns>
+      </TableView>
+      <Button fx:id="addTaskButton" layoutX="165.0" layoutY="15.0" mnemonicParsing="false" onAction="#addTaskAction">
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/addIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="deleteTaskButton" layoutX="222.0" layoutY="15.0" mnemonicParsing="false" onAction="#deleteTaskAction">
+         <graphic>
+            <ImageView fitHeight="25.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/trashIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <GridPane layoutX="25.0" layoutY="160.0" prefHeight="120.0" prefWidth="476.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="306.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Name:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Periodicity:" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Duration (h) :" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Start Date:" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Start Time:" GridPane.columnIndex="2">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Deadline Date:" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Deadline Time:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="General Task:" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="taskNameField" promptText="Name" GridPane.columnIndex="1" />
+            <Spinner fx:id="durationField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="startDateField" promptText="Start Date" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="deadlineDateField" promptText="Deadline Date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ComboBox fx:id="startTimeField" prefWidth="150.0" promptText="Start Time" GridPane.columnIndex="3" />
+            <ComboBox fx:id="deadlineTimeField" prefWidth="150.0" promptText="Deadline Time" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <RadioButton fx:id="yesRadioButton" mnemonicParsing="false" onAction="#YesRadioAction" text="Yes" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="noRadioButton" mnemonicParsing="false" onAction="#noRadioAction" text="No" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="60.0" />
+               </GridPane.margin>
+            </RadioButton>
+            <ComboBox fx:id="periodicityField" prefWidth="150.0" promptText="Periodicity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <Button fx:id="createTaskButton" layoutX="675.0" layoutY="421.0" mnemonicParsing="false" onAction="#createTaskAction" prefHeight="31.0" prefWidth="111.0" text="Create task" AnchorPane.leftAnchor="675.0" AnchorPane.rightAnchor="21.0">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+      <Label layoutX="521.0" layoutY="160.0" text="Alloc resources:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tableResourcesView" layoutX="519.0" layoutY="188.0" prefHeight="111.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="resourceNameColumn" prefWidth="199.0" text="Resource" />
+        </columns>
+      </TableView>
+      <Button fx:id="allocResourceButton" layoutX="648.0" layoutY="158.0" mnemonicParsing="false" onAction="#allocResourceAction" prefHeight="25.0" prefWidth="16.0">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/addIcon.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TableView fx:id="tableGeneralView" layoutX="45.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="tableGeneralColumn" prefWidth="199.0" text="General task" />
+        </columns>
+      </TableView>
+      <Label layoutX="77.0" layoutY="299.0" text="Select general task:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tableTaskParinte" layoutX="275.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="taskParinteColumn" prefWidth="199.0" text="Task's Name" />
+        </columns>
+      </TableView>
+      <Label layoutX="328.0" layoutY="299.0" text="task parinte* ">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tableAllGeneralTasks" layoutX="565.0" layoutY="16.0" prefHeight="124.0" prefWidth="235.0">
+        <columns>
+          <TableColumn fx:id="allGeneralTaskColumn" prefWidth="234.40001220703124" text="General Tasks" />
+        </columns>
+      </TableView>
+      <Button layoutX="521.0" layoutY="421.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="111.0" text="Clear all">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

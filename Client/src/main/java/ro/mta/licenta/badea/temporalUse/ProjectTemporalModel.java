@@ -1,21 +1,27 @@
-package ro.mta.licenta.badea.models;
+package ro.mta.licenta.badea.temporalUse;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import ro.mta.licenta.badea.models.TeamModel;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class ProjectModel {
-    private String numeProiect;
-    private String leader;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
-    private String details;
+public class ProjectTemporalModel {
+    private static String numeProiect=new String();
+    private int idCoordonator;
+    private static String leader = new String();
+    private static LocalDateTime starttime;
+    private static LocalDateTime deadline;
+    private static String details=new String();
+    private static ArrayList<TeamModel> listTeams=new ArrayList<>();
 
-    public ProjectModel(String name, String coordonator, LocalDateTime start,LocalDateTime dead,String descriere){
+    public ProjectTemporalModel(){}
+    public ProjectTemporalModel(String name, String coordonator, LocalDateTime start,LocalDateTime dead,String descriere){
         this.numeProiect=name;
         this.leader=coordonator;
         this.details=descriere;
@@ -24,6 +30,19 @@ public class ProjectModel {
 
     }
 
+    public void printData(){
+        System.out.println("Name: "+this.numeProiect);
+        System.out.println("Starttime: "+this.starttime);
+        System.out.println("Deadline: "+this.deadline);
+        for(int i=0;i<listTeams.size();i++){
+            listTeams.get(i).printTeamsInfo();
+        }
+
+    }
+
+    public void addTeam(TeamModel team){
+        this.listTeams.add(team);
+    }
 
     public void setNumeProiect(String nume) {
         this.numeProiect=nume;

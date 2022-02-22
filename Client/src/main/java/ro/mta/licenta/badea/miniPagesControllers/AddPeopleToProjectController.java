@@ -9,15 +9,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.InputMethodEvent;
 import javafx.stage.Stage;
-import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddPeopleToProjectController implements Initializable {
@@ -87,6 +83,7 @@ public class AddPeopleToProjectController implements Initializable {
 
     }
 
+    /**initial list of people*/
     private ObservableList<WorkerModel> workers = FXCollections.observableArrayList(
             new WorkerModel(1, "Badea Valentin"),
             new WorkerModel(2, "Popescu Ion"),
@@ -105,10 +102,13 @@ public class AddPeopleToProjectController implements Initializable {
         for (int i = 0; i < size; i++) {
             listObject.addWorker(localWorkers.get(i));
         }
+        //listObject.printList();
 
-        for(int i=size-1;i>=0;i--){
-            workers.remove(localWorkers.get(i));
+
+        for(int i=0;i<size;i++){
+            workers.remove(listObject.getWorkerbasedOnIndex(i));
         }
+        listObject.clearList();
 
         int newTotalValues = workers.size();
         totalNrLabel.setText(String.valueOf(newTotalValues));
