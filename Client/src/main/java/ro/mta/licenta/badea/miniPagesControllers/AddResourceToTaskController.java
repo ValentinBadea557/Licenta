@@ -11,8 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import ro.mta.licenta.badea.models.ResourceModel;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.SenderText;
+import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,13 +50,15 @@ public class AddResourceToTaskController implements Initializable {
     @FXML
     private TableView<ResourceModel> tableResource;
 
+    @FXML
+    private Button finishButton;
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /**Set spinner*/
-        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10);
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,999999);
         spinner.setValue(1);
         quantitySpinner.setValueFactory(spinner);
 
@@ -81,12 +86,37 @@ public class AddResourceToTaskController implements Initializable {
     }
 
     private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList(
-            new ResourceModel(1,"R1", 100,true,"Descriere 1"),
-            new ResourceModel(2,"R2", 154,false,"Descriere 2")
+            new ResourceModel(1,"R1", 10,true,"Descriere 1"),
+            new ResourceModel(2,"R2", 154,false,"Descriere 2"),
+            new ResourceModel(3,"R3", 200,false,"Descriere 2"),
+            new ResourceModel(4,"R4", 187,true,"Descriere 2"),
+            new ResourceModel(5,"R5", 654,false,"Descriere 2")
     );
 
     public void addResourceAction(ActionEvent actionEvent) {
+        SelectedWorkersIDs listObject = new SelectedWorkersIDs();
+        ResourceModel selectedResource;
+        selectedResource = tableResource.getSelectionModel().getSelectedItem();
 
-        //de folosit label de info verde si rosu
+        if(quantitySpinner.getValue()>selectedResource.getCantitate()){
+            labelResponse.setText("Unavailable number of resources!");
+            labelResponse.setStyle("-fx-text-fill:RED");
+
+        }else{
+            labelResponse.setText("Resource added!");
+            labelResponse.setStyle("-fx-text-fill:GREEN");
+            selectedResource.setCantitate(quantitySpinner.getValue());
+            listObject.addResource(selectedResource);
+
+            resurseModels.remove(selectedResource);
+            tableResource.setItems(resurseModels);
+        }
+
+
+    }
+
+    public void finishAction(ActionEvent actionEvent) {
+        Stage stage = (Stage) finishButton.getScene().getWindow();
+        stage.close();
     }
 }

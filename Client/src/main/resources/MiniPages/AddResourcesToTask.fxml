@@ -41,7 +41,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Button fx:id="addResourceButton" layoutX="166.0" layoutY="482.0" mnemonicParsing="false" onAction="#addResourceAction" text="Add Resource" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="167.5">
+      <Button fx:id="addResourceButton" layoutX="167.0" layoutY="430.0" mnemonicParsing="false" onAction="#addResourceAction" text="Add Resource" AnchorPane.leftAnchor="167.0" AnchorPane.rightAnchor="166.5">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -56,5 +56,10 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
+      <Button fx:id="finishButton" layoutX="146.0" layoutY="478.0" mnemonicParsing="false" onAction="#finishAction" prefHeight="26.0" prefWidth="160.0" text="Finish">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

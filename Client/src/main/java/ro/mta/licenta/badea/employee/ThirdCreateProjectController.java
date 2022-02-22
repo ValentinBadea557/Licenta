@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import ro.mta.licenta.badea.models.GeneralTaskModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TaskModel;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -95,61 +96,154 @@ public class ThirdCreateProjectController implements Initializable {
     @FXML
     private RadioButton yesRadioButton;
 
+    @FXML
+    private Label allResourceLabel;
 
-    public void addTaskAction(ActionEvent actionEvent) {
-    }
+    @FXML
+    private Label selectGeneralTaskLabel;
 
-    public void deleteTaskAction(ActionEvent actionEvent) {
-    }
+    @FXML
+    private Label taskParinteLabel;
 
     public void YesRadioAction(ActionEvent actionEvent) {
-        allocResourceButton.setDisable(false);
-        tableResourcesView.setEditable(true);
-        tableGeneralView.setEditable(true);
-        tableTaskParinte.setEditable(true);
+        allResourceLabel.setVisible(false);
+        allocResourceButton.setVisible(false);
+        tableResourcesView.setVisible(false);
+        selectGeneralTaskLabel.setVisible(false);
+        tableGeneralView.setVisible(false);
+        taskParinteLabel.setVisible(false);
+        tableTaskParinte.setVisible(false);
+
     }
 
     public void noRadioAction(ActionEvent actionEvent) {
-        allocResourceButton.setDisable(true);
-        tableResourcesView.setEditable(false);
-        tableGeneralView.setEditable(false);
-        tableTaskParinte.setEditable(false);
+        allResourceLabel.setVisible(true);
+        allocResourceButton.setVisible(true);
+        tableResourcesView.setVisible(true);
+        selectGeneralTaskLabel.setVisible(true);
+        tableGeneralView.setVisible(true);
+        taskParinteLabel.setVisible(true);
+        tableTaskParinte.setVisible(true);
     }
 
     public void createTaskAction(ActionEvent actionEvent) {
-        String name=taskNameField.getText();
-        String periodicity=periodicityField.getValue();
-        int duration=durationField.getValue();
-        LocalDate startDate=startDateField.getValue();
-        String startTime=startTimeField.getValue();
-        
-        LocalDateTime finalstarttime=returnFinalDateTimeFormat(startDate,startTime);
+        /**Check every field*/
 
-        LocalDate dearDate=deadlineDateField.getValue();
-        String dearTime=deadlineTimeField.getValue();
-        LocalDateTime finaldeadline=returnFinalDateTimeFormat(dearDate,dearTime);
-        
-        boolean generalTask = false;
-        if(yesRadioButton.isSelected()){
-            generalTask=true;
-        }else if(noRadioButton.isSelected()){
-            generalTask=false;
+        boolean emptyFields = false;
+        if (taskNameField.getText() == null || taskNameField.getText().trim().isEmpty()) {
+            emptyFields = true;
         }
-        
-        System.out.println(name+"\n"+periodicity+"\n"+duration+"\n"+finalstarttime+"\n"+finaldeadline+"\n"+String.valueOf(generalTask));
-        
-        
+        if (periodicityField.getValue() == null || periodicityField.getValue().trim().isEmpty()) {
+            emptyFields = true;
+        }
+        if (durationField.getValue() == null) {
+            emptyFields = true;
+        }
+        if (startDateField.getValue() == null) {
+            emptyFields = true;
+        }
+        if (startTimeField.getValue() == null || startTimeField.getValue().trim().isEmpty()) {
+            emptyFields = true;
+        }
+        if (deadlineDateField.getValue() == null) {
+            emptyFields = true;
+        }
+        if (deadlineTimeField.getValue() == null || startTimeField.getValue().trim().isEmpty()) {
+            emptyFields = true;
+        }
+
+        /**check if the desire task is general or not*/
+        boolean generalTask = false;
+        if (yesRadioButton.isSelected()) {
+            generalTask = true;
+        } else if (noRadioButton.isSelected()) {
+            generalTask = false;
+        }
+
+        String name = null;
+        String periodicity = null;
+        int duration = 0;
+        LocalDate startDate;
+        String startTime;
+        LocalDateTime finalstarttime = null;
+        LocalDate deadDate;
+        String deadTime;
+        LocalDateTime finaldeadline = null;
+
+        if (emptyFields) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Incomplete fields");
+            alert.setContentText("You must complete all fields to create a task!");
+            alert.showAndWait();
+        } else {
+            name = taskNameField.getText();
+            periodicity = periodicityField.getValue();
+            duration = durationField.getValue();
+
+            startDate = startDateField.getValue();
+            startTime = startTimeField.getValue();
+            finalstarttime = returnFinalDateTimeFormat(startDate, startTime);
+
+            deadDate = deadlineDateField.getValue();
+            deadTime = deadlineTimeField.getValue();
+            finaldeadline = returnFinalDateTimeFormat(deadDate, deadTime);
+
+            System.out.println("OK");
+
+
+            if (noRadioButton.isSelected()) {
+                if (listaResurse.isEmpty() || tableGeneralView.getSelectionModel().isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Incomplete fields");
+                    alert.setContentText("You must select every detail to create a task!");
+                    alert.showAndWait();
+                } else {
+                    System.out.println("OK");
+                }
+            } else {
+                GeneralTaskModel general = new GeneralTaskModel();
+                general.setName(name);
+                general.setPeriodicity(periodicity);
+                general.setDuration(duration);
+                general.setStarttime(finalstarttime);
+                general.setDeadline(finaldeadline);
+
+                taskuriGenerale.add(general);
+                tableGeneralView.setItems(taskuriGenerale);
+                tableAllGeneralTasks.setItems(taskuriGenerale);
+
+                System.out.println(name+" "+periodicity+" "+duration+" "+finalstarttime+" "+finaldeadline+" ");
+                /** Dupa ce fac serverul fac request sa primesc ID-ul**/
+            }
+        }
+
+        // listaResurse.clear();
     }
 
-    public void allocResourceAction(ActionEvent actionEvent) throws Exception{
+    ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
+
+    private ObservableList<TaskModel> taskuriNormale = FXCollections.observableArrayList();
+    private ObservableList<GeneralTaskModel> taskuriGenerale = FXCollections.observableArrayList();
+
+    public void allocResourceAction(ActionEvent actionEvent) throws Exception {
         root = FXMLLoader.load(getClass().getResource("/MiniPages/AddResourcesToTask.fxml"));
 
+        SelectedWorkersIDs resourceList = new SelectedWorkersIDs();
+        resourceList.clearResourceList();
+
         scene = new Scene(root);
-        Stage primaryStage=new Stage();
+        Stage primaryStage = new Stage();
         primaryStage.setTitle("test");
         primaryStage.setScene(scene);
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
+
+
+        resourceList.printResourceList();
+        for (int i = 0; i < resourceList.returnSizeOfResourceList(); i++) {
+            listaResurse.add(resourceList.getResourceBasedOnIndex(i));
+        }
+        tableResourcesView.setItems(listaResurse);
     }
 
     @Override
@@ -164,15 +258,23 @@ public class ThirdCreateProjectController implements Initializable {
         periodicityField.setItems(periodicityIntervals);
 
         /**Set group for radio buttons*/
-        final ToggleGroup group=new ToggleGroup();
+        final ToggleGroup group = new ToggleGroup();
         noRadioButton.setToggleGroup(group);
-        noRadioButton.setSelected(true);
+        noRadioButton.setSelected(false);
 
         yesRadioButton.setToggleGroup(group);
-        yesRadioButton.setSelected(false);
+        yesRadioButton.setSelected(true);
+
+        /**Hide tables for normal tasks*/
+        allResourceLabel.setVisible(false);
+        allocResourceButton.setVisible(false);
+        tableResourcesView.setVisible(false);
+        selectGeneralTaskLabel.setVisible(false);
+        tableGeneralView.setVisible(false);
+        taskParinteLabel.setVisible(false);
+        tableTaskParinte.setVisible(false);
 
         /**Deactivate fields for normal task*/
-        allocResourceButton.setDisable(true);
         tableResourcesView.setEditable(false);
         tableGeneralView.setEditable(false);
         tableTaskParinte.setEditable(false);
@@ -188,42 +290,42 @@ public class ThirdCreateProjectController implements Initializable {
         resourceNameColumn.setStyle("-fx-alignment: CENTER");
         taskParinteColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         taskParinteColumn.setStyle("-fx-alignment: CENTER");
-        
+
         /**Set spinner*/
         SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10);
         spinner.setValue(1);
         durationField.setValueFactory(spinner);
     }
 
-    public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time){
+    public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time) {
         /**get infomartion from LocalDate*/
-        int year= date.getYear();
-        int month=date.getMonth().getValue();
-        int day=date.getDayOfMonth();
+        int year = date.getYear();
+        int month = date.getMonth().getValue();
+        int day = date.getDayOfMonth();
 
         /**get hour and minute from combobox time*/
-        String[] timeTokenizer=time.split(":");
+        String[] timeTokenizer = time.split(":");
 
-        int hour=Integer.valueOf(timeTokenizer[0]);
-        int minutes=Integer.valueOf(timeTokenizer[1]);
-        int seconds=0;
+        int hour = Integer.valueOf(timeTokenizer[0]);
+        int minutes = Integer.valueOf(timeTokenizer[1]);
+        int seconds = 0;
 
         /**return final format that match with SQL format*/
         LocalDateTime finalDateTime = LocalDateTime.of(year, month, day, hour, minutes, seconds);
 
         return finalDateTime;
     }
-    
+
     ObservableList<String> periodicityIntervals =
             FXCollections.observableArrayList(
-                    "Daily","Weekly","Monthly"
+                    "Daily", "Weekly", "Monthly"
             );
 
     ObservableList<String> hours =
             FXCollections.observableArrayList(
-                    "00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30",
-                    "07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30",
-                    "15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30",
-                    "23:00","23:30"
+                    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30",
+                    "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+                    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30",
+                    "23:00", "23:30"
             );
 }

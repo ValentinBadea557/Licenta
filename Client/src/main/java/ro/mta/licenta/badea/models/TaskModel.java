@@ -1,6 +1,7 @@
 package ro.mta.licenta.badea.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class TaskModel {
     private int ID;
@@ -12,6 +13,11 @@ public class TaskModel {
     private int ID_general;
     private int ID_parinte;
     private int ID_Proiect;
+    private ArrayList<ResourceModel> listaResurse;
+
+    public void addResourseToList(ResourceModel resource){
+        this.listaResurse.add(resource);
+    }
 
     public void setPeriodicity(String periodicity) {
         this.periodicity = periodicity;
