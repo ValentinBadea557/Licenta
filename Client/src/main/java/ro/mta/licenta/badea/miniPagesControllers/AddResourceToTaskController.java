@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -17,6 +19,8 @@ import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -102,7 +106,9 @@ public class AddResourceToTaskController implements Initializable {
             labelResponse.setText("Unavailable number of resources!");
             labelResponse.setStyle("-fx-text-fill:RED");
 
+            quantitySpinner.setStyle("-fx-border-color:red");
         }else{
+            quantitySpinner.setStyle("-fx-border-color:none");
             labelResponse.setText("Resource added!");
             labelResponse.setStyle("-fx-text-fill:GREEN");
             selectedResource.setCantitate(quantitySpinner.getValue());

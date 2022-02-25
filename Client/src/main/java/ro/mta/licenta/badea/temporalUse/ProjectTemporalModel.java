@@ -3,6 +3,9 @@ package ro.mta.licenta.badea.temporalUse;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import ro.mta.licenta.badea.models.EmployeeModel;
+import ro.mta.licenta.badea.models.GeneralTaskModel;
+import ro.mta.licenta.badea.models.TaskModel;
 import ro.mta.licenta.badea.models.TeamModel;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +22,9 @@ public class ProjectTemporalModel {
     private static LocalDateTime deadline;
     private static String details=new String();
     private static ArrayList<TeamModel> listTeams=new ArrayList<>();
+    private static ArrayList<GeneralTaskModel> listaTaskuriGenerale=new ArrayList<>();
+    private static ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
+    private static ArrayList<EmployeeModel> listaUseri = new ArrayList<>();
 
     public ProjectTemporalModel(){}
     public ProjectTemporalModel(String name, String coordonator, LocalDateTime start,LocalDateTime dead,String descriere){
@@ -39,6 +45,12 @@ public class ProjectTemporalModel {
         }
 
     }
+
+    public void addEmployee(EmployeeModel worker){this.listaUseri.add(worker);}
+
+    public void addGeneralTask(GeneralTaskModel genTask){this.listaTaskuriGenerale.add(genTask);}
+
+    public void addTask(TaskModel task){this.listaTaskuri.add(task);}
 
     public void addTeam(TeamModel team){
         this.listTeams.add(team);

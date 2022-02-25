@@ -41,6 +41,30 @@ public class TaskGeneralDAO implements ITaskGeneralDAO {
     }
 
     @Override
+    public String addTaskGeneralBasedOnMember() {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String start = this.taskGeneral.getStarttime().toString();
+        String dead = this.taskGeneral.getDeadline().toString();
+        String name = this.taskGeneral.getName();
+        String periodicity=this.taskGeneral.getPeriodicity();
+        int duration = this.taskGeneral.getDuration();
+
+        String sql = "Insert into Taskuri_Generale(Denumire,Periodicitate,Durata,Starttime,Deadline)"
+                + "Values ('" + name + "','" + periodicity + "'," + duration + ",'" + start + "','" + dead + "')";
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            System.out.println("Task General adaugat");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
     public int getIDBasedOnName(String name, LocalDateTime start, LocalDateTime deadline) {
         Database db = new Database();
         Connection con = db.getConn();

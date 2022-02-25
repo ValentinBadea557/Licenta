@@ -1,7 +1,12 @@
 package ro.mta.licenta.badea.models;
 
+import javafx.concurrent.Task;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+
+import static java.util.Collections.copy;
 
 public class TaskModel {
     private int ID;
@@ -10,10 +15,24 @@ public class TaskModel {
     private int duration;
     private LocalDateTime starttime;
     private LocalDateTime deadline;
-    private int ID_general;
-    private int ID_parinte;
+    private GeneralTaskModel taskGeneral;
+    private TaskModel parinte;
     private int ID_Proiect;
     private ArrayList<ResourceModel> listaResurse;
+
+    public void printTaskInformation(){
+        System.out.println("Name: "+name+"\n Periodicity: "+periodicity+"\n Duration: "+duration+"\n Starttime: "+starttime+"\n Deadline: "+deadline);
+        System.out.println("Task General: "+taskGeneral.getName());
+        System.out.println("\nLista resurse:\n");
+        for(int i=0;i<listaResurse.size();i++){
+            System.out.println("Nume resursa: "+listaResurse.get(i).getDenumire()+" Cantitate:"+listaResurse.get(i).getCantitate()+"\n");
+        }
+
+    }
+
+    public void printResourceListSize(){
+        System.out.println(this.listaResurse.size());
+    }
 
     public void addResourseToList(ResourceModel resource){
         this.listaResurse.add(resource);
@@ -67,27 +86,35 @@ public class TaskModel {
         this.name = name;
     }
 
-    public int getID_general() {
-        return ID_general;
-    }
-
-    public int getID_parinte() {
-        return ID_parinte;
+    public void setID_Proiect(int ID_Proiect) {
+        this.ID_Proiect = ID_Proiect;
     }
 
     public int getID_Proiect() {
         return ID_Proiect;
     }
 
-    public void setID_general(int ID_general) {
-        this.ID_general = ID_general;
+    public GeneralTaskModel getTaskGeneral() {
+        return taskGeneral;
     }
 
-    public void setID_parinte(int ID_parinte) {
-        this.ID_parinte = ID_parinte;
+    public TaskModel getParinte() {
+        return parinte;
     }
 
-    public void setID_Proiect(int ID_Proiect) {
-        this.ID_Proiect = ID_Proiect;
+    public ArrayList<ResourceModel> getListaResurse() {
+        return listaResurse;
+    }
+
+    public void setListaResurse(ArrayList<ResourceModel> listaResurse) {
+        this.listaResurse=new ArrayList<>(listaResurse);
+    }
+
+    public void setParinte(TaskModel parinte) {
+        this.parinte = parinte;
+    }
+
+    public void setTaskGeneral(GeneralTaskModel taskGeneral) {
+        this.taskGeneral = taskGeneral;
     }
 }

@@ -135,11 +135,6 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="tableTaskParinte" layoutX="448.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0">
-        <columns>
-          <TableColumn fx:id="taskParinteColumn" prefWidth="199.0" text="Task's Name" />
-        </columns>
-      </TableView>
       <Label fx:id="taskParinteLabel" layoutX="502.0" layoutY="299.0" text="task parinte* ">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -155,5 +150,6 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
+      <ComboBox fx:id="taskuriParinteComboBox" layoutX="475.0" layoutY="328.0" prefWidth="150.0" promptText="Predecessor" />
    </children>
 </AnchorPane>

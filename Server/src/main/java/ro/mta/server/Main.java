@@ -6,6 +6,7 @@ import ro.mta.server.dao.CompanieDAO;
 import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
+import ro.mta.server.handlers.HandleUser;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -14,12 +15,10 @@ import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args){
-        TaskGeneralDAO general=new TaskGeneralDAO();
-        LocalDateTime s=LocalDateTime.parse("2022-02-22T02:00:10");
-        LocalDateTime d=LocalDateTime.parse("2022-03-09T02:00:15");
+        HandleUser handler=new HandleUser();
+        handler.analyzeMessage("AddTaskGeneral");
 
 
-        general.getIDBasedOnName("proiect first", s,d);
 
 
 

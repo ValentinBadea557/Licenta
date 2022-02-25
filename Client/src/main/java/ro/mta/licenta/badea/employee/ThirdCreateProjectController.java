@@ -1,5 +1,6 @@
 package ro.mta.licenta.badea.employee;
 
+import com.google.gson.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,9 +18,13 @@ import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TaskModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ThirdCreateProjectController implements Initializable {
@@ -79,9 +84,6 @@ public class ThirdCreateProjectController implements Initializable {
     private TableView<ResourceModel> tableResourcesView;
 
     @FXML
-    private TableView<TaskModel> tableTaskParinte;
-
-    @FXML
     private TableView<TaskModel> tableTasksView;
 
     @FXML
@@ -91,7 +93,7 @@ public class ThirdCreateProjectController implements Initializable {
     private TextField taskNameField;
 
     @FXML
-    private TableColumn<TaskModel, String> taskParinteColumn;
+    private ComboBox<String> taskuriParinteComboBox;
 
     @FXML
     private RadioButton yesRadioButton;
@@ -112,7 +114,7 @@ public class ThirdCreateProjectController implements Initializable {
         selectGeneralTaskLabel.setVisible(false);
         tableGeneralView.setVisible(false);
         taskParinteLabel.setVisible(false);
-        tableTaskParinte.setVisible(false);
+        taskuriParinteComboBox.setVisible(false);
 
     }
 
@@ -123,7 +125,7 @@ public class ThirdCreateProjectController implements Initializable {
         selectGeneralTaskLabel.setVisible(true);
         tableGeneralView.setVisible(true);
         taskParinteLabel.setVisible(true);
-        tableTaskParinte.setVisible(true);
+        taskuriParinteComboBox.setVisible(true);
     }
 
     public void createTaskAction(ActionEvent actionEvent) {
@@ -132,24 +134,45 @@ public class ThirdCreateProjectController implements Initializable {
         boolean emptyFields = false;
         if (taskNameField.getText() == null || taskNameField.getText().trim().isEmpty()) {
             emptyFields = true;
+            taskNameField.setStyle("-fx-border-color:red");
+        }else{
+            taskNameField.setStyle("-fx-border-color:none");
         }
         if (periodicityField.getValue() == null || periodicityField.getValue().trim().isEmpty()) {
             emptyFields = true;
+            periodicityField.setStyle("-fx-border-color:red");
+        }else{
+            periodicityField.setStyle("-fx-border-color:none");
         }
         if (durationField.getValue() == null) {
             emptyFields = true;
+            durationField.setStyle("-fx-border-color:red");
+        }else{
+            durationField.setStyle("-fx-border-color:none");
         }
         if (startDateField.getValue() == null) {
             emptyFields = true;
+            startDateField.setStyle("-fx-border-color:red");
+        }else{
+            startDateField.setStyle("-fx-border-color:none");
         }
-        if (startTimeField.getValue() == null || startTimeField.getValue().trim().isEmpty()) {
+        if (startTimeField.getValue() == null ) {
             emptyFields = true;
+            startTimeField.setStyle("-fx-border-color:red");
+        }else{
+            startTimeField.setStyle("-fx-border-color:none");
         }
         if (deadlineDateField.getValue() == null) {
             emptyFields = true;
+            deadlineDateField.setStyle("-fx-border-color:red");
+        }else{
+            deadlineDateField.setStyle("-fx-border-color:none");
         }
-        if (deadlineTimeField.getValue() == null || startTimeField.getValue().trim().isEmpty()) {
+        if (deadlineTimeField.getValue() == null ) {
             emptyFields = true;
+            deadlineTimeField.setStyle("-fx-border-color:red");
+        }else{
+            deadlineTimeField.setStyle("-fx-border-color:none");
         }
 
         /**check if the desire task is general or not*/
@@ -176,6 +199,8 @@ public class ThirdCreateProjectController implements Initializable {
             alert.setContentText("You must complete all fields to create a task!");
             alert.showAndWait();
         } else {
+
+
             name = taskNameField.getText();
             periodicity = periodicityField.getValue();
             duration = durationField.getValue();
@@ -188,8 +213,6 @@ public class ThirdCreateProjectController implements Initializable {
             deadTime = deadlineTimeField.getValue();
             finaldeadline = returnFinalDateTimeFormat(deadDate, deadTime);
 
-            System.out.println("OK");
-
 
             if (noRadioButton.isSelected()) {
                 if (listaResurse.isEmpty() || tableGeneralView.getSelectionModel().isEmpty()) {
@@ -198,7 +221,51 @@ public class ThirdCreateProjectController implements Initializable {
                     alert.setContentText("You must select every detail to create a task!");
                     alert.showAndWait();
                 } else {
-                    System.out.println("OK");
+                    TaskModel localTask = new TaskModel();
+                    localTask.setName(name);
+                    localTask.setPeriodicity(periodicity);
+                    localTask.setDuration(duration);
+                    localTask.setStarttime(finalstarttime);
+                    localTask.setDeadline(finaldeadline);
+
+                    /**Setter resources list*/
+                    ArrayList<ResourceModel> localResourcelist = new ArrayList<ResourceModel>();
+                    for (int i = 0; i < listaResurse.size(); i++) {
+                        localResourcelist.add(listaResurse.get(i));
+                    }
+                    localTask.setListaResurse(localResourcelist);
+                    /**Setter general task for normal task**/
+
+                    localTask.setTaskGeneral(tableGeneralView.getSelectionModel().getSelectedItem());
+                    localTask.printTaskInformation();
+
+                    /**Add in local List and also in table views*/
+                    taskuriNormale.add(localTask);
+                    listaNumeTaskuri.add(localTask.getName());
+
+                    tableTasksView.setItems(taskuriNormale);
+                    taskuriParinteComboBox.setItems(listaNumeTaskuri);
+
+                    if (!taskuriParinteComboBox.getSelectionModel().isEmpty() || taskuriParinteComboBox.getValue() != null) {
+                        /**Set parent task*/
+                        TaskModel parent = new TaskModel();
+                        for (int i = 0; i < taskuriNormale.size(); i++) {
+                            String selectedItem = taskuriParinteComboBox.getValue().toString();
+                            if (selectedItem.equals(taskuriNormale.get(i).getName())) {
+                                parent = taskuriNormale.get(i);
+                                localTask.setParinte(parent);
+                            }
+                        }
+                    }
+
+                    /**create gson*/
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+                    gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+                    Gson gson = gsonBuilder.setPrettyPrinting().create();
+                    String stringJson = gson.toJson(localTask);
+                    System.out.println("***\n" + stringJson);
+
                 }
             } else {
                 GeneralTaskModel general = new GeneralTaskModel();
@@ -212,18 +279,28 @@ public class ThirdCreateProjectController implements Initializable {
                 tableGeneralView.setItems(taskuriGenerale);
                 tableAllGeneralTasks.setItems(taskuriGenerale);
 
-                System.out.println(name+" "+periodicity+" "+duration+" "+finalstarttime+" "+finaldeadline+" ");
-                /** Dupa ce fac serverul fac request sa primesc ID-ul**/
+                System.out.println("TASK GENERAL\n");
+                System.out.println(name + " " + periodicity + " " + duration + " " + finalstarttime + " " + finaldeadline + " ");
+
+                /**Set gson to serialize localDateTime members**/
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+                Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+
+                String stringJson = gson.toJson(general);
+                System.out.println("***\n" + stringJson);
+                GeneralTaskModel aux=gson.fromJson(stringJson,GeneralTaskModel.class);
+                System.out.println("Nume: "+aux.getName()+" Start:"+aux.getStarttime()+" Dead:"+aux.getDeadline());
+                clearInputFields();
             }
+
         }
 
-        // listaResurse.clear();
+
     }
 
-    ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
-
-    private ObservableList<TaskModel> taskuriNormale = FXCollections.observableArrayList();
-    private ObservableList<GeneralTaskModel> taskuriGenerale = FXCollections.observableArrayList();
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {
         root = FXMLLoader.load(getClass().getResource("/MiniPages/AddResourcesToTask.fxml"));
@@ -244,6 +321,7 @@ public class ThirdCreateProjectController implements Initializable {
             listaResurse.add(resourceList.getResourceBasedOnIndex(i));
         }
         tableResourcesView.setItems(listaResurse);
+        System.out.println("Size1:" + listaResurse.size());
     }
 
     @Override
@@ -272,12 +350,12 @@ public class ThirdCreateProjectController implements Initializable {
         selectGeneralTaskLabel.setVisible(false);
         tableGeneralView.setVisible(false);
         taskParinteLabel.setVisible(false);
-        tableTaskParinte.setVisible(false);
+        taskuriParinteComboBox.setVisible(false);
 
         /**Deactivate fields for normal task*/
         tableResourcesView.setEditable(false);
         tableGeneralView.setEditable(false);
-        tableTaskParinte.setEditable(false);
+        taskuriParinteComboBox.setEditable(false);
 
         /**Set Tables*/
         allGeneralTaskColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -288,11 +366,10 @@ public class ThirdCreateProjectController implements Initializable {
         taskNameColumn.setStyle("-fx-alignment: CENTER");
         resourceNameColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
         resourceNameColumn.setStyle("-fx-alignment: CENTER");
-        taskParinteColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        taskParinteColumn.setStyle("-fx-alignment: CENTER");
+
 
         /**Set spinner*/
-        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10);
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24);
         spinner.setValue(1);
         durationField.setValueFactory(spinner);
     }
@@ -308,13 +385,36 @@ public class ThirdCreateProjectController implements Initializable {
 
         int hour = Integer.valueOf(timeTokenizer[0]);
         int minutes = Integer.valueOf(timeTokenizer[1]);
-        int seconds = 0;
+        int seconds = 1;
 
         /**return final format that match with SQL format*/
         LocalDateTime finalDateTime = LocalDateTime.of(year, month, day, hour, minutes, seconds);
 
         return finalDateTime;
     }
+
+    public void clearInputFields() {
+        this.taskNameField.setText("");
+        this.periodicityField.setValue(null);
+        this.startDateField.setValue(null);
+        this.startTimeField.setValue(null);
+        this.deadlineDateField.setValue(null);
+        this.deadlineTimeField.setValue(null);
+        listaResurse.clear();
+        if (noRadioButton.isSelected()) {
+            tableResourcesView.setItems(listaResurse);
+        }
+        taskuriParinteComboBox.setValue(null);
+
+    }
+
+    private ObservableList<String> listaNumeTaskuri = FXCollections.observableArrayList();
+
+    private ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
+
+    private ObservableList<TaskModel> taskuriNormale = FXCollections.observableArrayList();
+
+    private ObservableList<GeneralTaskModel> taskuriGenerale = FXCollections.observableArrayList();
 
     ObservableList<String> periodicityIntervals =
             FXCollections.observableArrayList(
@@ -328,4 +428,23 @@ public class ThirdCreateProjectController implements Initializable {
                     "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30",
                     "23:00", "23:30"
             );
+}
+
+
+class LocalDateTimeSerializer implements JsonSerializer < LocalDateTime > {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
+
+    @Override
+    public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+        return new JsonPrimitive(formatter.format(localDateTime));
+    }
+}
+
+class LocalDateTimeDeserializer implements JsonDeserializer < LocalDateTime > {
+    @Override
+    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        return LocalDateTime.parse(json.getAsString(),
+                DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
+    }
 }

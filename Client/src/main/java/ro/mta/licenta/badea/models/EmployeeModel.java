@@ -10,6 +10,24 @@ public class EmployeeModel {
     private String address;
     private String mail;
     private int admin;
+    private String role;
+    private String permision;
+
+    public String getPermision() {
+        return permision;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setPermision(String permision) {
+        this.permision = permision;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public int getID() {
         return ID;
