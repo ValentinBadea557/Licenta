@@ -141,8 +141,8 @@ public class EmployeeModel {
         return email;
     }
 
-    public void setAddress(String address) {
-        this.addr = address;
+    public void setAddress(String addr) {
+        this.addr = addr;
     }
 
     public void setLastname(String lastname) {

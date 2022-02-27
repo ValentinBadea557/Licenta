@@ -13,6 +13,7 @@ public class ResourceModel {
     private String descriere;
     private int IDcompanie;
 
+    public ResourceModel(){}
 
     public ResourceModel(int id,String name,int quantity,boolean sh,String description){
         this.id=id;
