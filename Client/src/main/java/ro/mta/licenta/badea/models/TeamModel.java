@@ -11,19 +11,18 @@ public class TeamModel {
     private LocalDateTime starttime;
     private LocalDateTime deadline;
     private int ID_proiect;
-    private ArrayList<WorkerModel> listaWorkers=new ArrayList<>();
+    private ArrayList<EmployeeModel> listaEmployees =new ArrayList<>();
 
     public void printTeamsInfo(){
         System.out.println("Nume echipa: "+this.name+"\nStarttime: "+starttime+"\nDeadline: "+deadline+"\n");
         System.out.println("Echipa contine urmatorii workeri:\n");
-        for(int i=0;i<this.listaWorkers.size();i++){
-            System.out.println(this.listaWorkers.get(i).getFullName());
+        for(int i=0;i<this.listaEmployees.size();i++){
+            System.out.println(this.listaEmployees.get(i).getFirstname());
         }
     }
 
-    public void addWorker(WorkerModel work){
-        this.listaWorkers.add(work);
-    }
+    public void addEmployee(EmployeeModel emp){listaEmployees.add(emp);}
+
     public void setID(int ID) {
         this.ID = ID;
     }

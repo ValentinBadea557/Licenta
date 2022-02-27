@@ -1,6 +1,7 @@
 package ro.mta.server.entities;
 
 public class User {
+    private int ID;
     private String username;
     private String password;
     private Companie company;
@@ -12,8 +13,35 @@ public class User {
     private int ore_max_munca;
     private int ore_munca;
     private int admin;
+    private String role;
+    private String permission;
 
     public User(){};
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
 
     public int getAdmin() {
         return admin;

@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import ro.mta.licenta.badea.models.EmployeeModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
@@ -44,6 +45,12 @@ public class AddPeopleToProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        for(int i=0;i<employees.size();i++){
+            String fullName=employees.get(i).getFirstname()+" "+employees.get(i).getLastname();
+            WorkerModel aux=new WorkerModel(employees.get(i).getID(),fullName);
+            workers.add(aux);
+        }
 
         /** Set Table Columns*/
         idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
@@ -84,14 +91,13 @@ public class AddPeopleToProjectController implements Initializable {
     }
 
     /**initial list of people*/
-    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList(
-            new WorkerModel(1, "Badea Valentin"),
-            new WorkerModel(2, "Popescu Ion"),
-            new WorkerModel(56, "Badea Mihai"),
-            new WorkerModel(4, "Nancu Petrica"),
-            new WorkerModel(5, "Pesu Ciprian")
-    );
+    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
 
+    private ObservableList<EmployeeModel> employees = FXCollections.observableArrayList(
+            new EmployeeModel(1,"badea.valentin","1234","Valentin","Badea","1234","Str Bucuresti","as@mta.ro"),
+            new EmployeeModel(2,"badea.valentin","1234","Mihai","Badea","1234","Str Bucuresti","as@mta.ro"),
+            new EmployeeModel(3,"badea.valentin","1234","Andreea","Cosmina","1234","Str Bucuresti","as@mta.ro")
+    );
 
     public void addSelectedCoworkersAction(ActionEvent actionEvent) {
         SelectedWorkersIDs listObject = new SelectedWorkersIDs();
@@ -101,9 +107,13 @@ public class AddPeopleToProjectController implements Initializable {
         int size = localWorkers.size();
         for (int i = 0; i < size; i++) {
             listObject.addWorker(localWorkers.get(i));
+            int idSelected=localWorkers.get(i).getID();
+            for(int j=0;j<employees.size();j++){
+                if(employees.get(j).getID()==idSelected){
+                    listObject.addEmployee(employees.get(j));
+                }
+            }
         }
-        //listObject.printList();
-
 
         for(int i=0;i<size;i++){
             workers.remove(listObject.getWorkerbasedOnIndex(i));

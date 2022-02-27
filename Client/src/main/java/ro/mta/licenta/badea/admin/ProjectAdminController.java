@@ -1,5 +1,6 @@
 package ro.mta.licenta.badea.admin;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -10,6 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ro.mta.licenta.badea.models.EmployeeModel;
+import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 
 import java.net.URL;
@@ -20,22 +23,22 @@ public class ProjectAdminController implements Initializable {
 
 
     @FXML
-    private TableColumn<ProjectTemporalModel, String> detailsColumn;
+    private TableColumn<ProjectModel, String> detailsColumn;
 
     @FXML
-    private TableColumn<ProjectTemporalModel, String> leaderColumn;
+    private TableColumn<ProjectModel, String> leaderColumn;
 
     @FXML
-    private TableColumn<ProjectTemporalModel, String> nameColumn;
+    private TableColumn<ProjectModel, String> nameColumn;
 
     @FXML
-    private TableColumn<ProjectTemporalModel, LocalDateTime> startColumn;
+    private TableColumn<ProjectModel, LocalDateTime> startColumn;
 
     @FXML
-    private TableColumn<ProjectTemporalModel, LocalDateTime> deadlineColumn;
+    private TableColumn<ProjectModel, LocalDateTime> deadlineColumn;
 
     @FXML
-    private TableView<ProjectTemporalModel> projectTable;
+    private TableView<ProjectModel> projectTable;
 
     @FXML
     private TextField searchProjectField;
@@ -44,15 +47,15 @@ public class ProjectAdminController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         /**set table */
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("numeProiect"));
-        leaderColumn.setCellValueFactory(new PropertyValueFactory<>("leader"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("nume"));
+        leaderColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCoordonatorFullName()));
         startColumn.setCellValueFactory(new PropertyValueFactory<>("starttime"));
         deadlineColumn.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-        detailsColumn.setCellValueFactory(new PropertyValueFactory<>("details"));
+        detailsColumn.setCellValueFactory(new PropertyValueFactory<>("descriere"));
 
         projectTable.setItems(projectModels);
 
-        FilteredList<ProjectTemporalModel> filteredData = new FilteredList<>(projectModels, b -> true);
+        FilteredList<ProjectModel> filteredData = new FilteredList<>(projectModels, b -> true);
 
         searchProjectField.textProperty().addListener((observable,oldValue,newValue)->{
             filteredData.setPredicate(projectModel ->{
@@ -61,26 +64,28 @@ public class ProjectAdminController implements Initializable {
                     return true;
                 }
                 String searchKeyword=newValue.toLowerCase();
-                if(projectModel.getNumeProiect().toLowerCase().indexOf(searchKeyword) > -1){
+                if(projectModel.getNume().toLowerCase().indexOf(searchKeyword) > -1){
                     return true;
-                }else if(projectModel.getDetails().toLowerCase().indexOf(searchKeyword) > -1){
+                }else if(projectModel.getDescriere().toLowerCase().indexOf(searchKeyword) > -1){
                     return true;
-                }else if(projectModel.getLeader().toLowerCase().indexOf(searchKeyword) > -1){
+                }
+                else if(projectModel.getCoordonatorFullName().toLowerCase().indexOf(searchKeyword) > -1){
                     return true;
-                }else
+                }
+                else
                     return false; //no match
             });
         });
 
-        SortedList<ProjectTemporalModel> sortedData=new SortedList<>(filteredData);
+        SortedList<ProjectModel> sortedData=new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(projectTable.comparatorProperty());
 
         projectTable.setItems(sortedData);
     }
 
 
-    private ObservableList<ProjectTemporalModel> projectModels = FXCollections.observableArrayList(
-            new ProjectTemporalModel("Soft","Valentin Badea", LocalDateTime.now(),LocalDateTime.now(),"descriere 1"),
-            new ProjectTemporalModel("Hard","Valentin Badea 2", LocalDateTime.now(),LocalDateTime.now(),"descriere 2")
+    private ObservableList<ProjectModel> projectModels = FXCollections.observableArrayList(
+            new ProjectModel("Soft",new EmployeeModel("Badea","Valentin"), LocalDateTime.now(),LocalDateTime.now(),"descriere 1"),
+            new ProjectModel("Hard",new EmployeeModel("Mihai","Andrei"), LocalDateTime.now(),LocalDateTime.now(),"descriere 2")
     );
 }

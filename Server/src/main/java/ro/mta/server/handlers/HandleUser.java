@@ -1,7 +1,9 @@
 package ro.mta.server.handlers;
 
 import com.google.gson.*;
+import org.json.JSONObject;
 import ro.mta.server.dao.TaskGeneralDAO;
+import ro.mta.server.dao.UserDAO;
 import ro.mta.server.entities.TaskGeneral;
 
 import java.lang.reflect.Type;
@@ -30,20 +32,32 @@ public class HandleUser implements IHandler{
     }
 
     @Override
-    public void analyzeMessage(String message) {
+    public void analyzeMessage() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        switch (message){
+        JSONObject json = new JSONObject(this.messageReceived);
+        String type= json.get("type").toString();
+
+
+        switch (type){
+            case "Login":
+                UserDAO user=new UserDAO();
+                String result= user.login(json.get("username").toString(),json.get("password").toString());
+                System.out.println(result);
+                this.messageToSend=result;
+                break;
             case "AddTaskGeneral":
                 String test= "{\n  \"ID\": 0,\n  \"name\": \"fsda\",\n  \"periodicity\": \"Daily\",\n  \"duration\": 1,\n  \"starttime\": \"24::Feb::2022 02::30::01\",\n  \"deadline\": \"22::Feb::2022 02::30::01\"\n}";
 
                 TaskGeneral generalObject=gson.fromJson(test, TaskGeneral.class);
                 TaskGeneralDAO general=new TaskGeneralDAO(generalObject);
                 general.addTaskGeneralBasedOnMember();
+                break;
+
+
         }
     }
 }

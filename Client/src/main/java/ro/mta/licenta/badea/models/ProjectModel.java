@@ -1,5 +1,7 @@
 package ro.mta.licenta.badea.models;
 
+import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -14,6 +16,27 @@ public class ProjectModel {
     private ArrayList<EmployeeModel> listaOameni;
     private ArrayList<GeneralTaskModel> listaTaskuriGenerale;
     private ArrayList<TaskModel> listaTaskuri;
+    private int finished;
+
+    public ProjectModel(String nume,EmployeeModel coord,LocalDateTime start,LocalDateTime dead,String descriere){
+        this.nume=nume;
+        this.coordonator=coord;
+        this.starttime=start;
+        this.deadline=dead;
+        this.descriere=descriere;
+    }
+
+    public void setFinished(int finished) {
+        this.finished = finished;
+    }
+
+    public String getCoordonatorFullName(){
+        return this.coordonator.getFullName();
+    }
+
+    public int getFinished() {
+        return finished;
+    }
 
     public void setID(int ID) {
         this.ID = ID;

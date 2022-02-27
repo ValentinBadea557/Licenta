@@ -3,31 +3,44 @@ package ro.mta.licenta.badea.models;
 import java.util.ArrayList;
 
 public class CompanyModel {
-    private int ID;
-    private String name;
-    private ArrayList<EmployeeModel> listaPersonal;
+    private int id;
+    private String nume;
+    private ArrayList<EmployeeModel> listaEmployees =new ArrayList<>();
+
+    public CompanyModel(int id,String name,ArrayList<EmployeeModel> lista){
+        this.id=id;
+        this.nume=name;
+        this.listaEmployees=new ArrayList<>(lista);
+    }
+
+    public CompanyModel(){}
+
+    public void printDetails(){
+        System.out.println("Nume:"+nume);
+        System.out.println("\nSize:"+listaEmployees.size());
+    }
 
     public int getID() {
-        return ID;
+        return id;
     }
 
     public void setID(int ID) {
-        this.ID = ID;
+        this.id = ID;
     }
 
     public String getName() {
-        return name;
+        return nume;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.nume = name;
     }
 
     public ArrayList<EmployeeModel> getListaPersonal() {
-        return listaPersonal;
+        return listaEmployees;
     }
 
     public void setListaPersonal(ArrayList<EmployeeModel> listaPersonal) {
-        this.listaPersonal = listaPersonal;
+        this.listaEmployees = new ArrayList<>(listaPersonal);
     }
 }

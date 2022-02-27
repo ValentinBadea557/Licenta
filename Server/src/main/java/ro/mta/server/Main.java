@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args){
-        HandleUser handler=new HandleUser();
-        handler.analyzeMessage("AddTaskGeneral");
+        JSONObject json=new JSONObject();
 
-
+        UserDAO usr=new UserDAO();
+        usr.AdministratorViewAllEmployees(9);
 
 
 

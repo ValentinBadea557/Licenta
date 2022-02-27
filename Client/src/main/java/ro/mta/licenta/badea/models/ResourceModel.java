@@ -11,6 +11,8 @@ public class ResourceModel {
     private int cantitate;
     private boolean shareable;
     private String descriere;
+    private int IDcompanie;
+
 
     public ResourceModel(int id,String name,int quantity,boolean sh,String description){
         this.id=id;
@@ -18,6 +20,14 @@ public class ResourceModel {
         this.cantitate=quantity;
         this.shareable=sh;
         this.descriere=description;
+    }
+
+    public int getIDcompanie() {
+        return IDcompanie;
+    }
+
+    public void setIDcompanie(int IDcompanie) {
+        this.IDcompanie = IDcompanie;
     }
 
     public void setDescriere(String descriere) {
