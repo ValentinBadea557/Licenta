@@ -41,6 +41,7 @@ public class HandlerAdmin implements IHandler{
             case "viewAllEmployees":
                 UserDAO userInstance=new UserDAO();
                 userInstance.AdministratorViewAllEmployees(1);
+
         }
     }
 }

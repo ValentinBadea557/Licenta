@@ -54,7 +54,11 @@ public class AdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources){
-
+        topemployees.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topprojects.setStyle("-fx-border-color: none");
+        topaddemployee.setStyle("-fx-border-color: none");
+        topresources.setStyle("-fx-border-color: none");
 
 
         try {
@@ -103,24 +107,49 @@ public class AdminController implements Initializable {
 
 
     public void showEmployees(ActionEvent actionEvent) throws IOException{
+        topemployees.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topprojects.setStyle("-fx-border-color: none");
+        topaddemployee.setStyle("-fx-border-color: none");
+        topresources.setStyle("-fx-border-color: none");
+
+
         Parent fxml = FXMLLoader.load(getClass().getResource("/AdministratorPages/EmployeesPageAdmin.fxml"));
         adminstackpane.getChildren().removeAll();
         adminstackpane.getChildren().setAll(fxml);
     }
 
     public void showProjects(ActionEvent actionEvent)  throws IOException{
+        topprojects.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topemployees.setStyle("-fx-border-color: none");
+        topaddemployee.setStyle("-fx-border-color: none");
+        topresources.setStyle("-fx-border-color: none");
+
         Parent fxml = FXMLLoader.load(getClass().getResource("/AdministratorPages/ProjectsAdmin.fxml"));
         adminstackpane.getChildren().removeAll();
         adminstackpane.getChildren().setAll(fxml);
     }
 
     public void showAddEmployee(ActionEvent actionEvent)  throws IOException{
+        topaddemployee.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topemployees.setStyle("-fx-border-color: none");
+        topprojects.setStyle("-fx-border-color: none");
+        topresources.setStyle("-fx-border-color: none");
+
         Parent fxml = FXMLLoader.load(getClass().getResource("/AdministratorPages/AddEmployeePageAdmin.fxml"));
         adminstackpane.getChildren().removeAll();
         adminstackpane.getChildren().setAll(fxml);
     }
 
     public void showResources(ActionEvent actionEvent)  throws IOException{
+        topresources.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topemployees.setStyle("-fx-border-color: none");
+        topaddemployee.setStyle("-fx-border-color: none");
+        topprojects.setStyle("-fx-border-color: none");
+
         Parent fxml = FXMLLoader.load(getClass().getResource("/AdministratorPages/ResourcesPageAdmin.fxml"));
         adminstackpane.getChildren().removeAll();
         adminstackpane.getChildren().setAll(fxml);
