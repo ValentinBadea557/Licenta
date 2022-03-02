@@ -6,6 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.json.JSONObject;
+import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.models.EmployeeModel;
 
 import java.net.URL;
@@ -55,7 +57,7 @@ public class AddEmployeeController implements Initializable {
 
     }
 
-    public void addEmployee(ActionEvent actionEvent) {
+    public void addEmployee(ActionEvent actionEvent) throws Exception {
         /**check empty fields*/
         boolean isempty = false;
         if (usernameField.getText().isEmpty()) {
@@ -107,7 +109,7 @@ public class AddEmployeeController implements Initializable {
             alert.setContentText("You must complete all fields!!");
             alert.showAndWait();
         } else {
-            System.out.println("ok");
+            Client client = Client.getInstance();
 
             /**Get data*/
             String user = usernameField.getText().toString();
@@ -134,15 +136,33 @@ public class AddEmployeeController implements Initializable {
             newEmployee.setAddress(addr);
             newEmployee.setMail(mail);
             newEmployee.setOre_max_munca(8);
+            newEmployee.setCompany(client.getCurrentUser().getCompany());
 
             /**Build gson*/
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             String employeeJson = gson.toJson(newEmployee);
-            System.out.println(employeeJson);
 
-            //to do
-            // get same company as admin
+            JSONObject tosend=new JSONObject(employeeJson);
+            tosend.put("Type","addEmployeeToCompany");
+            client.sendText(tosend.toString());
+
+            String jsonReturned = client.receiveText();
+            JSONObject json=new JSONObject(jsonReturned);
+            String result=json.getString("Response Add User");
+            if(result.equals("ok")){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Employee added!");
+                alert.setContentText("Successful add!");
+                alert.showAndWait();
+            }else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setContentText(result);
+                alert.showAndWait();
+            }
+
+
         }
     }
 }

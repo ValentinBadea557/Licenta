@@ -6,12 +6,15 @@ public class Companie {
     private int id;
     private String nume;
     private ArrayList<User> listaEmployees = new ArrayList<>();
+    private ArrayList<Resource> listaResurse = new ArrayList<>();
 
     public Companie(){};
     public Companie(int idparam,String numeparam){
         this.id=idparam;
         this.nume=numeparam;
     }
+
+    public void addResource(Resource res){ this.listaResurse.add(res);}
 
     public void addEmployee(User usr){this.listaEmployees.add(usr);}
 

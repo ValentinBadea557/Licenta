@@ -12,6 +12,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.json.JSONObject;
+import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.models.*;
 
 import java.net.URL;
@@ -49,47 +51,33 @@ public class ViewEmployeesAdminController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String test="{\n" +
-                "  \"id\": 1,\n" +
-                "  \"nume\": \"Tesla Inc.\",\n" +
-                "  \"listaEmployees\": [\n" +
-                "    {\n" +
-                "      \"ID\": 9,\n" +
-                "      \"username\": \"valentin.badea\",\n" +
-                "      \"firstname\": \"Valentin\",\n" +
-                "      \"lastname\": \"Badea\",\n" +
-                "      \"addr\": \"Bucuresti\",\n" +
-                "      \"phone\": \"112\",\n" +
-                "      \"email\": \"badea@mta.ro\",\n" +
-                "      \"ore_max_munca\": 8,\n" +
-                "      \"ore_munca\": 0,\n" +
-                "      \"admin\": 0\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"ID\": 11,\n" +
-                "      \"username\": \"matei.mihai\",\n" +
-                "      \"firstname\": \"Mihai\",\n" +
-                "      \"lastname\": \"Matei\",\n" +
-                "      \"addr\": \"Brasov\",\n" +
-                "      \"phone\": \"1111\",\n" +
-                "      \"email\": \"matei@yaho.com\",\n" +
-                "      \"ore_max_munca\": 8,\n" +
-                "      \"ore_munca\": 0,\n" +
-                "      \"admin\": 1\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
+        Client client = Client.getInstance();
+        JSONObject jsonRequestEmployeeList = new JSONObject();
+        jsonRequestEmployeeList.put("Type", "viewAllEmployees");
+        jsonRequestEmployeeList.put("IDadmin",client.getCurrentUser().getID());
+        String tosend=jsonRequestEmployeeList.toString();
+
+        System.out.println(tosend);
+        String receive = null;
+        try {
+            client.sendText(tosend);
+            receive = client.receiveText();
+            System.out.println(receive);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.setPrettyPrinting().create();
-        CompanyModel company= new CompanyModel();
+        CompanyModel company = new CompanyModel();
 
-        company=gson.fromJson(test, CompanyModel.class);
+        company = gson.fromJson(receive, CompanyModel.class);
 
         company.printDetails();
-        ArrayList<EmployeeModel> listaAuxEmployees=new ArrayList<>();
-        listaAuxEmployees=company.getListaPersonal();
-        for(int i=0;i<listaAuxEmployees.size();i++){
+        ArrayList<EmployeeModel> listaAuxEmployees = new ArrayList<>();
+        listaAuxEmployees = company.getListaPersonal();
+        for (int i = 0; i < listaAuxEmployees.size(); i++) {
             employeesList.add(listaAuxEmployees.get(i));
             System.out.println(employeesList.get(i).getMail());
         }
@@ -110,33 +98,31 @@ public class ViewEmployeesAdminController implements Initializable {
         /**Set search engine**/
         FilteredList<EmployeeModel> filteredData = new FilteredList<>(employeesList, b -> true);
 
-        searchField.textProperty().addListener((observable,oldValue,newValue)->{
-            filteredData.setPredicate(projectModel ->{
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(projectModel -> {
 
-                if(newValue.isEmpty() || newValue.isBlank() || newValue==null){
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
                     return true;
                 }
-                String searchKeyword=newValue.toLowerCase();
-                if(projectModel.getFirstname().toLowerCase().indexOf(searchKeyword) > -1){
+                String searchKeyword = newValue.toLowerCase();
+                if (projectModel.getFirstname().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }else if(projectModel.getLastname().toLowerCase().indexOf(searchKeyword) > -1){
+                } else if (projectModel.getLastname().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }
-                else if(projectModel.getUsername().toLowerCase().indexOf(searchKeyword) > -1){
+                } else if (projectModel.getUsername().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }else if(projectModel.getMail().toLowerCase().indexOf(searchKeyword) > -1){
+                } else if (projectModel.getMail().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }else if(projectModel.getPhone().toLowerCase().indexOf(searchKeyword) > -1){
+                } else if (projectModel.getPhone().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }else if(projectModel.getAddress().toLowerCase().indexOf(searchKeyword) > -1){
+                } else if (projectModel.getAddress().toLowerCase().indexOf(searchKeyword) > -1) {
                     return true;
-                }
-                else
+                } else
                     return false; //no match
             });
         });
 
-        SortedList<EmployeeModel> sortedData=new SortedList<>(filteredData);
+        SortedList<EmployeeModel> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableEmployeesView.comparatorProperty());
 
         tableEmployeesView.setItems(sortedData);

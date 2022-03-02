@@ -1,12 +1,16 @@
 package ro.mta.server;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.dao.CompanieDAO;
 import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
+import ro.mta.server.entities.User;
 import ro.mta.server.handlers.HandleUser;
+import ro.mta.server.handlers.HandlerAdmin;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,9 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try {
-
 
             ServerSocket ss = new ServerSocket(5000);
 
@@ -45,7 +48,6 @@ public class Main {
                     t.start();
 
 
-
                 } catch (Exception e) {
                     s.close();
                     e.printStackTrace();
@@ -65,7 +67,6 @@ class ClientHandler extends Thread {
     final DataInputStream dis;
     final DataOutputStream dos;
     final Socket s;
-
 
     // Constructor
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos) {
@@ -109,6 +110,83 @@ class ClientHandler extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Am ajung in run ");
+        System.out.println("Am intrat in run\n");
+        boolean logged = false;
+        boolean continueReceiving = true;
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+
+        int admin = 0;
+
+        while (continueReceiving) {
+            HandleUser hndl = new HandleUser();
+            String received = receiveMessage();
+
+            JSONObject jsonreceived = new JSONObject(received);
+            if (jsonreceived.get("Type").toString().equals("Exit")) {
+                System.out.println("Clientul a inchis aplicatia");
+                break;
+            }
+
+            hndl.setMessageReceived(received);
+            hndl.analyzeMessage();
+            String solvedMessage = hndl.getMessageToSend();
+            System.out.println(solvedMessage);
+            sendMessage(solvedMessage);
+
+            if (jsonreceived.get("Type").toString().equals("Login")) {
+                JSONObject json = new JSONObject(solvedMessage);
+                if (!json.has("Response Login")) {
+                    admin = json.getInt("admin");
+                    if (admin == 1) {
+                        while (true) {
+                            HandlerAdmin hndlAdmin = new HandlerAdmin();
+                            String receivedAdmin = receiveMessage();
+
+                            System.out.println("Am primit :"+receivedAdmin);
+                            /**Check if user closed the application*/
+                            JSONObject adminJson = new JSONObject(receivedAdmin);
+                            if (adminJson.get("Type").toString().equals("Exit")) {
+                                System.out.println("Clientul a inchis aplicatia");
+                                continueReceiving = false;
+                                break;
+                            }
+                            if(adminJson.get("Type").toString().equals("Logout")){
+                                System.out.println("Logout");
+                                JSONObject logOutResponse=new JSONObject();
+                                logOutResponse.put("Logout Response","ok");
+                                sendMessage(logOutResponse.toString());
+                                break;
+                            }
+
+                            hndlAdmin.setMessageReceived(receivedAdmin);
+                            hndlAdmin.analyzeMessage();
+                            solvedMessage = hndlAdmin.getMessageToSend();
+                            sendMessage(solvedMessage);
+
+                        }
+                    } else {
+                        while (true) {
+                            String receiveUser=receiveMessage();
+                            JSONObject userJSON=new JSONObject(receiveUser);
+                            if(userJSON.get("Type").toString().equals("Logout")){
+                                System.out.println("Logout");
+                                JSONObject logOutResponse=new JSONObject();
+                                logOutResponse.put("Logout Response","ok");
+                                sendMessage(logOutResponse.toString());
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+        }
+
+
     }
 }

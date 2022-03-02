@@ -27,8 +27,10 @@ public class Client {
 
     public static Client getInstance() {
         try {
-            if (single_instance == null)
+            if (single_instance == null) {
                 single_instance = new Client("localhost", 5000);
+                System.out.println("Nu exista instanta precedenta");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,5 +56,7 @@ public class Client {
         return msg;
     }
 
-
+    public EmployeeModel getCurrentUser() {
+        return currentUser;
+    }
 }

@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class ResourceModel {
-    private int id;
+    private int ID;
     private String denumire;
     private int cantitate;
     private boolean shareable;
@@ -16,7 +16,7 @@ public class ResourceModel {
     public ResourceModel(){}
 
     public ResourceModel(int id,String name,int quantity,boolean sh,String description){
-        this.id=id;
+        this.ID=id;
         this.denumire=name;
         this.cantitate=quantity;
         this.shareable=sh;
@@ -64,10 +64,10 @@ public class ResourceModel {
     }
 
     public int getId() {
-        return id;
+        return ID;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.ID = id;
     }
 }

@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
+
+        Client client = Client.getInstance();
         StartInterface startInterface= new StartInterface();
         startInterface.launchApplication(args);
     }

@@ -3,6 +3,7 @@ package ro.mta.server.dao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.Database;
@@ -32,30 +33,47 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public String addUserPlusCompany(String username, String parola, String nume_companie, String Nume, String Prenume, String Adrs, String Telefon, String mail, int admin) {
-        CompanieDAO comp = new CompanieDAO();
-        int addComp = comp.addCompany(nume_companie);
+        JSONObject result = new JSONObject();
+        int checkunicity = checkUsernameUnicity(username);
+        if (checkunicity == 1) {
+            CompanieDAO comp = new CompanieDAO();
+            int addComp = comp.addCompany(nume_companie);
 
-        if (addComp == -1) {
-            //eroare
-        } else if (addComp == 0) {
-            //exista deja
+
+            if (addComp == -1) {
+                //eroare
+                result.put("Result Register", "Error trying to add Company!");
+
+            } else if (addComp == 0) {
+                //exista deja
+                result.put("Result Register", "This company's name is already used!");
+
+            } else {
+                //adaugare cu succes
+                addOnlyUser(username, parola, nume_companie, Nume, Prenume, Adrs, Telefon, mail, 1);
+                result.put("Result Register", "ok");
+            }
         } else {
-            //adaugare cu succes
-            addOnlyUser(username, parola, nume_companie, Nume, Prenume, Adrs, Telefon, mail, 1);
+            result.put("Result Register", "Username already used!");
         }
-        return null;
+        return result.toString();
     }
 
     @Override
     public String addOnlyUser(String username, String parola, String nume_companie, String Nume, String Prenume, String Adrs, String Telefon, String mail, int admin) {
-        CompanieDAO cmp = new CompanieDAO();
-        int id_companie = cmp.getCompanyIDbasedOnName(nume_companie);
 
-        Database db = new Database();
-        Connection con = db.getConn();
+        JSONObject json=new JSONObject();
 
         int unicity = checkUsernameUnicity(username);
         if (unicity == 1) {
+            CompanieDAO cmp = new CompanieDAO();
+            int id_companie = cmp.getCompanyIDbasedOnName(nume_companie);
+
+
+            Database db = new Database();
+            Connection con = db.getConn();
+
+
             String hashpass = hashFunction(parola);
             String sql = "Insert into Useri(Username,Parola,ID_Companie) "
                     + "Values ('" + username + "','" + hashpass + "','" + id_companie + "')";
@@ -64,7 +82,7 @@ public class UserDAO implements IUserDAO {
                 Statement stmt = con.createStatement();
                 stmt.execute(sql);
             } catch (Exception e) {
-                System.out.println("Eroare la inserare user");
+                json.put("Response Add User","Error");
                 e.printStackTrace();
             }
             int id = getUserIDbasedOnUsername(username);
@@ -74,7 +92,7 @@ public class UserDAO implements IUserDAO {
                 Statement stmt = con.createStatement();
                 stmt.execute(sql2);
             } catch (Exception e) {
-                System.out.println("Eroare la inserare date personale");
+                json.put("Response Add User","Error");
                 e.printStackTrace();
             }
 
@@ -82,11 +100,12 @@ public class UserDAO implements IUserDAO {
                 int id_user = getUserIDbasedOnUsername(username);
                 addAdminbasedOnUserID(id_user);
             }
+            json.put("Response Add User","ok");
         } else {
-            System.out.println("Username existent");
+            json.put("Response Add User","Duplicate username");
         }
 
-        return null;
+        return json.toString();
 
     }
 
@@ -204,11 +223,13 @@ public class UserDAO implements IUserDAO {
 
                 result = gson.toJson(userReturned);
             }
+            if (results != 0)
+                return result;
         } catch (SQLException e) {
             e.printStackTrace();
             result = "Eroare";
         }
-        return result;
+        return "Eroare";
     }
 
 
@@ -391,19 +412,17 @@ public class UserDAO implements IUserDAO {
             ResultSetMetaData meta = rs.getMetaData();
             int idUserCurrent;
             while (rs.next()) {
-                idUserCurrent=rs.getInt(1);
+                idUserCurrent = rs.getInt(1);
                 company.addEmployee(getUserbasedOnID(idUserCurrent));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        gson.toJson(company);
-        System.out.println(gson.toJson(company));
+        String returnString = gson.toJson(company);
 
-        Companie newCompany=new Companie();
-        newCompany=gson.fromJson(gson.toJson(company), Companie.class);
-        return null;
+        return returnString;
     }
+
 
 }

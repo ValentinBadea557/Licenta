@@ -8,13 +8,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #404040;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.LoginController">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="263.0" fitWidth="357.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="263.0" fitWidth="357.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="68.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="69.0">
                <image>
                   <Image url="@Images/project_management_lolly_graphic_final.png" />
                </image>
@@ -24,6 +25,7 @@
    <right>
       <AnchorPane prefHeight="400.0" prefWidth="336.0" BorderPane.alignment="CENTER">
          <children>
+            <Region fx:id="rectangleShape" layoutX="11.0" layoutY="147.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f2f2f2;" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
             <ImageView fitHeight="89.0" fitWidth="59.0" layoutX="152.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@Images/lock.png" />
@@ -46,7 +48,7 @@
                   <Font name="System Bold" size="17.0" />
                </font>
             </Button>
-            <Label fx:id="wronglogin" layoutX="154.0" layoutY="101.0" textFill="#dd0000">
+            <Label fx:id="wronglogin" layoutX="111.0" layoutY="101.0" prefHeight="17.0" prefWidth="189.0" textFill="#dd0000">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>

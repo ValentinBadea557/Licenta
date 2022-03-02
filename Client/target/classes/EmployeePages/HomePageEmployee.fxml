@@ -43,11 +43,42 @@
                         </ImageView>
                      </graphic>
                   </Label>
-                  <Label fx:id="titleLabel" alignment="CENTER" layoutX="199.0" layoutY="50.0" prefHeight="47.0" prefWidth="808.0" text="title">
+                  <Button fx:id="topHomeButton" layoutX="200.0" layoutY="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Home" AnchorPane.topAnchor="50.0">
                      <font>
-                        <Font name="System Bold" size="32.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
-                  </Label>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/home.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="topCreateProjectButton" layoutX="350.0" layoutY="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="170.0" text="Create Project">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="27.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/createProjectIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="topMyCompanyButton" layoutX="520.0" layoutY="50.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="My Company">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="21.0" fitWidth="39.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/team.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </AnchorPane>
          </top>

@@ -9,9 +9,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.json.JSONObject;
+import ro.mta.licenta.badea.Client;
+import ro.mta.licenta.badea.models.CompanyModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -56,6 +60,9 @@ public class ResourceAdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        updateTableView();
+
         /** group for radio buttons*/
         final ToggleGroup group = new ToggleGroup();
         ShareableNo.setToggleGroup(group);
@@ -79,12 +86,37 @@ public class ResourceAdminController implements Initializable {
         ResourcesTable.setItems(resurseModels);
     }
 
-    private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList(
-            new ResourceModel(1, "R1", 100, true, "Descriere 1"),
-            new ResourceModel(2, "R2", 154, false, "Descriere 2")
-    );
+    private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList();
 
-    public void defineResButton(ActionEvent actionEvent) {
+    public void updateTableView() {
+        resurseModels.removeAll();
+        ResourcesTable.getItems().clear();
+        Client client = Client.getInstance();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        JSONObject requestView = new JSONObject();
+        requestView.put("Type", "View Resources");
+        requestView.put("ID_Companie", client.getCurrentUser().getCompany().getID());
+        CompanyModel company = new CompanyModel();
+        try {
+            client.sendText(requestView.toString());
+            String response = client.receiveText();
+            company = gson.fromJson(response, CompanyModel.class);
+
+            ArrayList<ResourceModel> listaTemporala = company.getListaResurse();
+
+            for (int i = 0; i < listaTemporala.size(); i++) {
+                resurseModels.add(listaTemporala.get(i));
+            }
+            System.out.println(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void defineResButton(ActionEvent actionEvent) throws Exception {
 
         boolean emptyFields = false;
         if (ResourceName.getText() == null || ResourceName.getText().trim().isEmpty()) {
@@ -106,6 +138,7 @@ public class ResourceAdminController implements Initializable {
             alert.setContentText("Description missing!");
             alert.showAndWait();
         } else {
+            Client client = Client.getInstance();
 
             String name = ResourceName.getText().toString();
             int number = SpinnerQuantity.getValue();
@@ -117,18 +150,33 @@ public class ResourceAdminController implements Initializable {
                 s = false;
             }
 
-            ResourceModel newResource=new ResourceModel();
+            ResourceModel newResource = new ResourceModel();
             newResource.setDenumire(name);
             newResource.setCantitate(number);
             newResource.setShareable(s);
             newResource.setDescriere(description);
+            newResource.setIDcompanie(client.getCurrentUser().getCompany().getID());
 
-            /** TO DO SET ID COMPANIE**/
             /**Build gson*/
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             String resourcesJson = gson.toJson(newResource);
-            System.out.println(resourcesJson);
+
+            JSONObject jsonResource = new JSONObject(resourcesJson);
+            jsonResource.put("Type", "Add Resource");
+
+            client.sendText(jsonResource.toString());
+            String response = client.receiveText();
+
+            JSONObject responseJson = new JSONObject(response);
+            if (responseJson.get("Response").toString().equals("ok")) {
+                updateTableView();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setContentText(responseJson.get("Response").toString());
+                alert.showAndWait();
+            }
 
         }
     }

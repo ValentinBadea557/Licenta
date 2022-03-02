@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.json.JSONObject;
+import ro.mta.licenta.badea.Client;
 
 import java.io.IOException;
 import java.net.URL;
@@ -59,7 +61,6 @@ public class AdminController implements Initializable {
         topprojects.setStyle("-fx-border-color: none");
         topaddemployee.setStyle("-fx-border-color: none");
         topresources.setStyle("-fx-border-color: none");
-
 
         try {
             Parent fxml= FXMLLoader.load(getClass().getResource("/AdministratorPages/EmployeesPageAdmin.fxml"));
@@ -156,16 +157,23 @@ public class AdminController implements Initializable {
     }
 
 
-    public void logoutAction(ActionEvent actionEvent) {
-        try {
-            root = FXMLLoader.load(getClass().getResource("/LoginPage.fxml"));
-            stage=(Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-            scene=new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+    public void logoutAction(ActionEvent actionEvent) throws Exception {
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            Client client= Client.getInstance();
+            JSONObject jsonlogout=new JSONObject();
+            jsonlogout.put("Type","Logout");
+            client.sendText(jsonlogout.toString());
+            String response=client.receiveText();
+
+            JSONObject responselogout=new JSONObject(response);
+            if(responselogout.get("Logout Response").toString().equals("ok")){
+                root = FXMLLoader.load(getClass().getResource("/LoginPage.fxml"));
+                stage=(Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+                scene=new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            }
+
+
     }
 }

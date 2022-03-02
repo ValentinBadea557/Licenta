@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
 import ro.mta.server.entities.TaskGeneral;
+import ro.mta.server.entities.User;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import java.util.Locale;
 public class HandleUser implements IHandler{
     private String messageReceived;
     private String messageToSend;
+
+    public HandleUser(){}
 
     public String getMessageReceived() {
         return messageReceived;
@@ -33,22 +36,51 @@ public class HandleUser implements IHandler{
 
     @Override
     public void analyzeMessage() {
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         JSONObject json = new JSONObject(this.messageReceived);
-        String type= json.get("type").toString();
+        String type= json.get("Type").toString();
 
+        System.out.println(type);
+
+
+        UserDAO user=new UserDAO();
+        String result;
 
         switch (type){
             case "Login":
-                UserDAO user=new UserDAO();
-                String result= user.login(json.get("username").toString(),json.get("password").toString());
-                System.out.println(result);
+
+                result= user.login(json.get("Username").toString(),json.get("Password").toString());
+                if(result.equals("Eroare")){
+                    JSONObject resultjson=new JSONObject();
+                    resultjson.put("Response Login","Error");
+                    this.messageToSend=resultjson.toString();
+                }else{
+                    this.messageToSend=result;
+                }
+                break;
+            case "Register":
+                System.out.println("aici");
+                json.remove("Type");
+                User newUser=new User();
+                newUser=gson.fromJson(json.toString(),User.class);
+                String username=newUser.getUsername();
+                String pass=newUser.getPassword();
+                String companyName=newUser.getCompany().getNume();
+                String first=newUser.getFirstname();
+                String last=newUser.getLastname();
+                String mail=newUser.getEmail();
+                String addr=newUser.getAddr();
+                String phone=newUser.getPhone();
+
+                result=user.addUserPlusCompany(username,pass,companyName,last,first,addr,phone,mail,1);
                 this.messageToSend=result;
                 break;
+
             case "AddTaskGeneral":
                 String test= "{\n  \"ID\": 0,\n  \"name\": \"fsda\",\n  \"periodicity\": \"Daily\",\n  \"duration\": 1,\n  \"starttime\": \"24::Feb::2022 02::30::01\",\n  \"deadline\": \"22::Feb::2022 02::30::01\"\n}";
 

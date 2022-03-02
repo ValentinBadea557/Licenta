@@ -42,7 +42,31 @@ public class EmployeeModel {
         this.admin=admin;
     }
 
-    public EmployeeModel(String firstName,String lastName){
+    public void setCompany(CompanyModel company) {
+        this.company = company;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public CompanyModel getCompany() {
+        return company;
+    }
+
+    public EmployeeModel(String firstName, String lastName){
         this.firstname=firstName;
         this.lastname=lastName;
     }
