@@ -133,7 +133,6 @@ class ClientHandler extends Thread {
             hndl.setMessageReceived(received);
             hndl.analyzeMessage();
             String solvedMessage = hndl.getMessageToSend();
-            System.out.println(solvedMessage);
             sendMessage(solvedMessage);
 
             if (jsonreceived.get("Type").toString().equals("Login")) {
@@ -171,13 +170,16 @@ class ClientHandler extends Thread {
                         while (true) {
                             String receiveUser=receiveMessage();
                             JSONObject userJSON=new JSONObject(receiveUser);
-                            if(userJSON.get("Type").toString().equals("Logout")){
-                                System.out.println("Logout");
-                                JSONObject logOutResponse=new JSONObject();
-                                logOutResponse.put("Logout Response","ok");
-                                sendMessage(logOutResponse.toString());
+                            if(userJSON.get("Type").toString().equals("Exit")){
+                                System.out.println("Clientul a inchis aplicatia");
+                                continueReceiving = false;
                                 break;
                             }
+
+                            hndl.setMessageReceived(receiveUser);
+                            hndl.analyzeMessage();
+                            solvedMessage=hndl.getMessageToSend();
+                            sendMessage(solvedMessage);
                         }
                     }
                 }
@@ -187,6 +189,7 @@ class ClientHandler extends Thread {
 
         }
 
-
+        System.out.println("Socketul "+ s+ " a fost inchis!\n");
     }
+
 }

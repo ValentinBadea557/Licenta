@@ -17,6 +17,7 @@ import ro.mta.licenta.badea.models.GeneralTaskModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TaskModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
+import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -107,6 +108,15 @@ public class ThirdCreateProjectController implements Initializable {
     @FXML
     private Label taskParinteLabel;
 
+    @FXML
+    private ComboBox<String> assignToComboBox;
+
+    @FXML
+    private Button finishButton;
+
+    @FXML
+    private Label assignToLabel;
+
     public void YesRadioAction(ActionEvent actionEvent) {
         allResourceLabel.setVisible(false);
         allocResourceButton.setVisible(false);
@@ -115,7 +125,8 @@ public class ThirdCreateProjectController implements Initializable {
         tableGeneralView.setVisible(false);
         taskParinteLabel.setVisible(false);
         taskuriParinteComboBox.setVisible(false);
-
+        assignToComboBox.setVisible(false);
+        assignToLabel.setVisible(false);
     }
 
     public void noRadioAction(ActionEvent actionEvent) {
@@ -126,6 +137,9 @@ public class ThirdCreateProjectController implements Initializable {
         tableGeneralView.setVisible(true);
         taskParinteLabel.setVisible(true);
         taskuriParinteComboBox.setVisible(true);
+        assignToComboBox.setVisible(true);
+        assignToLabel.setVisible(true);
+
     }
 
     public void createTaskAction(ActionEvent actionEvent) {
@@ -135,43 +149,43 @@ public class ThirdCreateProjectController implements Initializable {
         if (taskNameField.getText() == null || taskNameField.getText().trim().isEmpty()) {
             emptyFields = true;
             taskNameField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             taskNameField.setStyle("-fx-border-color:none");
         }
         if (periodicityField.getValue() == null || periodicityField.getValue().trim().isEmpty()) {
             emptyFields = true;
             periodicityField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             periodicityField.setStyle("-fx-border-color:none");
         }
         if (durationField.getValue() == null) {
             emptyFields = true;
             durationField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             durationField.setStyle("-fx-border-color:none");
         }
         if (startDateField.getValue() == null) {
             emptyFields = true;
             startDateField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             startDateField.setStyle("-fx-border-color:none");
         }
-        if (startTimeField.getValue() == null ) {
+        if (startTimeField.getValue() == null) {
             emptyFields = true;
             startTimeField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             startTimeField.setStyle("-fx-border-color:none");
         }
         if (deadlineDateField.getValue() == null) {
             emptyFields = true;
             deadlineDateField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             deadlineDateField.setStyle("-fx-border-color:none");
         }
-        if (deadlineTimeField.getValue() == null ) {
+        if (deadlineTimeField.getValue() == null) {
             emptyFields = true;
             deadlineTimeField.setStyle("-fx-border-color:red");
-        }else{
+        } else {
             deadlineTimeField.setStyle("-fx-border-color:none");
         }
 
@@ -199,8 +213,6 @@ public class ThirdCreateProjectController implements Initializable {
             alert.setContentText("You must complete all fields to create a task!");
             alert.showAndWait();
         } else {
-
-
             name = taskNameField.getText();
             periodicity = periodicityField.getValue();
             duration = durationField.getValue();
@@ -215,7 +227,7 @@ public class ThirdCreateProjectController implements Initializable {
 
 
             if (noRadioButton.isSelected()) {
-                if (listaResurse.isEmpty() || tableGeneralView.getSelectionModel().isEmpty()) {
+                if (listaResurse.isEmpty() || tableGeneralView.getSelectionModel().isEmpty() || assignToComboBox.getValue() == null) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Incomplete fields");
                     alert.setContentText("You must select every detail to create a task!");
@@ -291,8 +303,8 @@ public class ThirdCreateProjectController implements Initializable {
 
                 String stringJson = gson.toJson(general);
                 System.out.println("***\n" + stringJson);
-                GeneralTaskModel aux=gson.fromJson(stringJson,GeneralTaskModel.class);
-                System.out.println("Nume: "+aux.getName()+" Start:"+aux.getStarttime()+" Dead:"+aux.getDeadline());
+                GeneralTaskModel aux = gson.fromJson(stringJson, GeneralTaskModel.class);
+                System.out.println("Nume: " + aux.getName() + " Start:" + aux.getStarttime() + " Dead:" + aux.getDeadline());
                 clearInputFields();
             }
 
@@ -300,13 +312,15 @@ public class ThirdCreateProjectController implements Initializable {
 
 
     }
-
+    public void finishAction(ActionEvent actionEvent) {
+    }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {
         root = FXMLLoader.load(getClass().getResource("/MiniPages/AddResourcesToTask.fxml"));
 
         SelectedWorkersIDs resourceList = new SelectedWorkersIDs();
         resourceList.clearResourceList();
+        listaResurse.clear();
 
         scene = new Scene(root);
         Stage primaryStage = new Stage();
@@ -351,6 +365,8 @@ public class ThirdCreateProjectController implements Initializable {
         tableGeneralView.setVisible(false);
         taskParinteLabel.setVisible(false);
         taskuriParinteComboBox.setVisible(false);
+        assignToComboBox.setVisible(false);
+        assignToLabel.setVisible(false);
 
         /**Deactivate fields for normal task*/
         tableResourcesView.setEditable(false);
@@ -372,6 +388,15 @@ public class ThirdCreateProjectController implements Initializable {
         SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24);
         spinner.setValue(1);
         durationField.setValueFactory(spinner);
+
+        /**Set combo box assign to*/
+        SelectedWorkersIDs lista = new SelectedWorkersIDs();
+        ObservableList<String> listaNumeEmployees = FXCollections.observableArrayList();
+        for (int i = 0; i < lista.finalList.size(); i++) {
+            workers.add(lista.finalList.get(i));
+            listaNumeEmployees.add(workers.get(i).getFullName());
+        }
+        assignToComboBox.setItems(listaNumeEmployees);
     }
 
     public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time) {
@@ -416,6 +441,8 @@ public class ThirdCreateProjectController implements Initializable {
 
     private ObservableList<GeneralTaskModel> taskuriGenerale = FXCollections.observableArrayList();
 
+    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
+
     ObservableList<String> periodicityIntervals =
             FXCollections.observableArrayList(
                     "Daily", "Weekly", "Monthly"
@@ -428,10 +455,12 @@ public class ThirdCreateProjectController implements Initializable {
                     "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30",
                     "23:00", "23:30"
             );
+
+
 }
 
 
-class LocalDateTimeSerializer implements JsonSerializer < LocalDateTime > {
+class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
 
     @Override
@@ -440,7 +469,7 @@ class LocalDateTimeSerializer implements JsonSerializer < LocalDateTime > {
     }
 }
 
-class LocalDateTimeDeserializer implements JsonDeserializer < LocalDateTime > {
+class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {

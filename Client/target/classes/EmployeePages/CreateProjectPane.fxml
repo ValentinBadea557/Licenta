@@ -129,5 +129,10 @@
             </ImageView>
          </graphic>
       </Button>
+      <Label fx:id="infoLabelField" layoutX="419.0" layoutY="383.0" prefHeight="20.0" prefWidth="352.0" textFill="RED">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

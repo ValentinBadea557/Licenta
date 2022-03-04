@@ -52,14 +52,13 @@
       </Button>
       <TableView fx:id="teamsTableView" layoutX="50.0" layoutY="72.0" prefHeight="154.0" prefWidth="294.0">
         <columns>
-          <TableColumn fx:id="idTeamColumn" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="teamNameColumn" prefWidth="218.0" text="Team's Name" />
+          <TableColumn fx:id="teamNameColumn" prefWidth="282.0" text="Team's Name" />
         </columns>
       </TableView>
       <TableView fx:id="coworkersTableView" layoutX="53.0" layoutY="269.0" prefHeight="154.0" prefWidth="294.0">
         <columns>
-          <TableColumn fx:id="idRolesColumn" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="fullNameRoleColumn" prefWidth="218.0" text="Full Name" />
+          <TableColumn fx:id="idRolesColumn" prefWidth="66.0" text="ID" />
+          <TableColumn fx:id="fullNameRoleColumn" prefWidth="211.0" text="Full Name" />
         </columns>
       </TableView>
       <Button fx:id="rightPageButton" layoutX="744.0" layoutY="440.0" mnemonicParsing="false" onAction="#rightPageAction" prefHeight="29.0" prefWidth="49.0">

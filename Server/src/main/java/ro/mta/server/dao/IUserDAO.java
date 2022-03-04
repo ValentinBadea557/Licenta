@@ -23,7 +23,7 @@ public interface IUserDAO {
     public Companie getCompanybasedOnID(int IDcompany);
     public String getListOfActiveProjects(int IDuser);
     public User getUserbasedOnID(int idUser);
-
+    public String selectListOfEmployeesNotAdmins(int ID_company);
 
     /**Functions used by admins*/
     public String AdministratorViewAllEmployees(int IDuseradmin);

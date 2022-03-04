@@ -64,7 +64,7 @@ public class HandleUser implements IHandler{
                 }
                 break;
             case "Register":
-                System.out.println("aici");
+
                 json.remove("Type");
                 User newUser=new User();
                 newUser=gson.fromJson(json.toString(),User.class);
@@ -81,6 +81,12 @@ public class HandleUser implements IHandler{
                 this.messageToSend=result;
                 break;
 
+            case "View Employees not Admins":
+                int idCompany=json.getInt("ID_Companie");
+                result=user.selectListOfEmployeesNotAdmins(idCompany);
+                this.messageToSend=result;
+                break;
+
             case "AddTaskGeneral":
                 String test= "{\n  \"ID\": 0,\n  \"name\": \"fsda\",\n  \"periodicity\": \"Daily\",\n  \"duration\": 1,\n  \"starttime\": \"24::Feb::2022 02::30::01\",\n  \"deadline\": \"22::Feb::2022 02::30::01\"\n}";
 
@@ -88,6 +94,7 @@ public class HandleUser implements IHandler{
                 TaskGeneralDAO general=new TaskGeneralDAO(generalObject);
                 general.addTaskGeneralBasedOnMember();
                 break;
+
 
 
         }

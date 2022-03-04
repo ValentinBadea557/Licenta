@@ -62,7 +62,7 @@ public class UserDAO implements IUserDAO {
     @Override
     public String addOnlyUser(String username, String parola, String nume_companie, String Nume, String Prenume, String Adrs, String Telefon, String mail, int admin) {
 
-        JSONObject json=new JSONObject();
+        JSONObject json = new JSONObject();
 
         int unicity = checkUsernameUnicity(username);
         if (unicity == 1) {
@@ -82,7 +82,7 @@ public class UserDAO implements IUserDAO {
                 Statement stmt = con.createStatement();
                 stmt.execute(sql);
             } catch (Exception e) {
-                json.put("Response Add User","Error");
+                json.put("Response Add User", "Error");
                 e.printStackTrace();
             }
             int id = getUserIDbasedOnUsername(username);
@@ -92,7 +92,7 @@ public class UserDAO implements IUserDAO {
                 Statement stmt = con.createStatement();
                 stmt.execute(sql2);
             } catch (Exception e) {
-                json.put("Response Add User","Error");
+                json.put("Response Add User", "Error");
                 e.printStackTrace();
             }
 
@@ -100,9 +100,9 @@ public class UserDAO implements IUserDAO {
                 int id_user = getUserIDbasedOnUsername(username);
                 addAdminbasedOnUserID(id_user);
             }
-            json.put("Response Add User","ok");
+            json.put("Response Add User", "ok");
         } else {
-            json.put("Response Add User","Duplicate username");
+            json.put("Response Add User", "Duplicate username");
         }
 
         return json.toString();
@@ -244,8 +244,6 @@ public class UserDAO implements IUserDAO {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        System.out.println("String original-> " + pass);
-        System.out.println("Hash-> " + sha256hex);
 
         return sha256hex;
 
@@ -374,6 +372,48 @@ public class UserDAO implements IUserDAO {
             result = "Eroare";
         }
         return userReturned;
+    }
+
+    @Override
+    public String selectListOfEmployeesNotAdmins(int ID_company) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "Select U.ID_User,DP.Nume,DP.Prenume from Useri U " +
+                "left join Admini A " +
+                "on U.ID_User=A.ID_User " +
+                "inner join Date_Personale DP " +
+                "on U.ID_User=DP.ID_User " +
+                "where A.ID_Admin is null ";
+
+        Companie company = new Companie();
+        String result = null;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                User user = new User();
+                user.setID(rs.getInt(1));
+                user.setLastname(rs.getString(2));
+                user.setFirstname(rs.getString(3));
+                company.addEmployee(user);
+            }
+
+            result= gson.toJson(company);
+
+        } catch (SQLException e) {
+            JSONObject response = new JSONObject();
+            response.put("Response", "not ok");
+            result=response.toString();
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 

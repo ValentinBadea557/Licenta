@@ -20,11 +20,25 @@ public class SelectedWorkersIDs {
     public void printEmployees(){
         System.out.println("********************\n");
         for(int i=0;i<listaEmployees.size();i++){
-            System.out.println(listaEmployees.get(i).getID());
+            System.out.println("ID: "+listaEmployees.get(i).getID());
+            System.out.println("First: "+listaEmployees.get(i).getFirstname());
+            System.out.println("Last: "+listaEmployees.get(i).getLastname());
+            System.out.println("Role: "+listaEmployees.get(i).getRole());
+            System.out.println("Lvl: "+listaEmployees.get(i).getPermision());
+
+
         }
     }
 
+
+
+    public ArrayList<EmployeeModel> getListaEmployees() {
+        return listaEmployees;
+    }
+
     public void addEmployee(EmployeeModel emp){ this.listaEmployees.add(emp);}
+
+    public int getSizeOfEmployeesList(){return this.listaEmployees.size();}
 
     public void addResource(ResourceModel res){
         this.listaResurse.add(res);
@@ -34,6 +48,8 @@ public class SelectedWorkersIDs {
         this.finalList.add(work);
         this.listaIDs.add(work);
     }
+
+    public int getSizeOfWorkersList(){return listaIDs.size();}
 
     public void deleteFromList(WorkerModel worker){
         finalList.remove(worker);

@@ -15,41 +15,49 @@ import java.util.Date;
 import java.util.List;
 
 public class ProjectTemporalModel {
-    private static String numeProiect = new String();
+    private static String nume = new String();
     private static EmployeeModel coordonator;
     private static String descriere = new String();
     private static LocalDateTime starttime;
     private static LocalDateTime deadline;
-    private static String details = new String();
-    private static ArrayList<TeamModel> listTeams = new ArrayList<>();
+    private static ArrayList<TeamModel> listaEchipe = new ArrayList<>();
     private static ArrayList<GeneralTaskModel> listaTaskuriGenerale = new ArrayList<>();
     private static ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
-    private static ArrayList<EmployeeModel> listaUseri = new ArrayList<>();
+    private static ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
 
     public ProjectTemporalModel() {
     }
 
     public ProjectTemporalModel(String name, EmployeeModel coordonator, LocalDateTime start, LocalDateTime dead, String descriere) {
-        this.numeProiect = name;
+        this.nume = name;
         this.coordonator = coordonator;
-        this.details = descriere;
+        this.descriere = descriere;
         this.starttime = start;
         this.deadline = dead;
 
     }
 
     public void printData() {
-        System.out.println("Name: " + this.numeProiect);
+        System.out.println("Name: " + this.nume);
         System.out.println("Starttime: " + this.starttime);
         System.out.println("Deadline: " + this.deadline);
-        for (int i = 0; i < listTeams.size(); i++) {
-            listTeams.get(i).printTeamsInfo();
+        for (int i = 0; i < listaEchipe.size(); i++) {
+            listaEchipe.get(i).printTeamsInfo();
         }
+    }
 
+    public void printEmployees(){
+        for(int i=0;i<listaOameni.size();i++){
+            System.out.println("** "+ listaOameni.get(i).getID()+" *\n");
+        }
+    }
+
+    public void cleanListaEmployees(){
+        listaOameni.clear();
     }
 
     public void addEmployee(EmployeeModel worker) {
-        this.listaUseri.add(worker);
+        this.listaOameni.add(worker);
     }
 
     public void addGeneralTask(GeneralTaskModel genTask) {
@@ -61,11 +69,11 @@ public class ProjectTemporalModel {
     }
 
     public void addTeam(TeamModel team) {
-        this.listTeams.add(team);
+        this.listaEchipe.add(team);
     }
 
     public void setNumeProiect(String nume) {
-        this.numeProiect = nume;
+        this.nume = nume;
     }
 
     public void setStarttime(LocalDateTime starttime) {
@@ -77,7 +85,7 @@ public class ProjectTemporalModel {
     }
 
     public void setDetails(String details) {
-        this.details = details;
+        this.descriere = details;
     }
 
     public LocalDateTime getDeadline() {
@@ -89,11 +97,11 @@ public class ProjectTemporalModel {
     }
 
     public String getDetails() {
-        return details;
+        return descriere;
     }
 
     public String getNumeProiect() {
-        return numeProiect;
+        return nume;
     }
 
 }

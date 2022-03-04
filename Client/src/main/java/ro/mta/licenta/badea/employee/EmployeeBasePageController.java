@@ -1,7 +1,9 @@
 package ro.mta.licenta.badea.employee;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
@@ -68,6 +71,7 @@ public class EmployeeBasePageController implements Initializable {
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topCreateProjectButton.setStyle("-fx-border-color: none");
         topMyCompanyButton.setStyle("-fx-border-color: none");
+
 
 
         /** Set home page*/

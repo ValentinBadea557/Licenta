@@ -76,14 +76,6 @@ public class EmployeeModel {
         return fullname;
     }
 
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
     public void setOre_munca(int ore_munca) {
         this.ore_munca = ore_munca;
     }

@@ -20,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ro.mta.licenta.badea.miniPagesControllers.AddTeamToProjectController;
 import ro.mta.licenta.badea.models.TeamModel;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
@@ -45,9 +46,6 @@ public class SecondCreateProjectController implements Initializable {
     private TableColumn<WorkerModel, Integer> idRolesColumn;
 
     @FXML
-    private TableColumn<TeamModel, Integer> idTeamColumn;
-
-    @FXML
     private TableColumn<TeamModel, String> teamNameColumn;
 
     @FXML
@@ -65,10 +63,13 @@ public class SecondCreateProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        SelectedWorkersIDs lista= new SelectedWorkersIDs();
+        for(int i=0;i<lista.finalList.size();i++){
+            workers.add(lista.finalList.get(i));
+        }
+
         /**Set team table*/
-        idTeamColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         teamNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        idTeamColumn.setStyle("-fx-alignment: CENTER");
         teamNameColumn.setStyle("-fx-alignment: CENTER");
         /**Set workers table*/
         idRolesColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
@@ -79,6 +80,7 @@ public class SecondCreateProjectController implements Initializable {
         /***/
 
 
+        /**Add role and permission*/
         coworkersTableView.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -100,9 +102,6 @@ public class SecondCreateProjectController implements Initializable {
         });
         /***/
         try {
-           // Parent fxml= FXMLLoader.load(getClass().getResource("/MiniPages/AddTeamPage.fxml"));
-
-
             FXMLLoader loader=new FXMLLoader(getClass().getResource("/MiniPages/AddTeamPage.fxml"));
             Parent fxml=loader.load();
             stackPaneView.getChildren().removeAll();
@@ -121,13 +120,7 @@ public class SecondCreateProjectController implements Initializable {
 
     private ObservableList<TeamModel> teams = FXCollections.observableArrayList();
 
-    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList(
-            new WorkerModel(1, "Badea Valentin"),
-            new WorkerModel(2, "Popescu Ion"),
-            new WorkerModel(56, "Badea Mihai"),
-            new WorkerModel(4, "Nancu Petrica"),
-            new WorkerModel(5, "Pesu Ciprian")
-    );
+    private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
 
     public void backLeftAction(ActionEvent actionEvent) throws Exception{
         paneMaster.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("/EmployeePages/CreateProjectPane.fxml")));

@@ -10,6 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ro.mta.licenta.badea.models.EmployeeModel;
 import ro.mta.licenta.badea.models.TeamModel;
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.net.URL;
@@ -69,6 +70,17 @@ public class AddTeamToProjectController implements Initializable {
         starttimeTimeComboBox.setItems(hours);
         deadlineTimeComboBox.setItems(hours);
 
+        /**Get list of employees*/
+        SelectedWorkersIDs lista= new SelectedWorkersIDs();
+        for(int i=0;i<lista.finalList.size();i++){
+            workers.add(lista.finalList.get(i));
+        }
+
+        for (int i = 0; i < lista.listaEmployees.size(); i++) {
+           employees.add(lista.listaEmployees.get(i));
+        }
+
+
         /** Set Table */
         idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         idColumn.setStyle("-fx-alignment: CENTER");
@@ -81,46 +93,85 @@ public class AddTeamToProjectController implements Initializable {
     }
 
     public void createTeamAction(ActionEvent actionEvent) {
-        /** Get data from every field*/
-        String name=teamNameField.getText().toString();
-        LocalDate startDate=starttimeDateField.getValue();
-        LocalDate deadDate=deadlineField.getValue();
-        String startTime=starttimeTimeComboBox.getValue();
-        String deadTime=deadlineTimeComboBox.getValue();
-        LocalDateTime finalStartTime=returnFinalDateTimeFormat(startDate,startTime);
-        LocalDateTime finalDeadline=returnFinalDateTimeFormat(deadDate,deadTime);
+        boolean isempty=false;
+
+        if(teamNameField.getText().isEmpty()){
+            isempty=true;
+            teamNameField.setStyle("-fx-border-color:red");
+        }else{
+            teamNameField.setStyle("-fx-border-color:none");
+        }
+        if(starttimeDateField.getValue()==null){
+            isempty=true;
+            starttimeDateField.setStyle("-fx-border-color:red");
+        }else{
+            starttimeDateField.setStyle("-fx-border-color:none");
+        }
+        if(starttimeTimeComboBox.getValue()==null){
+            isempty=true;
+            starttimeTimeComboBox.setStyle("-fx-border-color:red");
+        }else{
+            starttimeTimeComboBox.setStyle("-fx-border-color:none");
+        }
+        if(deadlineField.getValue()==null){
+            isempty=true;
+            deadlineField.setStyle("-fx-border-color:red");
+        }else{
+            deadlineField.setStyle("-fx-border-color:none");
+        }
+        if(deadlineTimeComboBox.getValue()==null){
+            isempty=true;
+            deadlineTimeComboBox.setStyle("-fx-border-color:red");
+        }else{
+            deadlineTimeComboBox.setStyle("-fx-border-color:none");
+        }
+        if(tableWorkersView.getSelectionModel().getSelectedItems().isEmpty()){
+            tableWorkersView.setStyle("-fx-border-color:red");
+            isempty=true;
+        }else{
+            tableWorkersView.setStyle("-fx-border-color:none");
+        }
+
+        if(!isempty) {
+            /** Get data from every field*/
+            String name = teamNameField.getText().toString();
+            LocalDate startDate = starttimeDateField.getValue();
+            LocalDate deadDate = deadlineField.getValue();
+            String startTime = starttimeTimeComboBox.getValue();
+            String deadTime = deadlineTimeComboBox.getValue();
+            LocalDateTime finalStartTime = returnFinalDateTimeFormat(startDate, startTime);
+            LocalDateTime finalDeadline = returnFinalDateTimeFormat(deadDate, deadTime);
 
 
-        /** Get selected workers from table*/
-        TeamModel echipa=new TeamModel();
-        ObservableList<WorkerModel> selectedWorkers;
-        selectedWorkers=tableWorkersView.getSelectionModel().getSelectedItems();
-        for(int i=0;i<selectedWorkers.size();i++){
-            for(int j=0;j<employees.size();j++){
-                if(selectedWorkers.get(i).getID()==employees.get(j).getID()){
-                    echipa.addEmployee(employees.get(j));
+            /** Get selected workers from table*/
+            TeamModel echipa = new TeamModel();
+            ObservableList<WorkerModel> selectedWorkers;
+            selectedWorkers = tableWorkersView.getSelectionModel().getSelectedItems();
+            for (int i = 0; i < selectedWorkers.size(); i++) {
+                for (int j = 0; j < employees.size(); j++) {
+                    if (selectedWorkers.get(i).getID() == employees.get(j).getID()) {
+                        echipa.addEmployee(employees.get(j));
+                    }
                 }
             }
-        }
-        echipa.setName(name);
-        echipa.setStarttime(finalStartTime);
-        echipa.setDeadline(finalDeadline);
+            echipa.setName(name);
+            echipa.setStarttime(finalStartTime);
+            echipa.setDeadline(finalDeadline);
 
-        ProjectTemporalModel proiectNew=new ProjectTemporalModel();
-        proiectNew.addTeam(echipa);
+            ProjectTemporalModel proiectNew = new ProjectTemporalModel();
+            proiectNew.addTeam(echipa);
 
-        if (customerSelectCallback != null) {
-            customerSelectCallback.accept(echipa);
+            if (customerSelectCallback != null) {
+                customerSelectCallback.accept(echipa);
+            }
+
+            System.out.println(echipa.getName()+" "+echipa.getStarttime()+" "+echipa.getDeadline());
         }
     }
 
     private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
 
-    private ObservableList<EmployeeModel> employees = FXCollections.observableArrayList(
-            new EmployeeModel(1,"badea.valentin","1234","Valentin","Badea","1234","Str Bucuresti","as@mta.ro"),
-            new EmployeeModel(2,"badea.valentin","1234","Mihai","Badea","1234","Str Bucuresti","as@mta.ro"),
-            new EmployeeModel(3,"badea.valentin","1234","Andreea","Cosmina","1234","Str Bucuresti","as@mta.ro")
-    );
+    private ObservableList<EmployeeModel> employees = FXCollections.observableArrayList();
 
     public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time){
         /**get infomartion from LocalDate*/
