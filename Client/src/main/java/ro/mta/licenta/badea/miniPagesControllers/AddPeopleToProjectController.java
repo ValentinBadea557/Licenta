@@ -57,6 +57,7 @@ public class AddPeopleToProjectController implements Initializable {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         Client client = Client.getInstance();
+
         JSONObject jsonRequest = new JSONObject();
         jsonRequest.put("Type", "View Employees not Admins");
         jsonRequest.put("ID_Companie",client.getCurrentUser().getCompany().getID());

@@ -313,6 +313,14 @@ public class ThirdCreateProjectController implements Initializable {
 
     }
     public void finishAction(ActionEvent actionEvent) {
+        System.out.println("Lista taskuri normale:\n");
+        for(int i=0;i<taskuriNormale.size();i++){
+            System.out.println(taskuriNormale.get(i).getName()+" size res:"+taskuriNormale.get(i).getListaResurse().size());
+        }
+        System.out.println("Lista taskuri Generale:\n");
+        for(int i=0;i<taskuriGenerale.size();i++){
+            System.out.println(taskuriGenerale.get(i).getName());
+        }
     }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {

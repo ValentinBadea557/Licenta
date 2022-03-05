@@ -1,22 +1,28 @@
 package ro.mta.licenta.badea;
 
-import ro.mta.licenta.badea.models.EmployeeModel;
-
+import org.json.JSONObject;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import javax.net.ssl.*;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-public class Client {
+
+/* Singleton class that handles the connection with the server*/
+
+class ServerConnection {
+
     private DataInputStream InStream;
     private DataOutputStream OutStream;
+    private static ServerConnection intance = null ;
     private static Mac sha256_HMAC;
     private static SecretKeySpec secret_key;
     private static String secret;
@@ -33,10 +39,7 @@ public class Client {
     private TrustManagerFactory tmf;
     private SSLContext sslContext;
 
-    private static Client instance = null;
-    private EmployeeModel currentUser;
-
-    private Client() throws CertificateException, IOException, NoSuchAlgorithmException {
+    private ServerConnection() throws CertificateException, IOException, NoSuchAlgorithmException {
 
         boolean status;
         status=CreateKeyTrustManagerFactory();
@@ -60,37 +63,29 @@ public class Client {
         }
     }
 
+
     private void closeConnection() throws IOException {
         InStream.close();
+
     }
 
-    public static Client getInstance() throws CertificateException, IOException, NoSuchAlgorithmException {
-        if (instance == null)
-            instance = new Client();
 
-        return instance;
+    /* Sets the secret key for the JWT signature from the secret variable */
+    public static ServerConnection getInstance() throws CertificateException, IOException, NoSuchAlgorithmException {
+        if (intance == null)
+            intance = new ServerConnection();
+
+        return intance;
     }
-
-    public static void deleteInstance() {
-        instance = null;
-    }
-
-    public void setCurrentUser(EmployeeModel user){
-        this.currentUser=user;
-    }
-
-    public void sendText(String msg) throws Exception{
-        OutStream.writeUTF(msg);
-        OutStream.flush();
-    }
-
-    public String receiveText() throws Exception{
+    /* Returns the JSONObject sent by the server in the Payload field of the JWT */
+    public  String recivMsg() throws IOException {
         String recv=InStream.readUTF();
         return  recv;
     }
-
-    public EmployeeModel getCurrentUser() {
-        return currentUser;
+    /* Sends a JSONObject to the server packaging it in a JWT throw the genJWT function */
+    public  void sendMsg(String toSend) throws IOException {
+        OutStream.writeUTF(toSend);
+        OutStream.flush();
     }
 
 
@@ -128,4 +123,5 @@ public class Client {
         System.out.println("Create context returned: "+retval);
         return retval;
     }
+
 }

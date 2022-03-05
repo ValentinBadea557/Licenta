@@ -12,28 +12,44 @@ import ro.mta.server.entities.User;
 import ro.mta.server.handlers.HandleUser;
 import ro.mta.server.handlers.HandlerAdmin;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
+    private static SSLContext sslContext;
+    private static final String fullPathToTrustStore = ".\\lib\\truststore";
+    private static final String fullPathToKeyStore = ".\\lib\\keystore";
+    private final String serverIP = "127.0.0.1";
+    private static final String password = "valentin";
+    private static KeyManagerFactory kmf;
+    private static TrustManagerFactory tmf;
 
-            ServerSocket ss = new ServerSocket(5000);
+    public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
+
+        boolean status;
+        status = CreateKeyTrustManagerFactory();
+        if (status) {
+            CreateSSLContext();
+        }
+
+        try {
+            SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
+            SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5000);
+
+           // ServerSocket ss = new ServerSocket(5000);
 
             // client request
             while (true) {
                 Socket s = null;
                 try {
                     // socket object to receive incoming client requests
-                    s = ss.accept();
+                    s = serverSocket.accept();
                     System.out.println("A new client is connected : " + s);
                     // obtaining input and out streams
                     DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -59,6 +75,41 @@ public class Main {
 
         /////////
 
+    }
+
+    private static boolean CreateKeyTrustManagerFactory() throws CertificateException, IOException, NoSuchAlgorithmException {
+        boolean retval = true;
+        char[] passPhrase = password.toCharArray();
+        try {
+
+            KeyStore ksKeys = KeyStore.getInstance("PKCS12");
+            ksKeys.load(new FileInputStream(fullPathToKeyStore), passPhrase);
+            KeyStore ksTrust = KeyStore.getInstance("PKCS12");
+            ksTrust.load(new FileInputStream(fullPathToTrustStore), passPhrase);
+
+            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ksKeys, passPhrase);
+            tmf = TrustManagerFactory.getInstance("SunX509");
+            tmf.init(ksKeys);
+
+        } catch (KeyStoreException | FileNotFoundException | UnrecoverableKeyException e) {
+            retval = false;
+        }
+        System.out.println("CreateKeyTrustManagerFactory returned: " + retval);
+        return retval;
+    }
+
+    private static boolean CreateSSLContext() {
+        boolean retval = true;
+        try {
+            sslContext = SSLContext.getInstance("TLSv1.3");
+            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+        } catch (Exception ex) {
+            retval = false;
+        }
+        System.out.println("CreateSSLContext returned: " + retval);
+        return retval;
     }
 
 }
@@ -111,6 +162,8 @@ class ClientHandler extends Thread {
     @Override
     public void run() {
         System.out.println("Am intrat in run\n");
+
+
         boolean logged = false;
         boolean continueReceiving = true;
 

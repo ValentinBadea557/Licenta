@@ -1,5 +1,6 @@
 package ro.mta.licenta.badea;
 
+import org.json.JSONObject;
 import ro.mta.licenta.badea.StartInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

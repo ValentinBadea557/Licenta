@@ -2,6 +2,7 @@ package ro.mta.server.handlers;
 
 import com.google.gson.*;
 import org.json.JSONObject;
+import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
 import ro.mta.server.entities.TaskGeneral;
@@ -95,6 +96,13 @@ public class HandleUser implements IHandler{
                 general.addTaskGeneralBasedOnMember();
                 break;
 
+            case "View Resources":
+                ResourceDAO resourceView = new ResourceDAO();
+                int id_company = json.getInt("ID_Companie");
+                result = resourceView.getListOfResourcesBasedOnCompanyID(id_company);
+                this.messageToSend = result;
+                System.out.println(result);
+                break;
 
 
         }

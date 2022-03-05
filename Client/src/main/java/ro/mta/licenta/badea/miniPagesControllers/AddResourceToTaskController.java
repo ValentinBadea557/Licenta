@@ -1,5 +1,7 @@
 package ro.mta.licenta.badea.miniPagesControllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.json.JSONObject;
+import ro.mta.licenta.badea.Client;
+import ro.mta.licenta.badea.models.CompanyModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.SenderText;
@@ -23,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class AddResourceToTaskController implements Initializable {
@@ -67,6 +73,30 @@ public class AddResourceToTaskController implements Initializable {
         quantitySpinner.setValueFactory(spinner);
 
         /**Set table*/
+        Client client= Client.getInstance();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        JSONObject requestView = new JSONObject();
+        requestView.put("Type", "View Resources");
+        requestView.put("ID_Companie", client.getCurrentUser().getCompany().getID());
+        CompanyModel company = new CompanyModel();
+        try {
+            client.sendText(requestView.toString());
+            String response = client.receiveText();
+            company = gson.fromJson(response, CompanyModel.class);
+
+            ArrayList<ResourceModel> listaTemporala = company.getListaResurse();
+
+            for (int i = 0; i < listaTemporala.size(); i++) {
+                resurseModels.add(listaTemporala.get(i));
+            }
+            System.out.println(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         idColumn.setStyle("-fx-alignment: CENTER");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
@@ -89,13 +119,7 @@ public class AddResourceToTaskController implements Initializable {
 
     }
 
-    private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList(
-            new ResourceModel(1,"R1", 10,true,"Descriere 1"),
-            new ResourceModel(2,"R2", 154,false,"Descriere 2"),
-            new ResourceModel(3,"R3", 200,false,"Descriere 2"),
-            new ResourceModel(4,"R4", 187,true,"Descriere 2"),
-            new ResourceModel(5,"R5", 654,false,"Descriere 2")
-    );
+    private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList();
 
     public void addResourceAction(ActionEvent actionEvent) {
         SelectedWorkersIDs listObject = new SelectedWorkersIDs();
