@@ -21,7 +21,10 @@ import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
+import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -57,6 +60,7 @@ public class AddPeopleToProjectController implements Initializable {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         Client client = Client.getInstance();
+
 
         JSONObject jsonRequest = new JSONObject();
         jsonRequest.put("Type", "View Employees not Admins");

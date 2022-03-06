@@ -64,9 +64,18 @@ public class Client {
         InStream.close();
     }
 
-    public static Client getInstance() throws CertificateException, IOException, NoSuchAlgorithmException {
-        if (instance == null)
-            instance = new Client();
+    public static Client getInstance() {
+        if (instance == null) {
+            try {
+                instance = new Client();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
 
         return instance;
     }

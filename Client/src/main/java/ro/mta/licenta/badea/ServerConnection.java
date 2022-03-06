@@ -71,9 +71,18 @@ class ServerConnection {
 
 
     /* Sets the secret key for the JWT signature from the secret variable */
-    public static ServerConnection getInstance() throws CertificateException, IOException, NoSuchAlgorithmException {
-        if (intance == null)
-            intance = new ServerConnection();
+    public static ServerConnection getInstance(){
+        if (intance == null) {
+            try {
+                intance = new ServerConnection();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
 
         return intance;
     }

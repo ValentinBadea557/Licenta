@@ -13,9 +13,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.models.GeneralTaskModel;
+import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TaskModel;
+import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
@@ -116,6 +119,9 @@ public class ThirdCreateProjectController implements Initializable {
 
     @FXML
     private Label assignToLabel;
+
+    @FXML
+    private Button cleanButton;
 
     public void YesRadioAction(ActionEvent actionEvent) {
         allResourceLabel.setVisible(false);
@@ -277,7 +283,7 @@ public class ThirdCreateProjectController implements Initializable {
                     Gson gson = gsonBuilder.setPrettyPrinting().create();
                     String stringJson = gson.toJson(localTask);
                     System.out.println("***\n" + stringJson);
-
+                    clearInputFields();
                 }
             } else {
                 GeneralTaskModel general = new GeneralTaskModel();
@@ -312,15 +318,37 @@ public class ThirdCreateProjectController implements Initializable {
 
 
     }
+
     public void finishAction(ActionEvent actionEvent) {
-        System.out.println("Lista taskuri normale:\n");
+        System.out.println("N:"+taskuriNormale.size()+" g:"+taskuriGenerale.size());
+
+        ProjectModel project = new ProjectModel();
+        ProjectTemporalModel tempProject=new ProjectTemporalModel();
+        Client client= Client.getInstance();
+
+
+        project.setCoordonator(client.getCurrentUser());
+        project.setNume(tempProject.getNumeProiect());
+        project.setDescriere(tempProject.getDetails());
+        project.setStarttime(tempProject.getStarttime());
+        project.setDeadline(tempProject.getDeadline());
+        project.setListaOameni(tempProject.getListaOameni());
+        project.setListaEchipe(tempProject.getListaEchipe());
         for(int i=0;i<taskuriNormale.size();i++){
-            System.out.println(taskuriNormale.get(i).getName()+" size res:"+taskuriNormale.get(i).getListaResurse().size());
+            project.addNormalTask(taskuriNormale.get(i));
         }
-        System.out.println("Lista taskuri Generale:\n");
         for(int i=0;i<taskuriGenerale.size();i++){
-            System.out.println(taskuriGenerale.get(i).getName());
+            project.addGeneralTask(taskuriGenerale.get(i));
         }
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        String projectJson = gson.toJson(project);
+        System.out.println("***\n" + projectJson);
+
+
     }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {
@@ -428,17 +456,33 @@ public class ThirdCreateProjectController implements Initializable {
 
     public void clearInputFields() {
         this.taskNameField.setText("");
+        this.taskNameField.setPromptText("Name");
         this.periodicityField.setValue(null);
+        this.periodicityField.getSelectionModel().clearSelection();
+        this.periodicityField.setPromptText("Periodicity");
         this.startDateField.setValue(null);
+        this.startDateField.setPromptText("Date");
         this.startTimeField.setValue(null);
+        this.startTimeField.getSelectionModel().clearSelection();
+        this.startTimeField.setPromptText("Start time");
         this.deadlineDateField.setValue(null);
+        this.deadlineDateField.setPromptText("Deadline Date");
         this.deadlineTimeField.setValue(null);
+        this.deadlineTimeField.setPromptText("Deadline Time");
+        this.deadlineTimeField.getSelectionModel().clearSelection();
         listaResurse.clear();
         if (noRadioButton.isSelected()) {
             tableResourcesView.setItems(listaResurse);
         }
         taskuriParinteComboBox.setValue(null);
+        taskuriParinteComboBox.setPromptText("Precedessor");
 
+        assignToComboBox.setValue(null);
+        assignToComboBox.setPromptText("Select an employee");
+    }
+
+    public void cleanAction(ActionEvent actionEvent) {
+        clearInputFields();
     }
 
     private ObservableList<String> listaNumeTaskuri = FXCollections.observableArrayList();
@@ -463,7 +507,6 @@ public class ThirdCreateProjectController implements Initializable {
                     "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30",
                     "23:00", "23:30"
             );
-
 
 }
 

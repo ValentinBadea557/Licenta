@@ -145,7 +145,7 @@
           <TableColumn fx:id="allGeneralTaskColumn" prefWidth="234.40001220703124" text="General Tasks" />
         </columns>
       </TableView>
-      <Button layoutX="675.0" layoutY="325.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="111.0" text="Clear all">
+      <Button fx:id="cleanButton" layoutX="675.0" layoutY="325.0" mnemonicParsing="false" onAction="#cleanAction" prefHeight="31.0" prefWidth="111.0" text="Clear all">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

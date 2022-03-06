@@ -12,11 +12,13 @@ public class ProjectModel {
     private String descriere;
     private LocalDateTime starttime;
     private LocalDateTime deadline;
-    private ArrayList<TeamModel> listaEchipe;
-    private ArrayList<EmployeeModel> listaOameni;
-    private ArrayList<GeneralTaskModel> listaTaskuriGenerale;
-    private ArrayList<TaskModel> listaTaskuri;
+    private ArrayList<TeamModel> listaEchipe = new ArrayList<>();
+    private ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
+    private ArrayList<GeneralTaskModel> listaTaskuriGenerale = new ArrayList<>();
+    private ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
     private int finished;
+
+    public ProjectModel(){}
 
     public ProjectModel(String nume,EmployeeModel coord,LocalDateTime start,LocalDateTime dead,String descriere){
         this.nume=nume;
@@ -24,6 +26,14 @@ public class ProjectModel {
         this.starttime=start;
         this.deadline=dead;
         this.descriere=descriere;
+    }
+
+    public void addNormalTask(TaskModel task){
+        this.listaTaskuri.add(task);
+    }
+
+    public void addGeneralTask(GeneralTaskModel gen){
+        this.listaTaskuriGenerale.add(gen);
     }
 
     public void setFinished(int finished) {

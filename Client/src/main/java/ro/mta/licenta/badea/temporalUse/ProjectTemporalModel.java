@@ -60,6 +60,19 @@ public class ProjectTemporalModel {
         this.listaOameni.add(worker);
     }
 
+    public static ArrayList<EmployeeModel> getListaOameni() {
+        return listaOameni;
+    }
+
+    public static ArrayList<TaskModel> getListaTaskuri() {
+        return listaTaskuri;
+    }
+
+    public static ArrayList<TeamModel> getListaEchipe() {
+        return listaEchipe;
+    }
+
+
     public void addGeneralTask(GeneralTaskModel genTask) {
         this.listaTaskuriGenerale.add(genTask);
     }
