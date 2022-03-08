@@ -8,7 +8,7 @@ public class Team {
     private String name;
     private LocalDateTime starttime;
     private LocalDateTime deadline;
-    private ArrayList<User> listaUseri;
+    private ArrayList<User> listaEmployees;
     private int ID_proiect;
 
     public void setName(String name) {
@@ -44,10 +44,10 @@ public class Team {
     }
 
     public ArrayList<User> getListaUseri() {
-        return listaUseri;
+        return this.listaEmployees;
     }
 
     public void setListaUseri(ArrayList<User> listaUseri) {
-        this.listaUseri = listaUseri;
+        this.listaEmployees = listaUseri;
     }
 }

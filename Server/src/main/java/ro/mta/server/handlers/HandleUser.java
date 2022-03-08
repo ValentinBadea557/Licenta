@@ -104,7 +104,10 @@ public class HandleUser implements IHandler{
                 System.out.println(result);
                 break;
 
-
+            case "Create new Project":
+                json.remove("Type");
+                user.createNewProject(json.toString());
+                break;
         }
     }
 }

@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.models.GeneralTaskModel;
 import ro.mta.licenta.badea.models.ProjectModel;
@@ -276,6 +277,14 @@ public class ThirdCreateProjectController implements Initializable {
                         }
                     }
 
+                    String selectedName=assignToComboBox.getValue().toString();
+                    SelectedWorkersIDs lista=new SelectedWorkersIDs();
+                    for(int i=0;i<lista.listaEmployees.size();i++){
+                        if(selectedName.equals(lista.listaEmployees.get(i).getFullName())){
+                            localTask.setExecutant(lista.listaEmployees.get(i));
+                        }
+                    }
+
                     /**create gson*/
                     GsonBuilder gsonBuilder = new GsonBuilder();
                     gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
@@ -319,7 +328,7 @@ public class ThirdCreateProjectController implements Initializable {
 
     }
 
-    public void finishAction(ActionEvent actionEvent) {
+    public void finishAction(ActionEvent actionEvent) throws Exception {
         System.out.println("N:"+taskuriNormale.size()+" g:"+taskuriGenerale.size());
 
         ProjectModel project = new ProjectModel();
@@ -348,6 +357,9 @@ public class ThirdCreateProjectController implements Initializable {
         String projectJson = gson.toJson(project);
         System.out.println("***\n" + projectJson);
 
+        JSONObject tosend=new JSONObject(projectJson);
+        tosend.put("Type","Create new Project");
+        client.sendText(tosend.toString());
 
     }
 

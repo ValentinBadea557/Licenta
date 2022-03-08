@@ -133,50 +133,50 @@ public class CreateProjectOneController implements Initializable {
     public void nextPageAction(ActionEvent actionEvent) throws Exception {
         boolean isempty = false;
 
-//
-//        if (projectNameField.getText().isEmpty()) {
-//            isempty = true;
-//            projectNameField.setStyle("-fx-border-color:red");
-//        } else {
-//            projectNameField.setStyle("-fx-border-color:none");
-//        }
-//
-//        if (descriptionField.getText().isEmpty()) {
-//            isempty = true;
-//            descriptionField.setStyle("-fx-border-color:red");
-//        } else {
-//            descriptionField.setStyle("-fx-border-color:none");
-//        }
-//
-//        if (startDateField.getValue() == null) {
-//            isempty = true;
-//            startDateField.setStyle("-fx-border-color:red");
-//        } else {
-//            startDateField.setStyle("-fx-border-color:none");
-//        }
-//
-//        if (deadlineDateField.getValue() == null) {
-//            isempty = true;
-//            deadlineDateField.setStyle("-fx-border-color:red");
-//        } else {
-//            deadlineDateField.setStyle("-fx-border-color:none");
-//        }
-//
-//        if (startTimeField.getValue() == null) {
-//            isempty = true;
-//            startTimeField.setStyle("-fx-border-color:red");
-//        } else {
-//            startTimeField.setStyle("-fx-border-color:none");
-//        }
-//
-//
-//
-//        if (deadlineTimeField.getValue() == null) {
-//            isempty = true;
-//            deadlineTimeField.setStyle("-fx-border-color:red");
-//        } else {
-//            deadlineTimeField.setStyle("-fx-border-color:none");
-//        }
+
+        if (projectNameField.getText().isEmpty()) {
+            isempty = true;
+            projectNameField.setStyle("-fx-border-color:red");
+        } else {
+            projectNameField.setStyle("-fx-border-color:none");
+        }
+
+        if (descriptionField.getText().isEmpty()) {
+            isempty = true;
+            descriptionField.setStyle("-fx-border-color:red");
+        } else {
+            descriptionField.setStyle("-fx-border-color:none");
+        }
+
+        if (startDateField.getValue() == null) {
+            isempty = true;
+            startDateField.setStyle("-fx-border-color:red");
+        } else {
+            startDateField.setStyle("-fx-border-color:none");
+        }
+
+        if (deadlineDateField.getValue() == null) {
+            isempty = true;
+            deadlineDateField.setStyle("-fx-border-color:red");
+        } else {
+            deadlineDateField.setStyle("-fx-border-color:none");
+        }
+
+        if (startTimeField.getValue() == null) {
+            isempty = true;
+            startTimeField.setStyle("-fx-border-color:red");
+        } else {
+            startTimeField.setStyle("-fx-border-color:none");
+        }
+
+
+
+        if (deadlineTimeField.getValue() == null) {
+            isempty = true;
+            deadlineTimeField.setStyle("-fx-border-color:red");
+        } else {
+            deadlineTimeField.setStyle("-fx-border-color:none");
+        }
 
         if (listCoworkers.getItems().isEmpty()) {
             isempty = true;
@@ -186,30 +186,30 @@ public class CreateProjectOneController implements Initializable {
         }
 
         if (!isempty) {
-//            infoLabelField.setText("");
-//
-//            String name = projectNameField.getText();
-//            String description = descriptionField.getText();
-//            LocalDate startDate = startDateField.getValue();
-//            LocalDate deadDate = deadlineDateField.getValue();
-//            String startTime = startTimeField.getValue();
-//            String deadTime = deadlineTimeField.getValue();
-//
-//
-//            LocalDateTime finalStartTime, finalDeadline;
-//            finalStartTime = returnFinalDateTimeFormat(startDate, startTime);
-//            finalDeadline = returnFinalDateTimeFormat(deadDate, deadTime);
-//
-//
-//            ProjectTemporalModel newProject = new ProjectTemporalModel();
-//            newProject.setNumeProiect(name);
-//            newProject.setStarttime(finalStartTime);
-//            newProject.setDeadline(finalDeadline);
-//            newProject.setDetails(description);
-//
-//
-//            GsonBuilder gsonBuilder = new GsonBuilder();
-//            Gson gson = gsonBuilder.setPrettyPrinting().create();
+            infoLabelField.setText("");
+
+            String name = projectNameField.getText();
+            String description = descriptionField.getText();
+            LocalDate startDate = startDateField.getValue();
+            LocalDate deadDate = deadlineDateField.getValue();
+            String startTime = startTimeField.getValue();
+            String deadTime = deadlineTimeField.getValue();
+
+
+            LocalDateTime finalStartTime, finalDeadline;
+            finalStartTime = returnFinalDateTimeFormat(startDate, startTime);
+            finalDeadline = returnFinalDateTimeFormat(deadDate, deadTime);
+
+
+            ProjectTemporalModel newProject = new ProjectTemporalModel();
+            newProject.setNumeProiect(name);
+            newProject.setStarttime(finalStartTime);
+            newProject.setDeadline(finalDeadline);
+            newProject.setDetails(description);
+
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.setPrettyPrinting().create();
             paneMaster.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("/EmployeePages/SecondCreateProjectPane.fxml")));
 
         }else{
@@ -232,7 +232,7 @@ public class CreateProjectOneController implements Initializable {
 
         int hour = Integer.valueOf(timeTokenizer[0]);
         int minutes = Integer.valueOf(timeTokenizer[1]);
-        int seconds = 0;
+        int seconds = 1;
 
         /**return final format that match with SQL format*/
         LocalDateTime finalDateTime = LocalDateTime.of(year, month, day, hour, minutes, seconds);

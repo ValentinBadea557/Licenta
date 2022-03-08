@@ -12,6 +12,7 @@ import ro.mta.licenta.badea.temporalUse.SenderText;
 import javax.swing.text.html.ImageView;
 import java.net.URL;
 import java.nio.channels.SelectionKey;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AddRolesToWorkersController implements Initializable {
@@ -94,7 +95,7 @@ public class AddRolesToWorkersController implements Initializable {
         if (!isempty) {
             SenderText Selectedname = new SenderText();
 
-            String role = roleField.getText().toString();
+            String role = roleField.getText().toString().toLowerCase();
             String permisiuni = permissionComboBox.getSelectionModel().getSelectedItem().toString();
 
             SelectedWorkersIDs lista = new SelectedWorkersIDs();

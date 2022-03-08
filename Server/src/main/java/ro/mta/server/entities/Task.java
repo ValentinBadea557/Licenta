@@ -11,9 +11,18 @@ public class Task {
     private LocalDateTime starttime;
     private LocalDateTime deadline;
     private TaskGeneral taskGeneral;
-    private Task taskParinte;
+    private Task parinte;
     private int ID_Proiect;
     private ArrayList<Resource> listaResurse;
+    private User executant;
+
+    public void setExecutant(User executant) {
+        this.executant = executant;
+    }
+
+    public User getExecutant() {
+        return executant;
+    }
 
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
@@ -80,7 +89,7 @@ public class Task {
     }
 
     public Task getTaskParinte() {
-        return taskParinte;
+        return parinte;
     }
 
     public ArrayList<Resource> getListaResurse() {
@@ -92,7 +101,7 @@ public class Task {
     }
 
     public void setTaskParinte(Task taskParinte) {
-        this.taskParinte = taskParinte;
+        this.parinte = taskParinte;
     }
 
 }

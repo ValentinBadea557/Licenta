@@ -184,7 +184,7 @@ public class AddTeamToProjectController implements Initializable {
 
         int hour=Integer.valueOf(timeTokenizer[0]);
         int minutes=Integer.valueOf(timeTokenizer[1]);
-        int seconds=0;
+        int seconds=1;
 
         /**return final format that match with SQL format*/
         LocalDateTime finalDateTime = LocalDateTime.of(year, month, day, hour, minutes, seconds);

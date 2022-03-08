@@ -19,6 +19,7 @@ public class TaskModel {
     private TaskModel parinte;
     private int ID_Proiect;
     private ArrayList<ResourceModel> listaResurse;
+    private EmployeeModel executant;
 
     public void printTaskInformation(){
         System.out.println("Name: "+name+"\n Periodicity: "+periodicity+"\n Duration: "+duration+"\n Starttime: "+starttime+"\n Deadline: "+deadline);
@@ -28,6 +29,14 @@ public class TaskModel {
             System.out.println("Nume resursa: "+listaResurse.get(i).getDenumire()+" Cantitate:"+listaResurse.get(i).getCantitate()+"\n");
         }
 
+    }
+
+    public EmployeeModel getExecutant() {
+        return executant;
+    }
+
+    public void setExecutant(EmployeeModel executant) {
+        this.executant = executant;
     }
 
     public void printResourceListSize(){

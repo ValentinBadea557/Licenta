@@ -1,23 +1,21 @@
 package ro.mta.server.dao;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.Database;
-import ro.mta.server.entities.Companie;
-import ro.mta.server.entities.Project;
-import ro.mta.server.entities.User;
+import ro.mta.server.entities.*;
 
 
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class UserDAO implements IUserDAO {
     public User utilizator;
@@ -404,16 +402,307 @@ public class UserDAO implements IUserDAO {
                 company.addEmployee(user);
             }
 
-            result= gson.toJson(company);
+            result = gson.toJson(company);
 
         } catch (SQLException e) {
             JSONObject response = new JSONObject();
             response.put("Response", "not ok");
-            result=response.toString();
+            result = response.toString();
             e.printStackTrace();
         }
 
         return result;
+    }
+
+    /**
+     * @param jsonProject
+     * @return
+     */
+    @Override
+    public String createNewProject(String jsonProject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        JSONObject response = new JSONObject();
+
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        Project project = gson.fromJson(jsonProject, Project.class);
+
+        /**Insert Project*/
+        String sql = "Insert into Proiecte " +
+                "Values ('" + project.getCoordonator().getID() + "','" + project.getNume() + "','" + project.getDescriere() +
+                "','" + project.getStarttime() + "','" + project.getDeadline() + "',0) ;\n" +
+                "Select SCOPE_IDENTITY();";
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                project.setID(rs.getInt(1));
+                System.out.println("ID:" + rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            response.put("Response Create", "Error");
+            e.printStackTrace();
+        }
+
+        /**Insert roles and permissions**/
+        ArrayList<User> listaEmployees = project.getListaOameni();
+        for (int i = 0; i < listaEmployees.size(); i++) {
+            int id_permission = 0;
+            String sql1 = "SELECT * from Permisiuni " +
+                    "Where Nivel='" + listaEmployees.get(i).getPermission() + "'; ";
+            try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql1);
+                ResultSetMetaData meta = rs.getMetaData();
+                while (rs.next()) {
+                    id_permission = rs.getInt(1);
+                }
+            } catch (SQLException e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+            int id_role = createRoleOrGetRoleID(listaEmployees.get(i).getRole());
+
+            String sql2 = "Insert into Proiecte_Useri " +
+                    "Values (" + project.getID() + "," + listaEmployees.get(i).getID() + "," + id_role + "," + id_permission + ");";
+
+            try {
+                Statement stmt = con.createStatement();
+                stmt.execute(sql2);
+            } catch (Exception e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+        }
+
+        /**Insert echipa*/
+        ArrayList<Team> echipe = project.getListaEchipe();
+        for (int i = 0; i < echipe.size(); i++) {
+            String sqlTeam = "Insert into Echipe " +
+                    "Values ('" + echipe.get(i).getName() + "','" + echipe.get(i).getStarttime() + "','" + echipe.get(i).getDeadline() + "" +
+                    "'," + project.getID() + "); " +
+                    "Select SCOPE_IDENTITY();";
+            int id_team = 0;
+            try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlTeam);
+                ResultSetMetaData meta = rs.getMetaData();
+                while (rs.next()) {
+                    id_team = rs.getInt(1);
+                }
+            } catch (SQLException e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+
+            /**Add every employee to his team*/
+            ArrayList<User> listaUseriEchipa = echipe.get(i).getListaUseri();
+            System.out.println(gson.toJson(echipe.get(i)));
+            for (int j = 0; j < listaUseriEchipa.size(); j++) {
+                String sql2Team = "Insert into Echipe_Useri " +
+                        "Values (" + id_team + "," + listaUseriEchipa.get(j).getID() + "); ";
+                try {
+                    Statement stmt = con.createStatement();
+                    stmt.execute(sql2Team);
+                } catch (Exception e) {
+                    response.put("Response Create", "Error");
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ArrayList<TaskGeneral> listaGenerale = project.getListaTaskuriGenerale();
+        for (int i = 0; i < listaGenerale.size(); i++) {
+            String sqlGeneral = "Insert into Taskuri_Generale " +
+                    "Values ('" + listaGenerale.get(i).getName() + "','" + listaGenerale.get(i).getPeriodicity() + "','" +
+                    listaGenerale.get(i).getDuration() + "','" + listaGenerale.get(i).getStarttime() + "','" +
+                    listaGenerale.get(i).getDeadline() + "');";
+            try {
+                Statement stmt = con.createStatement();
+                stmt.execute(sqlGeneral);
+            } catch (Exception e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+        }
+
+        ArrayList<Task> listaTaskuri = project.getListaTaskuri();
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            int id_general = getIDofGeneralTask(listaTaskuri.get(i).getTaskGeneral());
+
+            String sqlNormal = null;
+            if (listaTaskuri.get(i).getTaskParinte() != null) {
+                int id_general_particulat = getIDofGeneralTask(listaTaskuri.get(i).getTaskParinte().getTaskGeneral());
+                listaTaskuri.get(i).getTaskParinte().getTaskGeneral().setID(id_general_particulat);
+                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_General,ID_Task_Parinte)  " +
+                        "Values ('" + listaTaskuri.get(i).getName() + "','" + listaTaskuri.get(i).getPeriodicity() + "' ," +
+                        listaTaskuri.get(i).getDuration() + ",'" + listaTaskuri.get(i).getStarttime() + "','" +
+                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + id_general + "," + getIDofNormalTask(listaTaskuri.get(i).getTaskParinte()) + "); " +
+                        "Select SCOPE_IDENTITY();";
+            } else {
+                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_General) " +
+                        "Values ('" + listaTaskuri.get(i).getName() + "','" + listaTaskuri.get(i).getPeriodicity() + "' ," +
+                        listaTaskuri.get(i).getDuration() + ",'" + listaTaskuri.get(i).getStarttime() + "','" +
+                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + id_general + "); " +
+                        "Select SCOPE_IDENTITY();";
+            }
+            int id_task = 0;
+            try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlNormal);
+                ResultSetMetaData meta = rs.getMetaData();
+                while (rs.next()) {
+                    id_task = rs.getInt(1);
+                    System.out.println("ID ============" + id_task);
+                }
+            } catch (SQLException e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+
+            listaTaskuri.get(i).setID(id_task);
+
+            String sqlAssignTo = "Insert into Taskuri_Useri " +
+                    "Values (" + id_task + "," + listaTaskuri.get(i).getExecutant().getID() + ") ;";
+
+            try {
+                Statement stmt = con.createStatement();
+                stmt.execute(sqlAssignTo);
+            } catch (Exception e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+
+            ArrayList<Resource> listaResurseTask = listaTaskuri.get(i).getListaResurse();
+            for (int j = 0; j < listaResurseTask.size(); j++) {
+                System.out.println("ID TASK:" + listaTaskuri.get(i).getID() + " ID RES+" + listaResurseTask.get(j).getID());
+                String sqlTaskResource = "Insert into Resurse_Taskuri " +
+                        "Values (" + listaResurseTask.get(j).getID() + "," + listaTaskuri.get(i).getID() + "," + listaResurseTask.get(j).getCantitate() + "); ";
+
+                try {
+                    Statement stmt = con.createStatement();
+                    stmt.execute(sqlTaskResource);
+                } catch (Exception e) {
+                    response.put("Response Create", "Error");
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public int createRoleOrGetRoleID(String role) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "Select * from Roluri " +
+                "Where Denumire='" + role + "'; ";
+        int id = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (id != 0) {
+            return id;
+        } else {
+            String sql1 = "Insert into Roluri " +
+                    "values ('" + role + "') " +
+                    "Select SCOPE_IDENTITY();";
+
+            try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                ResultSetMetaData meta = rs.getMetaData();
+                while (rs.next()) {
+                    id = rs.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return id;
+        }
+
+    }
+
+    @Override
+    public int getIDofGeneralTask(TaskGeneral general) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String name = general.getName();
+        String peridicity = general.getPeriodicity();
+        int duration = general.getDuration();
+        LocalDateTime start = general.getStarttime();
+        LocalDateTime deadline = general.getDeadline();
+
+        String sql = "Select * from Taskuri_Generale " +
+                "Where Denumire='" + name + "' and " +
+                "Periodicitate='" + peridicity + "' and Durata=" + duration + " and " +
+                "Starttime='" + start + "' and Deadline='" + deadline + "' ;";
+
+        int id = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return id;
+    }
+
+    @Override
+    public int getIDofNormalTask(Task task) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String name = task.getName();
+        String peridicity = task.getPeriodicity();
+        int duration = task.getDuration();
+        LocalDateTime start = task.getStarttime();
+        LocalDateTime deadline = task.getDeadline();
+
+        String sql = "Select * from Taskuri " +
+                "Where Denumire='" + name + "' and " +
+                "Periodicitate='" + peridicity + "' and Durata=" + duration + " and " +
+                "Starttime='" + start + "' and Deadline='" + deadline + "' and ID_General=" + task.getTaskGeneral().getID() + " ;";
+
+        int id = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Returnez id:" + id);
+        return id;
     }
 
 
@@ -465,4 +754,23 @@ public class UserDAO implements IUserDAO {
     }
 
 
+}
+
+
+class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
+
+    @Override
+    public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
+        return new JsonPrimitive(formatter.format(localDateTime));
+    }
+}
+
+class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
+    @Override
+    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+        return LocalDateTime.parse(json.getAsString(),
+                DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
+    }
 }
