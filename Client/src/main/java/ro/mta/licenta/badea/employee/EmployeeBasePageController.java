@@ -1,9 +1,7 @@
 package ro.mta.licenta.badea.employee;
 
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
@@ -65,6 +62,9 @@ public class EmployeeBasePageController implements Initializable {
     @FXML
     private Button topMyCompanyButton;
 
+    @FXML
+    private Button activeProjectsButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         topHomeButton.setStyle(" -fx-border-color: #660099;\n" +
@@ -73,12 +73,14 @@ public class EmployeeBasePageController implements Initializable {
         topMyCompanyButton.setStyle("-fx-border-color: none");
 
 
-
         /** Set home page*/
         try {
-            Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/HomePane.fxml"));
+
+            Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/CalendarPane.fxml"));
             employeeStackPane.getChildren().removeAll();
             employeeStackPane.getChildren().setAll(fxml);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,7 +147,15 @@ public class EmployeeBasePageController implements Initializable {
         topCreateProjectButton.setStyle("-fx-border-color: none");
         topMyCompanyButton.setStyle("-fx-border-color: none");
 
-        Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/HomePane.fxml"));
+        Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/CalendarPane.fxml"));
+        employeeStackPane.getChildren().removeAll();
+        employeeStackPane.getChildren().setAll(fxml);
+
+    }
+
+    public void activeProjectAction(ActionEvent actionEvent) throws IOException {
+
+        Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/ViewProjects.fxml"));
         employeeStackPane.getChildren().removeAll();
         employeeStackPane.getChildren().setAll(fxml);
 
@@ -168,4 +178,6 @@ public class EmployeeBasePageController implements Initializable {
 
     public void personalInfoAction(ActionEvent actionEvent) throws IOException {
     }
+
+
 }

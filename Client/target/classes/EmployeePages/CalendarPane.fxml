@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane fx:id="entirePane" prefHeight="486.0" prefWidth="807.0" styleClass="linear-grad-to-top-left" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CalendarController">
+   <children>
+      <ScrollPane fx:id="scrollPane" layoutX="68.0" layoutY="40.0" prefHeight="403.0" prefWidth="702.0" AnchorPane.leftAnchor="68.0" AnchorPane.rightAnchor="37.0">
+         <content>
+            <GridPane fx:id="gridPane" prefHeight="30.0" prefWidth="64.0">
+              <rowConstraints>
+                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

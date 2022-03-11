@@ -83,7 +83,7 @@
             </AnchorPane>
          </top>
          <left>
-            <VBox fx:id="slider" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #00807C;" BorderPane.alignment="CENTER">
+            <VBox fx:id="slider" prefHeight="506.0" prefWidth="200.0" style="-fx-background-color: #00807C;" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="homeButton" alignment="CENTER" mnemonicParsing="false" onAction="#homeAction" prefHeight="40.0" prefWidth="200.0" styleClass="sidebaritem2" text="Home">
                      <VBox.margin>
@@ -96,6 +96,14 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="activeProjectsButton" mnemonicParsing="false" onAction="#activeProjectAction" prefHeight="40.0" prefWidth="200.0" styleClass="sidebaritem2" text="Active Projects">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

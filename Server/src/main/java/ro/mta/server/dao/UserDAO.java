@@ -596,8 +596,14 @@ public class UserDAO implements IUserDAO {
             }
 
         }
+        if(response.has("Response Create")){
+            response.put("Final Response","ok");
+        }else{
+            response.put("Final Response","SQL Exception");
+        }
 
-        return null;
+        System.out.println(response.toString());
+        return response.toString();
     }
 
     @Override
@@ -703,6 +709,63 @@ public class UserDAO implements IUserDAO {
 
         System.out.println("Returnez id:" + id);
         return id;
+    }
+
+
+    @Override
+    public String viewProjects(int idUser) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        ArrayList<Project> listaProiecte = new ArrayList<>();
+
+        String sql = "select P.ID_Proiect,P.Denumire,P.Descriere,P.Finished from Proiecte P " +
+                "inner join Proiecte_Useri PU " +
+                "on P.ID_Proiect=PU.ID_Proiect " +
+                "Where PU.ID_USER=" + idUser;
+
+        String returned = null;
+        JSONObject errorjson=new JSONObject();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                Project proiectTemp = new Project();
+                proiectTemp.setID(rs.getInt(1));
+                proiectTemp.setNume(rs.getString(2));
+                proiectTemp.setDescriere(rs.getString(3));
+                proiectTemp.setFinished(rs.getInt(4));
+                listaProiecte.add(proiectTemp);
+            }
+            returned=gson.toJson(listaProiecte);
+        } catch (SQLException e) {
+            errorjson.put("Error","SQL Exception");
+            returned=errorjson.toString();
+            e.printStackTrace();
+        }
+
+        System.out.println(returned);
+        return returned;
+    }
+
+    @Override
+    public String getEveryInfoAboutProject(int idProject) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        Project project=new Project();
+        return null;
     }
 
 

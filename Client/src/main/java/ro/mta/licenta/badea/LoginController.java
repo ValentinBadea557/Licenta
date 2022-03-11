@@ -51,6 +51,7 @@ public class LoginController implements Initializable {
     }
 
     private void checkLogin(ActionEvent actionEvent) throws Exception {
+
         String user = usernameField.getText().toString();
         String pass = passwordField.getText().toString();
 

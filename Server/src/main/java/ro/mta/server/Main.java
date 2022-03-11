@@ -188,6 +188,8 @@ class ClientHandler extends Thread {
             String solvedMessage = hndl.getMessageToSend();
             sendMessage(solvedMessage);
 
+
+
             if (jsonreceived.get("Type").toString().equals("Login")) {
                 JSONObject json = new JSONObject(solvedMessage);
                 if (!json.has("Response Login")) {
@@ -233,6 +235,9 @@ class ClientHandler extends Thread {
                             hndl.analyzeMessage();
                             solvedMessage=hndl.getMessageToSend();
                             sendMessage(solvedMessage);
+
+
+                            System.out.println("Am trimis");
                         }
                     }
                 }

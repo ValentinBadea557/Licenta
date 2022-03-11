@@ -18,3 +18,7 @@
     -fx-background-color: #CEDCDA;
     -fx-border-width: 0px 0px 0px 6px;
 }
+
+.linear-grad-to-top-left{
+   -fx-background-color: linear-gradient(to top left, #008060 ,   #00807C);
+}

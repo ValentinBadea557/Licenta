@@ -361,6 +361,23 @@ public class ThirdCreateProjectController implements Initializable {
         tosend.put("Type","Create new Project");
         client.sendText(tosend.toString());
 
+
+        String receive=client.receiveText();
+        JSONObject response=new JSONObject(receive);
+
+        System.out.println(response.toString());
+        if(response.get("Final Response").equals("ok")){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Project Created!");
+            alert.setContentText("All information was inserted into Database!");
+            alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setContentText("SQL Exception occured!");
+            alert.showAndWait();
+        }
+
     }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {
