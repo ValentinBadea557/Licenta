@@ -74,7 +74,7 @@ public class viewProjectsController implements Initializable {
             e.printStackTrace();
         }
 
-        //ArrayList<ProjectModel> listaProiecte = gson.fromJson(receive,ArrayList.class);
+
 
         Type listOfMyClassObject = new TypeToken<ArrayList<ProjectModel>>() {
         }.getType();
@@ -111,7 +111,7 @@ public class viewProjectsController implements Initializable {
 
                 data.setData(String.valueOf(tableActive.getSelectionModel().getSelectedItem().getID()));
 
-                root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel1.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel3.fxml"));
 
                 Scene scene = new Scene(root);
                 Stage primaryStage = new Stage();

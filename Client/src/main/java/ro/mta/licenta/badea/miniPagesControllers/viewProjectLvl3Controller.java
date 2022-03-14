@@ -17,6 +17,7 @@ import ro.mta.licenta.badea.employee.LocalDateTimeDeserializer;
 import ro.mta.licenta.badea.employee.LocalDateTimeSerializer;
 import ro.mta.licenta.badea.models.EmployeeModel;
 import ro.mta.licenta.badea.models.ProjectModel;
+import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TeamModel;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 
@@ -26,33 +27,33 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class viewProjectLvl1Controller implements Initializable {
+public class viewProjectLvl3Controller implements Initializable {
+
     private ProjectModel projectLocal;
 
+    @FXML
+    private Label addressLabel;
 
     @FXML
-    private GridPane gridScheduling;
-
-    @FXML
-    private TreeView teamsTreeView;
+    private TextArea descriptionResourceText;
 
     @FXML
     private TableColumn<EmployeeModel, String> firstNameColumn;
 
     @FXML
+    private Label firstNameLabel;
+
+    @FXML
+    private GridPane gridScheduling;
+
+    @FXML
     private TableColumn<EmployeeModel, Integer> idPeopleColumn;
 
     @FXML
+    private TableColumn<ResourceModel, Integer> idResourceColumn;
+
+    @FXML
     private TableColumn<EmployeeModel, String> lastNameColumn;
-
-    @FXML
-    private Region regionBackground;
-
-    @FXML
-    private TableView<EmployeeModel> tablePeople;
-
-    @FXML
-    private Label usernameLabel;
 
     @FXML
     private Label lastNameLabel;
@@ -61,13 +62,51 @@ public class viewProjectLvl1Controller implements Initializable {
     private Label mailLabel;
 
     @FXML
+    private Button modifyButton;
+
+    @FXML
+    private TableColumn<ResourceModel, String> nameResourceColumn;
+
+    @FXML
     private Label phoneLabel;
 
     @FXML
-    private Label firstNameLabel;
+    private TableColumn<ResourceModel, Integer> quantityResourceColumn;
 
     @FXML
-    private Label addressLabel;
+    private Spinner<Integer> quantitySpinner;
+
+    @FXML
+    private Region regionBackground;
+
+    @FXML
+    private Label resourceNameLabel;
+
+    @FXML
+    private TableView<ResourceModel> resourcesTable;
+
+    @FXML
+    private TableColumn<ResourceModel, Boolean> shareableResourceColumn;
+
+    @FXML
+    private Label shareableResourceLabel;
+
+    @FXML
+    private TableView<EmployeeModel> tablePeople;
+
+    @FXML
+    private TreeView<String> teamsTreeView;
+
+    @FXML
+    private Label usernameLabel;
+
+    @FXML
+    private Region regionResources;
+
+    @FXML
+    void modifyResourceAction(ActionEvent event) {
+        System.out.println("Clicked!");
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -135,7 +174,14 @@ public class viewProjectLvl1Controller implements Initializable {
         /**Set scheduling view**/
         setSchedulingTable();
 
+
+
         /**Set region border radius*/
+
+        regionResources.setStyle("-fx-border-radius:20px;" +
+                "-fx-background-radius:20px; " +
+                "-fx-background-color: WHITE;");
+
         regionBackground.setStyle("-fx-border-radius:20px;" +
                 "-fx-background-radius:20px; " +
                 "-fx-background-color: WHITE;");
@@ -227,6 +273,4 @@ public class viewProjectLvl1Controller implements Initializable {
         tablePeople.setItems(listaEmployees);
 
     }
-
-
 }

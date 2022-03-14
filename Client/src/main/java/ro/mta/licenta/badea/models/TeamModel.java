@@ -21,6 +21,11 @@ public class TeamModel {
         }
     }
 
+    public ArrayList<EmployeeModel> getListaEmployees() {
+        return listaEmployees;
+    }
+
+
     public void addEmployee(EmployeeModel emp){listaEmployees.add(emp);}
 
     public void setID(int ID) {

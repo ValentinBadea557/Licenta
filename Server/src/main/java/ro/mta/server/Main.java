@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
-import ro.mta.server.dao.CompanieDAO;
-import ro.mta.server.dao.ResourceDAO;
-import ro.mta.server.dao.TaskGeneralDAO;
-import ro.mta.server.dao.UserDAO;
+import ro.mta.server.dao.*;
 import ro.mta.server.entities.User;
 import ro.mta.server.handlers.HandleUser;
 import ro.mta.server.handlers.HandlerAdmin;
@@ -42,7 +39,7 @@ public class Main {
             SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5000);
 
-           // ServerSocket ss = new ServerSocket(5000);
+            // ServerSocket ss = new ServerSocket(5000);
 
             // client request
             while (true) {
@@ -189,7 +186,6 @@ class ClientHandler extends Thread {
             sendMessage(solvedMessage);
 
 
-
             if (jsonreceived.get("Type").toString().equals("Login")) {
                 JSONObject json = new JSONObject(solvedMessage);
                 if (!json.has("Response Login")) {
@@ -199,7 +195,7 @@ class ClientHandler extends Thread {
                             HandlerAdmin hndlAdmin = new HandlerAdmin();
                             String receivedAdmin = receiveMessage();
 
-                            System.out.println("Am primit :"+receivedAdmin);
+                            System.out.println("Am primit :" + receivedAdmin);
                             /**Check if user closed the application*/
                             JSONObject adminJson = new JSONObject(receivedAdmin);
                             if (adminJson.get("Type").toString().equals("Exit")) {
@@ -207,10 +203,10 @@ class ClientHandler extends Thread {
                                 continueReceiving = false;
                                 break;
                             }
-                            if(adminJson.get("Type").toString().equals("Logout")){
+                            if (adminJson.get("Type").toString().equals("Logout")) {
                                 System.out.println("Logout");
-                                JSONObject logOutResponse=new JSONObject();
-                                logOutResponse.put("Logout Response","ok");
+                                JSONObject logOutResponse = new JSONObject();
+                                logOutResponse.put("Logout Response", "ok");
                                 sendMessage(logOutResponse.toString());
                                 break;
                             }
@@ -223,9 +219,9 @@ class ClientHandler extends Thread {
                         }
                     } else {
                         while (true) {
-                            String receiveUser=receiveMessage();
-                            JSONObject userJSON=new JSONObject(receiveUser);
-                            if(userJSON.get("Type").toString().equals("Exit")){
+                            String receiveUser = receiveMessage();
+                            JSONObject userJSON = new JSONObject(receiveUser);
+                            if (userJSON.get("Type").toString().equals("Exit")) {
                                 System.out.println("Clientul a inchis aplicatia");
                                 continueReceiving = false;
                                 break;
@@ -233,7 +229,7 @@ class ClientHandler extends Thread {
 
                             hndl.setMessageReceived(receiveUser);
                             hndl.analyzeMessage();
-                            solvedMessage=hndl.getMessageToSend();
+                            solvedMessage = hndl.getMessageToSend();
                             sendMessage(solvedMessage);
 
 
@@ -247,7 +243,7 @@ class ClientHandler extends Thread {
 
         }
 
-        System.out.println("Socketul "+ s+ " a fost inchis!\n");
+        System.out.println("Socketul " + s + " a fost inchis!\n");
     }
 
 }

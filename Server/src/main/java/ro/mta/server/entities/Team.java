@@ -11,6 +11,14 @@ public class Team {
     private ArrayList<User> listaEmployees;
     private int ID_proiect;
 
+    public void setID_proiect(int ID_proiect) {
+        this.ID_proiect = ID_proiect;
+    }
+
+    public int getID_proiect() {
+        return ID_proiect;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

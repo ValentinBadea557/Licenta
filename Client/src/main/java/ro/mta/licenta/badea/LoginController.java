@@ -102,31 +102,6 @@ public class LoginController implements Initializable {
             }
         }
 
-
-//        if(user.equals("user")){
-//            try {
-//                root = FXMLLoader.load(getClass().getResource("/EmployeePages/HomePageEmployee.fxml"));
-//                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-//                scene = new Scene(root);
-//                stage.setScene(scene);
-//                stage.show();
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }else {
-//            try {
-//                root = FXMLLoader.load(getClass().getResource("/AdministratorPages/AdminPage.fxml"));
-//                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-//                scene = new Scene(root);
-//                stage.setScene(scene);
-//                stage.show();
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
     }
 
     public void userregister(ActionEvent actionEvent) {

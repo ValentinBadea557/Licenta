@@ -2,6 +2,7 @@ package ro.mta.server.handlers;
 
 import com.google.gson.*;
 import org.json.JSONObject;
+import ro.mta.server.dao.ProjectDAO;
 import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
@@ -51,6 +52,8 @@ public class HandleUser implements IHandler {
 
 
         UserDAO user = new UserDAO();
+        ProjectDAO proiect = new ProjectDAO();
+
         String result;
 
         switch (type) {
@@ -106,6 +109,12 @@ public class HandleUser implements IHandler {
             case "ViewProjects":
                 int id=json.getInt("IDuser");
                 result=user.viewProjects(id);
+                this.messageToSend=result;
+                break;
+
+            case "Get Project":
+                int id_project=json.getInt("IDproject");
+                result=proiect.getProject(id_project);
                 this.messageToSend=result;
                 break;
         }
