@@ -73,29 +73,38 @@ public class AddResourceToTaskController implements Initializable {
         quantitySpinner.setValueFactory(spinner);
 
         /**Set table*/
-        Client client= Client.getInstance();
+//        Client client= Client.getInstance();
+//
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//        Gson gson = gsonBuilder.setPrettyPrinting().create();
+//
+//        JSONObject requestView = new JSONObject();
+//        requestView.put("Type", "View Resources");
+//        requestView.put("ID_Companie", client.getCurrentUser().getCompany().getID());
+//        CompanyModel company = new CompanyModel();
+//        try {
+//            client.sendText(requestView.toString());
+//            String response = client.receiveText();
+//            company = gson.fromJson(response, CompanyModel.class);
+//
+//            ArrayList<ResourceModel> listaTemporala = company.getListaResurse();
+//
+//            for (int i = 0; i < listaTemporala.size(); i++) {
+//                resurseModels.add(listaTemporala.get(i));
+//            }
+//            System.out.println(response);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        SelectedWorkersIDs lista=new SelectedWorkersIDs();
 
-        JSONObject requestView = new JSONObject();
-        requestView.put("Type", "View Resources");
-        requestView.put("ID_Companie", client.getCurrentUser().getCompany().getID());
-        CompanyModel company = new CompanyModel();
-        try {
-            client.sendText(requestView.toString());
-            String response = client.receiveText();
-            company = gson.fromJson(response, CompanyModel.class);
+        ArrayList<ResourceModel> listaTemporala = lista.getListaResurseProiect();
 
-            ArrayList<ResourceModel> listaTemporala = company.getListaResurse();
-
-            for (int i = 0; i < listaTemporala.size(); i++) {
-                resurseModels.add(listaTemporala.get(i));
-            }
-            System.out.println(response);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (int i = 0; i < listaTemporala.size(); i++) {
+            resurseModels.add(listaTemporala.get(i));
         }
+
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         idColumn.setStyle("-fx-alignment: CENTER");

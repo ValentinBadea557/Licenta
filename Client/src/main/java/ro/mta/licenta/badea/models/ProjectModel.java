@@ -16,6 +16,7 @@ public class ProjectModel {
     private ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
     private ArrayList<GeneralTaskModel> listaTaskuriGenerale = new ArrayList<>();
     private ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
+    private ArrayList<ResourceModel> listaResurseCurente;
     private int finished;
 
     public ProjectModel(){}
@@ -26,6 +27,14 @@ public class ProjectModel {
         this.starttime=start;
         this.deadline=dead;
         this.descriere=descriere;
+    }
+
+    public void setListaResurseCurente(ArrayList<ResourceModel> listaResurseCurente) {
+        this.listaResurseCurente = new ArrayList<>(listaResurseCurente);
+    }
+
+    public ArrayList<ResourceModel> getListaResurseCurente() {
+        return listaResurseCurente;
     }
 
     public void addNormalTask(TaskModel task){

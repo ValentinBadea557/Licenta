@@ -53,7 +53,7 @@ public class ProjectDAO {
                 project.setListaOameni(getUsersOfProject(IDproject));
                 project.setListaTaskuriGenerale(getTaskuriGenerale(IDproject));
                 project.setListaTaskuri(getListaTaskuri(IDproject));
-
+                project.setListaResurseCurente(getListaResurseFolosite(IDproject));
             }
             returned=gson.toJson(project);
 
@@ -64,8 +64,52 @@ public class ProjectDAO {
             e.printStackTrace();
         }
 
-
+        System.out.println(returned);
         return returned;
+    }
+
+    public ArrayList<Resource> getListaResurseFolosite(int IDproject){
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        String sql="select  R.ID_Resursa, R.Denumire, R.Shareable , R.Descriere, Sum(RT.Cantitate) as Cantitate from Resurse R\n" +
+                "inner join Resurse_Taskuri RT\n" +
+                "on R.ID_Resursa=RT.ID_Resursa\n" +
+                "inner join Taskuri T\n" +
+                "on T.ID_Task=RT.ID_Task\n" +
+                "inner join Proiecte P\n" +
+                "on T.ID_Proiect=P.ID_Proiect\n" +
+                "Where P.ID_Proiect=" + IDproject+"\n"+
+                "Group by R.ID_Resursa, R.Denumire, R.Shareable, R.Descriere";
+
+        ArrayList<Resource> listaResurse=new ArrayList<>();
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            while (rs.next()) {
+
+                Resource resursa=new Resource();
+                resursa.setID(rs.getInt(1));
+                resursa.setDenumire(rs.getString(2));
+                resursa.setShareable(rs.getBoolean(3));
+                resursa.setDescriere(rs.getString(4));
+                resursa.setCantitate(rs.getInt(5));
+                listaResurse.add(resursa);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return listaResurse;
     }
 
     public ArrayList<Task> getListaTaskuri(int idProject) {

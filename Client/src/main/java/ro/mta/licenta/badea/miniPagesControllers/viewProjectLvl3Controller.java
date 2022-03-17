@@ -47,6 +47,9 @@ public class viewProjectLvl3Controller implements Initializable {
     private GridPane gridScheduling;
 
     @FXML
+    private GridPane gridAllocResource;
+
+    @FXML
     private TableColumn<EmployeeModel, Integer> idPeopleColumn;
 
     @FXML
@@ -104,6 +107,21 @@ public class viewProjectLvl3Controller implements Initializable {
     private Region regionResources;
 
     @FXML
+    private TableView<ResourceModel> resourceAllocationTable;
+
+    @FXML
+    private TableColumn<ResourceModel, String> nameResAllocColumn;
+
+    @FXML
+    private TableColumn<ResourceModel, Integer> idResAllocColumn;
+
+    @FXML
+    private Label resourceAllocNameLabel;
+
+    @FXML
+    private ScrollPane allocResScrollPane;
+
+    @FXML
     void modifyResourceAction(ActionEvent event) {
         System.out.println("Clicked!");
     }
@@ -132,6 +150,8 @@ public class viewProjectLvl3Controller implements Initializable {
             String response = client.receiveText();
             project = gson.fromJson(response, ProjectModel.class);
             this.projectLocal = project;
+
+            System.out.println(gson.toJson(project));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,6 +194,39 @@ public class viewProjectLvl3Controller implements Initializable {
         /**Set scheduling view**/
         setSchedulingTable();
 
+        /**Set resource Table*/
+        setResourceTable();
+
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9999);
+        descriptionResourceText.setWrapText(true);
+        descriptionResourceText.setEditable(false);
+
+        resourcesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                resourceNameLabel.setText(newSelection.getDenumire());
+                descriptionResourceText.setText(newSelection.getDescriere());
+                if (newSelection.isShareable()) {
+                    shareableResourceLabel.setText("True");
+                } else {
+                    shareableResourceLabel.setText("False");
+                }
+
+
+                spinner.setValue(newSelection.getCantitate());
+                quantitySpinner.setValueFactory(spinner);
+
+            }
+        });
+
+        /**Set Allocation Res Page**/
+
+        setResourceAllocTable();
+        resourceAllocationTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                resourceAllocNameLabel.setText(newSelection.getDenumire());
+                setResourceAllocGrid(newSelection.getCantitate());
+            }
+        });
 
 
         /**Set region border radius*/
@@ -187,14 +240,110 @@ public class viewProjectLvl3Controller implements Initializable {
                 "-fx-background-color: WHITE;");
     }
 
-    public void setSchedulingTable(){
+    public void setResourceAllocTable() {
+        idResAllocColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameResAllocColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
+        ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
+
+        for (int i = 0; i < projectLocal.getListaResurseCurente().size(); i++) {
+            listaResurse.add(projectLocal.getListaResurseCurente().get(i));
+        }
+
+        resourceAllocationTable.setItems(listaResurse);
+    }
+
+    public void setResourceTable() {
+        idResourceColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameResourceColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
+        quantityResourceColumn.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
+        shareableResourceColumn.setCellValueFactory(new PropertyValueFactory<>("shareable"));
+
+        ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
+
+        for (int i = 0; i < projectLocal.getListaResurseCurente().size(); i++) {
+            listaResurse.add(projectLocal.getListaResurseCurente().get(i));
+        }
+
+        resourcesTable.setItems(listaResurse);
+
+    }
+
+    public void setResourceAllocGrid(int nr_max) {
+
+        /***REMAINDER: TRY MANUAL GRIDPANE***/
+        GridPane grid = new GridPane();
+
+        int currentRow = 0;
+        int currentColumn = 1;
+        int hour = 8;
+
+        Button empty = new Button();
+        empty.setMaxWidth(Double.MAX_VALUE);
+        empty.setMinWidth(Control.USE_PREF_SIZE);
+        grid.add(empty, 0, 0);
+        for (int i = 0; i < 24; i++) {
+            Button button = new Button(hour + "-" + (hour + 1));
+            hour++;
+            if (hour == 24) {
+                hour = 0;
+            }
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setMinWidth(Control.USE_PREF_SIZE);
+            button.setMaxHeight(Double.MAX_VALUE);
+            grid.add(button, currentColumn, currentRow);
+
+            currentColumn++;
+        }
+
+        currentRow = 1;
+        currentColumn = 0;
+        int max=nr_max;
+        for (int i = 0; i < max; i++) {
+            Button quantity= new Button(String.valueOf(nr_max));
+            quantity.setMaxWidth(Double.MAX_VALUE);
+            quantity.setMinWidth(Control.USE_PREF_SIZE);
+            quantity.setMaxHeight(Double.MAX_VALUE);
+            grid.add(quantity,currentColumn,currentRow);
+            currentRow++;
+            nr_max--;
+        }
+
+        Button Task=new Button("Create Database");
+        Task.setMaxWidth(Double.MAX_VALUE);
+        Task.setMinWidth(Control.USE_PREF_SIZE);
+        Task.setMaxHeight(Double.MAX_VALUE);
+        grid.add(Task,1,1,1,4);
+
+        Button a=new Button("Interface");
+        a.setMaxWidth(Double.MAX_VALUE);
+        a.setMinWidth(Control.USE_PREF_SIZE);
+        a.setMaxHeight(Double.MAX_VALUE);
+        grid.add(a,1,6,4,1);
+        allocResScrollPane.setContent(grid);
+
+//        currentRow = 1;
+//        currentColumn = 0;
+//        for (int i = 0; i < 10; i++) {
+//            Button button1 = new Button("aaaaaaaaa");
+//            gridAllocResource.add(button1, currentColumn, currentRow);
+//            button1.setMinWidth(Control.USE_PREF_SIZE);
+//            button1.setMaxWidth(Double.MAX_VALUE);
+//            button1.setMinHeight(Region.USE_PREF_SIZE);
+//            currentRow++;
+//        }
+
+
+//        Button test = new Button("Create Database");
+//        test.setMinWidth(Control.USE_PREF_SIZE);
+//        test.setMaxWidth(Double.MAX_VALUE);
+//        gridAllocResource.add(test, 1, 1, 3, 3);
+
+    }
+
+    public void setSchedulingTable() {
         LocalDate currentDate = LocalDate.now();
-
         /**Fill grid*/
-
         /**Hours*/
-
-
         gridScheduling.setVgap(5);
 
         int numRows = 7;
@@ -264,10 +413,9 @@ public class viewProjectLvl3Controller implements Initializable {
 
         ObservableList<EmployeeModel> listaEmployees = FXCollections.observableArrayList();
 
-        System.out.println(projectLocal.getListaOameni().size());
-        for(int i=0;i<projectLocal.getListaOameni().size();i++){
+
+        for (int i = 0; i < projectLocal.getListaOameni().size(); i++) {
             listaEmployees.add(projectLocal.getListaOameni().get(i));
-            System.out.println(projectLocal.getListaOameni().get(i).getFullName());
         }
 
         tablePeople.setItems(listaEmployees);

@@ -34,6 +34,9 @@ public class AddRolesToWorkersController implements Initializable {
     @FXML
     private Label levelField;
 
+    @FXML
+    private Label resultLabel;
+
     ObservableList<String> levels =
             FXCollections.observableArrayList("Level 1", "Level 2", "Level 3");
 
@@ -107,9 +110,9 @@ public class AddRolesToWorkersController implements Initializable {
                         if(lista.listaEmployees.get(j).getID()==id){
                             lista.listaEmployees.get(j).setRole(role);
                             lista.listaEmployees.get(j).setPermision(permisiuni);
-                            System.out.println(lista.listaEmployees.get(j).getFullName()+" cu ID:"+lista.listaEmployees.get(j).getID()+" are rolul:" +
-                                    ""+lista.listaEmployees.get(j).getRole()+" si lvl:"+lista.listaEmployees.get(j).getPermision());
 
+                            resultLabel.setText("Role and permissions added!");
+                            resultLabel.setStyle("-fx-text-fill:White");
                         }
                     }
                 }

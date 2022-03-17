@@ -72,6 +72,9 @@ public class ProjectTemporalModel {
         return listaEchipe;
     }
 
+    public static void setListaOameni(ArrayList<EmployeeModel> listaOameni) {
+        ProjectTemporalModel.listaOameni = new ArrayList<>(listaOameni);
+    }
 
     public void addGeneralTask(GeneralTaskModel genTask) {
         this.listaTaskuriGenerale.add(genTask);

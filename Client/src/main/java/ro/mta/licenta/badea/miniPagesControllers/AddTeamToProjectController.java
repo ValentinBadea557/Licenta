@@ -90,6 +90,7 @@ public class AddTeamToProjectController implements Initializable {
 
         tableWorkersView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+
     }
 
     public void createTeamAction(ActionEvent actionEvent) {

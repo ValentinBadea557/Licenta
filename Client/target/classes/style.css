@@ -15,10 +15,37 @@
 .sidebaritem2:hover{
     -fx-text-fill:black;
     -fx-border-color: BLACK;
-    -fx-background-color: #CEDCDA;
+    -fx-background-color: #98c1d9;
     -fx-border-width: 0px 0px 0px 6px;
 }
 
 .linear-grad-to-top-left{
    -fx-background-color: linear-gradient(to top left, #008060 ,   #00807C);
 }
+
+.menulabel:hover{
+    -fx-background-color:black;
+}
+
+.root {
+    button-hover-color: -fx-hover-base  ;
+    /*#AB9518*/
+}
+
+.registerbutton:hover{
+  -fx-color: button-hover-color ;
+  -fx-text-fill:white;
+}
+
+.buttonlogin:hover{
+    -fx-color: button-hover-color ;
+    -fx-text-fill:white;
+}
+
+/*
+3d5a80
+98c1d9
+e0fbfc
+ee6c4d
+293241
+*/

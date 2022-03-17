@@ -57,7 +57,7 @@
                               <TableColumn fx:id="shareableResourceColumn" prefWidth="92.79998779296875" text="Shareable" />
                           </columns>
                         </TableView>
-                        <Region layoutX="420.0" layoutY="14.0" prefHeight="358.0" prefWidth="394.0" style="-fx-background-color: lightgray;" />
+                        <Region fx:id="regionResources" layoutX="420.0" layoutY="14.0" prefHeight="358.0" prefWidth="394.0" style="-fx-background-color: lightgray;" />
                         <Label alignment="CENTER" layoutX="421.0" layoutY="29.0" prefHeight="18.0" prefWidth="295.0" text="General Information">
                            <font>
                               <Font name="System Bold" size="16.0" />
@@ -115,6 +115,31 @@
                               <Image url="@../Images/output-onlinepngtools.png" />
                            </image>
                         </ImageView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Resource Allocation">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="resourceAllocationTable" layoutX="17.0" layoutY="8.0" prefHeight="382.0" prefWidth="236.0">
+                          <columns>
+                            <TableColumn fx:id="idResAllocColumn" prefWidth="75.0" text="ID" />
+                            <TableColumn fx:id="nameResAllocColumn" prefWidth="160.0" text="Name" />
+                          </columns>
+                        </TableView>
+                        <ScrollPane fx:id="allocResScrollPane" layoutX="308.0" layoutY="86.0" prefHeight="303.0" prefWidth="511.0" />
+                        <Label fx:id="resourceAllocNameLabel" layoutX="511.0" layoutY="55.0" prefHeight="27.0" prefWidth="306.0">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="316.0" layoutY="55.0" text="Selected Resource:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </content>

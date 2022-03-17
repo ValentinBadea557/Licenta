@@ -58,11 +58,16 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <ImageView fx:id="imageViewRoles" fitHeight="163.0" fitWidth="228.0" layoutX="86.0" layoutY="153.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="86.0">
+      <ImageView fx:id="imageViewRoles" fitHeight="156.0" fitWidth="228.0" layoutX="86.0" layoutY="153.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="86.0">
          <image>
             <Image url="@../Images/rolesicon.png" />
          </image>
       </ImageView>
-      <Button fx:id="setButton" layoutX="128.0" layoutY="314.0" mnemonicParsing="false" onAction="#setRoleAction" text="Set Role and Permission" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="128.0" />
+      <Button fx:id="setButton" layoutX="128.0" layoutY="361.0" mnemonicParsing="false" onAction="#setRoleAction" text="Set Role and Permission" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="128.0" />
+      <Label fx:id="resultLabel" layoutX="42.0" layoutY="317.0" prefHeight="20.0" prefWidth="326.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

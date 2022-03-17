@@ -81,7 +81,7 @@ public class LoginController implements Initializable {
             if(recv.has("Response Login")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error!");
-                alert.setContentText("The account does not exist in datababse!");
+                alert.setContentText("The account does not exist in database!");
                 alert.showAndWait();
             }else{
 
@@ -122,8 +122,13 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        loginbutton.setStyle("button-hover-color: #293241; " );
+        registerbutton.setStyle("button-hover-color: #293241; ");
+
         rectangleShape.setStyle("-fx-border-radius:10px;" +
                 "-fx-background-radius:10px; " +
-                "-fx-background-color: #f2f2f2;");
+                "-fx-background-color: #e0fbfc; " +
+                "-fx-border-color: black; " +
+                "-fx-border-width: 3px; ");
     }
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddResourceToProjectController">
+   <children>
+      <Label layoutX="31.0" layoutY="30.0" text="Add resources to your Project!">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="51.0" fitWidth="107.0" layoutX="301.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/output-onlinepngtools.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="resourceTable" layoutX="11.0" layoutY="76.0" prefHeight="139.0" prefWidth="378.0">
+        <columns>
+          <TableColumn fx:id="idColumn" prefWidth="57.0" text="ID" />
+          <TableColumn fx:id="nameColumn" prefWidth="146.0" text="Name" />
+            <TableColumn fx:id="quantityColumn" prefWidth="87.0" text="Quantity" />
+            <TableColumn fx:id="shareableColumn" prefWidth="71.0" text="Shareable" />
+        </columns>
+      </TableView>
+      <Label layoutX="18.0" layoutY="225.0" text="Selected Resource:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Label>
+      <Label fx:id="nameLabel" layoutX="159.0" layoutY="225.0" prefHeight="17.0" prefWidth="214.0">
+         <font>
+            <Font name="System Bold Italic" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="17.0" layoutY="255.0" text="Quantity:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Spinner fx:id="quantitySpinner" layoutX="159.0" layoutY="253.0" />
+      <Label fx:id="InfoLabel" layoutX="17.0" layoutY="295.0" prefHeight="20.0" prefWidth="371.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="addResourceButton" layoutX="139.0" layoutY="348.0" mnemonicParsing="false" onAction="#addResourceAction" prefHeight="30.0" prefWidth="123.0" text="Add Resource">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

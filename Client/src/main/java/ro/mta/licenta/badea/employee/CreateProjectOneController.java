@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
@@ -70,6 +71,9 @@ public class CreateProjectOneController implements Initializable {
     @FXML
     private Label infoLabelField;
 
+    @FXML
+    private Region regionShape;
+
     private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
 
     @FXML
@@ -115,11 +119,21 @@ public class CreateProjectOneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        infoLabelField.setWrapText(true);
+
         startTimeField.getItems().clear();
         deadlineTimeField.getItems().clear();
         startTimeField.setItems(hours);
         deadlineTimeField.setItems(hours);
         descriptionField.setWrapText(true);
+
+        regionShape.setStyle("-fx-border-radius:10px;" +
+                "-fx-background-radius:10px; " +
+                "-fx-background-color: #98c1d9; " +
+                "-fx-border-color: black; " +
+                "-fx-border-width: 3px; ");
+
+        nextPageButton.setStyle("button-hover-color: #98c1d9; " );
     }
 
     ObservableList<String> hours =
@@ -213,6 +227,7 @@ public class CreateProjectOneController implements Initializable {
             paneMaster.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("/EmployeePages/SecondCreateProjectPane.fxml")));
 
         }else{
+
             infoLabelField.setText("You must complete all fields to move forward!");
         }
 

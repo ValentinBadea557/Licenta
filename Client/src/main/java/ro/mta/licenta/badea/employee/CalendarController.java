@@ -25,8 +25,6 @@ public class CalendarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            entirePane.setStyle("-fx-background-color: linear-gradient(to top left, #008060 ,   #00807C);");
-
             /**Set Date*/
             LocalDate currentDate = LocalDate.now();
 
@@ -62,6 +60,8 @@ public class CalendarController implements Initializable {
                 if (hour == 24) {
                     hour = 0;
                 }
+                button.setStyle("-fx-background-color:#3d5a80; " +
+                        "-fx-text-fill:white;");
                 button.setMaxWidth(Double.MAX_VALUE);
                 button.setMinWidth(Control.USE_PREF_SIZE);
                 gridPane.add(button, currentColumn, currentRow);
@@ -73,6 +73,8 @@ public class CalendarController implements Initializable {
             currentColumn = 0;
             for (int i = 0; i < 11; i++) {
                 Button button1 = new Button(currentDate.plusDays(i).toString());
+                button1.setStyle("-fx-background-color:#3d5a80; " +
+                        "-fx-text-fill:white;");
                 gridPane.add(button1, currentColumn, currentRow);
                 button1.setMinWidth(Control.USE_PREF_SIZE);
                 button1.setMaxWidth(Double.MAX_VALUE);
@@ -95,6 +97,8 @@ public class CalendarController implements Initializable {
             test3.setMaxWidth(Double.MAX_VALUE);
             gridPane.add(test3, 2, 2, 4, 1);
 
+            gridPane.setStyle("-fx-background-color:#98c1d9");
+            scrollPane.setStyle("-fx-background-color:#98c1d9");
         } catch (Exception e) {
             e.printStackTrace();
         }

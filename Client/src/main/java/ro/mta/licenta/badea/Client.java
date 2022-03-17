@@ -1,5 +1,6 @@
 package ro.mta.licenta.badea;
 
+import javafx.scene.control.Alert;
 import ro.mta.licenta.badea.models.EmployeeModel;
 
 import javax.crypto.Mac;
@@ -21,13 +22,13 @@ public class Client {
     private static SecretKeySpec secret_key;
     private static String secret;
     private static String EncodedHeader;
+    private static boolean connection;
 
-
-    private String fullPathToTrustStore=".\\lib\\truststore";
-    private String fullPathToKeyStore=".\\lib\\keystore";
-    private String serverIP="127.0.0.1";
-    private String password="valentin";
-    int serverPort=5000;
+    private String fullPathToTrustStore = ".\\lib\\truststore";
+    private String fullPathToKeyStore = ".\\lib\\keystore";
+    private String serverIP = "127.0.0.1";
+    private String password = "valentin";
+    int serverPort = 5000;
 
     private KeyManagerFactory kmf;
     private TrustManagerFactory tmf;
@@ -37,26 +38,28 @@ public class Client {
     private EmployeeModel currentUser;
 
     private Client() throws CertificateException, IOException, NoSuchAlgorithmException {
+        this.connection=true;
 
         boolean status;
-        status=CreateKeyTrustManagerFactory();
-        if(status){
+        status = CreateKeyTrustManagerFactory();
+        if (status) {
             CreateSSLContext();
         }
 
-        SSLSocketFactory ssf=sslContext.getSocketFactory();
+        SSLSocketFactory ssf = sslContext.getSocketFactory();
 
         try {
-            SSLSocket sslClientSocket= (SSLSocket) ssf.createSocket();
-            InetSocketAddress connectAddress=new InetSocketAddress(serverIP,serverPort);
+            SSLSocket sslClientSocket = (SSLSocket) ssf.createSocket();
+            InetSocketAddress connectAddress = new InetSocketAddress(serverIP, serverPort);
             sslClientSocket.connect(connectAddress);
             sslClientSocket.startHandshake();
-            SSLSession session=sslClientSocket.getSession();
-            System.out.println("Session: "+session);
+            SSLSession session = sslClientSocket.getSession();
+            System.out.println("Session: " + session);
             InStream = new DataInputStream(sslClientSocket.getInputStream());
             OutStream = new DataOutputStream(sslClientSocket.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            this.connection=false;
+          //  e.printStackTrace();
         }
     }
 
@@ -65,6 +68,7 @@ public class Client {
     }
 
     public static Client getInstance() {
+
         if (instance == null) {
             try {
                 instance = new Client();
@@ -84,45 +88,48 @@ public class Client {
         instance = null;
     }
 
-    public void setCurrentUser(EmployeeModel user){
-        this.currentUser=user;
+    public void setCurrentUser(EmployeeModel user) {
+        this.currentUser = user;
     }
 
-    public void sendText(String msg) throws Exception{
+    public void sendText(String msg) throws Exception {
         OutStream.writeUTF(msg);
         OutStream.flush();
     }
 
-    public String receiveText() throws Exception{
-        String recv=InStream.readUTF();
-        return  recv;
+    public String receiveText() throws Exception {
+        String recv = InStream.readUTF();
+        return recv;
     }
 
     public EmployeeModel getCurrentUser() {
         return currentUser;
     }
 
+    public static boolean getConnection() {
+        return connection;
+    }
 
     private boolean CreateKeyTrustManagerFactory() throws CertificateException, IOException, NoSuchAlgorithmException {
         boolean retval = true;
-        char[] passPhrase=password.toCharArray();
+        char[] passPhrase = password.toCharArray();
         try {
 
-            KeyStore ksKeys= KeyStore.getInstance("PKCS12");
-            ksKeys.load(new FileInputStream(fullPathToKeyStore),passPhrase);
-            KeyStore ksTrust=KeyStore.getInstance("PKCS12");
-            ksTrust.load(new FileInputStream(fullPathToTrustStore),passPhrase);
+            KeyStore ksKeys = KeyStore.getInstance("PKCS12");
+            ksKeys.load(new FileInputStream(fullPathToKeyStore), passPhrase);
+            KeyStore ksTrust = KeyStore.getInstance("PKCS12");
+            ksTrust.load(new FileInputStream(fullPathToTrustStore), passPhrase);
 
-            kmf=KeyManagerFactory.getInstance("SunX509");
-            kmf.init(ksKeys,passPhrase);
-            tmf=TrustManagerFactory.getInstance("SunX509");
+            kmf = KeyManagerFactory.getInstance("SunX509");
+            kmf.init(ksKeys, passPhrase);
+            tmf = TrustManagerFactory.getInstance("SunX509");
             tmf.init(ksKeys);
 
         } catch (KeyStoreException | FileNotFoundException | UnrecoverableKeyException e) {
-            retval=false;
+            retval = false;
         }
-        System.out.println("CreateKeyTrustManagerFactory returned: " +retval);
-        return  retval;
+        System.out.println("CreateKeyTrustManagerFactory returned: " + retval);
+        return retval;
     }
 
     private boolean CreateSSLContext() {
@@ -134,7 +141,7 @@ public class Client {
         } catch (Exception ex) {
             retval = false;
         }
-        System.out.println("Create context returned: "+retval);
+        System.out.println("Create context returned: " + retval);
         return retval;
     }
 }

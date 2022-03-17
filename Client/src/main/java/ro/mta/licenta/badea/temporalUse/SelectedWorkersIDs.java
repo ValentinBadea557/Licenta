@@ -10,6 +10,7 @@ public class SelectedWorkersIDs {
     public static ArrayList<WorkerModel> finalList=new ArrayList<>();
     public static ArrayList<ResourceModel> listaResurse=new ArrayList<>();
     public static ArrayList<EmployeeModel> listaEmployees=new ArrayList<>();
+    public static ArrayList<ResourceModel> listaResProiect=new ArrayList<>();
 
     public void printResourceList(){
         for(int i=0;i<listaResurse.size();i++){
@@ -26,11 +27,13 @@ public class SelectedWorkersIDs {
             System.out.println("Role: "+listaEmployees.get(i).getRole());
             System.out.println("Lvl: "+listaEmployees.get(i).getPermision());
 
-
         }
     }
 
 
+    public static ArrayList<ResourceModel> getListaResurseProiect() {
+        return listaResProiect;
+    }
 
     public ArrayList<EmployeeModel> getListaEmployees() {
         return listaEmployees;
@@ -67,7 +70,10 @@ public class SelectedWorkersIDs {
         this.listaIDs.clear();
     }
 
-    public void clearResourceList(){listaResurse.clear();}
+    public void clearResourceList(){
+        listaResurse.clear();
+        listaResProiect.clear();
+    }
 
     public void printList(){
         for(int i=0;i<this.listaIDs.size();i++){
