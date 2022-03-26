@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class ResourceModel {
+public class ResourceModel implements Cloneable{
     private int ID;
     private String denumire;
     private int cantitate;

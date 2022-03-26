@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.viewProjectsController">
+<Pane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #98C1D9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.viewProjectsController">
    <children>
       <Label layoutX="27.0" layoutY="349.0" prefHeight="35.0" prefWidth="743.0" text="*click on the project's name to view more details such as tasks, resources etc.">
          <font>

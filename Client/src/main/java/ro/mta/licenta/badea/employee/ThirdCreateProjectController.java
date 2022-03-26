@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -124,6 +125,9 @@ public class ThirdCreateProjectController implements Initializable {
     @FXML
     private Button cleanButton;
 
+    @FXML
+    private Pane lastPane;
+
     public void YesRadioAction(ActionEvent actionEvent) {
         allResourceLabel.setVisible(false);
         allocResourceButton.setVisible(false);
@@ -134,6 +138,7 @@ public class ThirdCreateProjectController implements Initializable {
         taskuriParinteComboBox.setVisible(false);
         assignToComboBox.setVisible(false);
         assignToLabel.setVisible(false);
+        lastPane.setVisible(false);
     }
 
     public void noRadioAction(ActionEvent actionEvent) {
@@ -146,7 +151,7 @@ public class ThirdCreateProjectController implements Initializable {
         taskuriParinteComboBox.setVisible(true);
         assignToComboBox.setVisible(true);
         assignToLabel.setVisible(true);
-
+        lastPane.setVisible(true);
     }
 
     public void createTaskAction(ActionEvent actionEvent) {
@@ -387,24 +392,33 @@ public class ThirdCreateProjectController implements Initializable {
         resourceList.clearResourceList();
         listaResurse.clear();
 
+
+
         scene = new Scene(root);
         Stage primaryStage = new Stage();
-        primaryStage.setTitle("test");
+        primaryStage.setTitle("Alloc Resources");
         primaryStage.setScene(scene);
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
 
 
-        resourceList.printResourceList();
+
+
         for (int i = 0; i < resourceList.returnSizeOfResourceList(); i++) {
-            listaResurse.add(resourceList.getResourceBasedOnIndex(i));
+            listaResurse.add(resourceList.getResourceBasedOnIndex(i));  /**merge**/
+
         }
+
         tableResourcesView.setItems(listaResurse);
-        System.out.println("Size1:" + listaResurse.size());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**Set buttons**/
+        cleanButton.setStyle("button-hover-color: #293241;");
+        createTaskButton.setStyle("button-hover-color: #293241;");
+        finishButton.setStyle("button-hover-color: #293241;");
+
         /**Set combo boxes*/
         startTimeField.getItems().clear();
         startTimeField.setItems(hours);
@@ -432,6 +446,7 @@ public class ThirdCreateProjectController implements Initializable {
         taskuriParinteComboBox.setVisible(false);
         assignToComboBox.setVisible(false);
         assignToLabel.setVisible(false);
+        lastPane.setVisible(false);
 
         /**Deactivate fields for normal task*/
         tableResourcesView.setEditable(false);
@@ -450,7 +465,7 @@ public class ThirdCreateProjectController implements Initializable {
 
 
         /**Set spinner*/
-        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24);
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100);
         spinner.setValue(1);
         durationField.setValueFactory(spinner);
 
@@ -499,6 +514,7 @@ public class ThirdCreateProjectController implements Initializable {
         this.deadlineTimeField.setValue(null);
         this.deadlineTimeField.setPromptText("Deadline Time");
         this.deadlineTimeField.getSelectionModel().clearSelection();
+
         listaResurse.clear();
         if (noRadioButton.isSelected()) {
             tableResourcesView.setItems(listaResurse);
@@ -508,10 +524,13 @@ public class ThirdCreateProjectController implements Initializable {
 
         assignToComboBox.setValue(null);
         assignToComboBox.setPromptText("Select an employee");
+
+
     }
 
     public void cleanAction(ActionEvent actionEvent) {
         clearInputFields();
+
     }
 
     private ObservableList<String> listaNumeTaskuri = FXCollections.observableArrayList();
@@ -526,7 +545,7 @@ public class ThirdCreateProjectController implements Initializable {
 
     ObservableList<String> periodicityIntervals =
             FXCollections.observableArrayList(
-                    "Daily", "Weekly", "Monthly"
+                    "No Periodicity","Daily", "Weekly", "Monthly"
             );
 
     ObservableList<String> hours =

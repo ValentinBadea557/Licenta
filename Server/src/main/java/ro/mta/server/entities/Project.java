@@ -15,7 +15,16 @@ public class Project {
     private ArrayList<TaskGeneral> listaTaskuriGenerale;
     private ArrayList<Task> listaTaskuri;
     private ArrayList<Resource> listaResurseCurente;
+    private ArrayList<Task> listaTaskuriReale;
     private int finished;
+
+    public void setListaTaskuriReale(ArrayList<Task> listaTaskuriReale) {
+        this.listaTaskuriReale = new ArrayList<>(listaTaskuriReale);
+    }
+
+    public ArrayList<Task> getListaTaskuriReale() {
+        return listaTaskuriReale;
+    }
 
     public ArrayList<Resource> getListaResurseCurente() {
         return listaResurseCurente;

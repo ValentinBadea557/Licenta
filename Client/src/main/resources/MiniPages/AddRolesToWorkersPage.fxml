@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #00807C;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddRolesToWorkersController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #3d5a80;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddRolesToWorkersController">
    <children>
       <GridPane layoutX="85.0" layoutY="26.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
         <columnConstraints>
@@ -26,17 +26,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Worker's Name:">
+            <Label text="Worker's Name:" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Role:" GridPane.rowIndex="1">
+            <Label text="Role:" textFill="WHITE" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="levelField" text="Level of Permissions:*" GridPane.rowIndex="2">
+            <Label fx:id="levelField" text="Level of Permissions:*" textFill="WHITE" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -44,7 +44,7 @@
                   <Tooltip fx:id="toolTipPermission" />
                </tooltip>
             </Label>
-            <Label fx:id="nameLabelField" text="SetName" GridPane.columnIndex="1">
+            <Label fx:id="nameLabelField" text="SetName" textFill="WHITE" GridPane.columnIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -53,7 +53,7 @@
             <ComboBox fx:id="permissionComboBox" prefWidth="150.0" promptText="Permission" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <Label layoutX="42.0" layoutY="133.0" text="*Place the mouse over the text to get more details">
+      <Label layoutX="42.0" layoutY="133.0" text="*Place the mouse over the text to get more details" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

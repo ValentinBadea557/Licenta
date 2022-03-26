@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneMaster" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.SecondCreateProjectController">
+<Pane fx:id="paneMaster" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.SecondCreateProjectController">
    <children>
-      <StackPane fx:id="stackPaneView" layoutX="393.0" layoutY="26.0" prefHeight="400.0" prefWidth="400.0" />
+      <StackPane fx:id="stackPaneView" layoutX="393.0" layoutY="26.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #3d5a80; -fx-border-radius:10px; -fx-background-radius:10px;" />
       <Label layoutX="65.0" layoutY="16.0" text="Teams:">
          <font>
             <Font name="System Bold" size="15.0" />
@@ -32,24 +32,15 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="backLeftButton" layoutX="14.0" layoutY="447.0" mnemonicParsing="false" onAction="#backLeftAction" prefHeight="21.0" prefWidth="37.0">
-         <graphic>
-            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/left-arrow.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
       <TableView fx:id="teamsTableView" layoutX="65.0" layoutY="48.0" prefHeight="102.0" prefWidth="294.0">
         <columns>
-          <TableColumn fx:id="teamNameColumn" prefWidth="282.0" text="Team's Name" />
+          <TableColumn fx:id="teamNameColumn" prefWidth="286.0" text="Team's Name" />
         </columns>
       </TableView>
       <TableView fx:id="coworkersTableView" layoutX="65.0" layoutY="193.0" prefHeight="102.0" prefWidth="294.0">
         <columns>
           <TableColumn fx:id="idRolesColumn" prefWidth="66.0" text="ID" />
-          <TableColumn fx:id="fullNameRoleColumn" prefWidth="211.0" text="Full Name" />
+          <TableColumn fx:id="fullNameRoleColumn" prefWidth="221.0" text="Full Name" />
         </columns>
       </TableView>
       <Button fx:id="rightPageButton" layoutX="744.0" layoutY="447.0" mnemonicParsing="false" onAction="#rightPageAction" prefHeight="29.0" prefWidth="49.0">
@@ -71,7 +62,7 @@
           <TableColumn fx:id="idResColumn" prefWidth="55.0" text="ID" />
           <TableColumn fx:id="nameResColumn" prefWidth="95.0" text="Name" />
             <TableColumn fx:id="quantityResColumn" prefWidth="65.0" text="Quantity" />
-            <TableColumn fx:id="shareableResColumn" prefWidth="73.0" text="Shareable" />
+            <TableColumn fx:id="shareableResColumn" prefWidth="72.0" text="Shareable" />
         </columns>
       </TableView>
       <Button fx:id="addResourceButton" layoutX="186.0" layoutY="302.0" mnemonicParsing="false" onAction="#addResourceAction">

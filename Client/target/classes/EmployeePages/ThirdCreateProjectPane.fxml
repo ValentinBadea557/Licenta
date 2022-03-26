@@ -15,12 +15,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #519291;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.ThirdCreateProjectController">
+<AnchorPane prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.ThirdCreateProjectController">
    <children>
-      <TableView fx:id="tableTasksView" layoutX="128.0" layoutY="14.0" prefHeight="124.0" prefWidth="235.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="444.0">
+      <Pane layoutX="93.0" layoutY="144.0" prefHeight="135.0" prefWidth="653.0" style="-fx-background-color: #3d5a80; -fx-border-radius: 10px; -fx-background-radius: 10px;" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="120.0" />
+      <Pane fx:id="lastPane" layoutX="448.0" layoutY="293.0" prefHeight="173.0" prefWidth="207.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 10px;">
+         <children>
+            <Label fx:id="assignToLabel" layoutX="69.0" layoutY="87.0" text="Assign to:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <TableView fx:id="tableTasksView" layoutX="128.0" layoutY="14.0" prefHeight="124.0" prefWidth="235.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="459.0">
         <columns>
           <TableColumn fx:id="taskNameColumn" prefWidth="234.20001220703125" text="Normal Tasks" />
         </columns>
@@ -39,42 +50,42 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Name:">
+            <Label text="Name:" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Periodicity:" GridPane.rowIndex="1">
+            <Label text="Periodicity:" textFill="WHITE" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Duration (h) :" GridPane.rowIndex="2">
+            <Label text="Duration (h) :" textFill="WHITE" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Start Date:" GridPane.rowIndex="3">
+            <Label text="Start Date:" textFill="WHITE" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Start Time:" GridPane.columnIndex="2">
+            <Label text="Start Time:" textFill="WHITE" GridPane.columnIndex="2">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Deadline Date:" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label text="Deadline Date:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="Deadline Time:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Label text="Deadline Time:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label text="General Task:" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Label text="General Task:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -85,12 +96,12 @@
             <DatePicker fx:id="deadlineDateField" promptText="Deadline Date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <ComboBox fx:id="startTimeField" prefWidth="150.0" promptText="Start Time" GridPane.columnIndex="3" />
             <ComboBox fx:id="deadlineTimeField" prefWidth="150.0" promptText="Deadline Time" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <RadioButton fx:id="yesRadioButton" mnemonicParsing="false" onAction="#YesRadioAction" text="Yes" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <RadioButton fx:id="yesRadioButton" mnemonicParsing="false" onAction="#YesRadioAction" text="Yes" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="noRadioButton" mnemonicParsing="false" onAction="#noRadioAction" text="No" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <RadioButton fx:id="noRadioButton" mnemonicParsing="false" onAction="#noRadioAction" text="No" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -101,22 +112,22 @@
             <ComboBox fx:id="periodicityField" prefWidth="150.0" promptText="Periodicity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <Button fx:id="createTaskButton" layoutX="675.0" layoutY="375.0" mnemonicParsing="false" onAction="#createTaskAction" prefHeight="31.0" prefWidth="111.0" text="Create task" AnchorPane.leftAnchor="675.0" AnchorPane.rightAnchor="21.0">
+      <Button fx:id="createTaskButton" layoutX="675.0" layoutY="375.0" mnemonicParsing="false" onAction="#createTaskAction" prefHeight="31.0" prefWidth="111.0" text="Create task" AnchorPane.bottomAnchor="79.8" AnchorPane.rightAnchor="21.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Label fx:id="allResourceLabel" layoutX="26.0" layoutY="289.0" text="Alloc resources:">
+      <Label fx:id="allResourceLabel" layoutX="23.0" layoutY="302.0" text="Alloc resources:" AnchorPane.bottomAnchor="162.39999999999998" AnchorPane.leftAnchor="23.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="tableResourcesView" layoutX="14.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0">
+      <TableView fx:id="tableResourcesView" layoutX="14.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="14.0">
         <columns>
           <TableColumn fx:id="resourceNameColumn" prefWidth="199.0" text="Resource" />
         </columns>
       </TableView>
-      <Button fx:id="allocResourceButton" layoutX="148.0" layoutY="287.0" mnemonicParsing="false" onAction="#allocResourceAction" prefHeight="25.0" prefWidth="16.0">
+      <Button fx:id="allocResourceButton" layoutX="142.0" layoutY="300.0" mnemonicParsing="false" onAction="#allocResourceAction" prefHeight="25.0" prefWidth="16.0" AnchorPane.bottomAnchor="160.39999999999998" AnchorPane.leftAnchor="142.0">
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -125,39 +136,34 @@
             </ImageView>
          </graphic>
       </Button>
-      <TableView fx:id="tableGeneralView" layoutX="228.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0">
+      <TableView fx:id="tableGeneralView" layoutX="228.0" layoutY="328.0" prefHeight="124.0" prefWidth="200.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="228.0">
         <columns>
           <TableColumn fx:id="tableGeneralColumn" prefWidth="199.0" text="General task" />
         </columns>
       </TableView>
-      <Label fx:id="selectGeneralTaskLabel" layoutX="260.0" layoutY="299.0" text="Select general task:">
+      <Label fx:id="selectGeneralTaskLabel" layoutX="245.0" layoutY="302.0" text="Select general task:" AnchorPane.bottomAnchor="162.39999999999998" AnchorPane.leftAnchor="245.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="taskParinteLabel" layoutX="502.0" layoutY="299.0" text="Parent Task">
+      <Label fx:id="taskParinteLabel" layoutX="502.0" layoutY="302.0" text="Parent Task:" textFill="WHITE" AnchorPane.bottomAnchor="162.39999999999998" AnchorPane.leftAnchor="502.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="tableAllGeneralTasks" layoutX="459.0" layoutY="14.0" prefHeight="124.0" prefWidth="235.0">
+      <TableView fx:id="tableAllGeneralTasks" layoutX="459.0" layoutY="14.0" prefHeight="124.0" prefWidth="235.0" AnchorPane.leftAnchor="459.0" AnchorPane.rightAnchor="128.0">
         <columns>
           <TableColumn fx:id="allGeneralTaskColumn" prefWidth="234.40001220703124" text="General Tasks" />
         </columns>
       </TableView>
-      <Button fx:id="cleanButton" layoutX="675.0" layoutY="325.0" mnemonicParsing="false" onAction="#cleanAction" prefHeight="31.0" prefWidth="111.0" text="Clear all">
+      <Button fx:id="cleanButton" layoutX="675.0" layoutY="325.0" mnemonicParsing="false" onAction="#cleanAction" prefHeight="31.0" prefWidth="111.0" styleClass="buttonlogin" text="Clear all" AnchorPane.bottomAnchor="129.8" AnchorPane.rightAnchor="20.799999999999997">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <ComboBox fx:id="taskuriParinteComboBox" layoutX="475.0" layoutY="328.0" prefWidth="150.0" promptText="Predecessor" />
-      <Label fx:id="assignToLabel" layoutX="502.0" layoutY="380.0" text="Assign to:">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="assignToComboBox" layoutX="475.0" layoutY="409.0" prefWidth="150.0" promptText="Select an employee" />
-      <Button fx:id="finishButton" layoutX="662.0" layoutY="422.0" mnemonicParsing="false" onAction="#finishAction" prefHeight="41.0" prefWidth="137.0" text="Finish">
+      <ComboBox fx:id="taskuriParinteComboBox" layoutX="475.0" layoutY="328.0" prefWidth="150.0" promptText="Predecessor" AnchorPane.bottomAnchor="132.4" />
+      <ComboBox fx:id="assignToComboBox" layoutX="475.0" layoutY="409.0" prefWidth="150.0" promptText="Select an employee" AnchorPane.bottomAnchor="51.4" />
+      <Button fx:id="finishButton" layoutX="662.0" layoutY="422.0" mnemonicParsing="false" onAction="#finishAction" prefHeight="41.0" prefWidth="137.0" text="Finish" AnchorPane.bottomAnchor="22.4" AnchorPane.rightAnchor="7.400000000000006">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

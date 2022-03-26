@@ -25,6 +25,10 @@ public class ProjectTemporalModel {
     private static ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
     private static ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
 
+    protected void finalize()
+    {
+    }
+
     public ProjectTemporalModel() {
     }
 

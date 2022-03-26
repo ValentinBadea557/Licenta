@@ -22,11 +22,13 @@ public interface IUserDAO {
     public User getUserbasedOnID(int idUser);
     public String selectListOfEmployeesNotAdmins(int ID_company);
     public String createNewProject(String jsonProject);
+    public int createRealTasks(Task task) throws SQLException;
     public int createRoleOrGetRoleID(String role);
     public int getIDofGeneralTask(TaskGeneral general);
     public int getIDofNormalTask(Task task);
     public String viewProjects(int idUser);
     public String getEveryInfoAboutProject(int idProject);
+
 
     /**Functions used by admins*/
     public String addUserPlusCompany(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);

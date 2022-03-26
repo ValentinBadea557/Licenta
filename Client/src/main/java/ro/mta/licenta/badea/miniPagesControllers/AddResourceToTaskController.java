@@ -29,6 +29,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class AddResourceToTaskController implements Initializable {
@@ -64,42 +66,19 @@ public class AddResourceToTaskController implements Initializable {
     private Button finishButton;
 
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /**Set spinner*/
-        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,999999);
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999999);
         spinner.setValue(1);
         quantitySpinner.setValueFactory(spinner);
 
         /**Set table*/
-//        Client client= Client.getInstance();
-//
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        Gson gson = gsonBuilder.setPrettyPrinting().create();
-//
-//        JSONObject requestView = new JSONObject();
-//        requestView.put("Type", "View Resources");
-//        requestView.put("ID_Companie", client.getCurrentUser().getCompany().getID());
-//        CompanyModel company = new CompanyModel();
-//        try {
-//            client.sendText(requestView.toString());
-//            String response = client.receiveText();
-//            company = gson.fromJson(response, CompanyModel.class);
-//
-//            ArrayList<ResourceModel> listaTemporala = company.getListaResurse();
-//
-//            for (int i = 0; i < listaTemporala.size(); i++) {
-//                resurseModels.add(listaTemporala.get(i));
-//            }
-//            System.out.println(response);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
-        SelectedWorkersIDs lista=new SelectedWorkersIDs();
+        SelectedWorkersIDs lista = new SelectedWorkersIDs();
 
-        ArrayList<ResourceModel> listaTemporala = lista.getListaResurseProiect();
+        ArrayList<ResourceModel> listaTemporala = (ArrayList<ResourceModel>) lista.getListaResurseProiect().clone();
+
 
         for (int i = 0; i < listaTemporala.size(); i++) {
             resurseModels.add(listaTemporala.get(i));
@@ -131,21 +110,32 @@ public class AddResourceToTaskController implements Initializable {
     private ObservableList<ResourceModel> resurseModels = FXCollections.observableArrayList();
 
     public void addResourceAction(ActionEvent actionEvent) {
+
         SelectedWorkersIDs listObject = new SelectedWorkersIDs();
+
         ResourceModel selectedResource;
         selectedResource = tableResource.getSelectionModel().getSelectedItem();
+        Gson gson=new Gson();
 
-        if(quantitySpinner.getValue()>selectedResource.getCantitate()){
+        ResourceModel copyResource = gson.fromJson(gson.toJson(selectedResource),ResourceModel.class);
+
+
+        if (quantitySpinner.getValue() > selectedResource.getCantitate()) {
             labelResponse.setText("Unavailable number of resources!");
             labelResponse.setStyle("-fx-text-fill:RED");
 
             quantitySpinner.setStyle("-fx-border-color:red");
-        }else{
+        } else {
+
+
             quantitySpinner.setStyle("-fx-border-color:none");
             labelResponse.setText("Resource added!");
             labelResponse.setStyle("-fx-text-fill:GREEN");
-            selectedResource.setCantitate(quantitySpinner.getValue());
-            listObject.addResource(selectedResource);
+
+            copyResource.setCantitate(quantitySpinner.getValue());
+
+            listObject.addResource(copyResource);
+
 
             resurseModels.remove(selectedResource);
             tableResource.setItems(resurseModels);
@@ -153,6 +143,7 @@ public class AddResourceToTaskController implements Initializable {
 
 
     }
+
 
     public void finishAction(ActionEvent actionEvent) {
         Stage stage = (Stage) finishButton.getScene().getWindow();

@@ -42,6 +42,10 @@
     -fx-text-fill:white;
 }
 
+.table-view .column-header {
+    -fx-background-color: #e6b800;
+}
+
 /*
 3d5a80
 98c1d9

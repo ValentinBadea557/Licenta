@@ -65,6 +65,9 @@ public class EmployeeBasePageController implements Initializable {
     @FXML
     private Button activeProjectsButton;
 
+    @FXML
+    private Button topActiveProjectsButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         topHomeButton.setStyle(" -fx-border-color: #660099;\n" +
@@ -144,6 +147,7 @@ public class EmployeeBasePageController implements Initializable {
     public void homeAction(ActionEvent actionEvent) throws IOException {
         topHomeButton.setStyle(" -fx-border-color: #660099;\n" +
                 "    -fx-border-width: 0px 0px 3px 0px;");
+        topActiveProjectsButton.setStyle("-fx-border-color: none");
         topCreateProjectButton.setStyle("-fx-border-color: none");
         topMyCompanyButton.setStyle("-fx-border-color: none");
 
@@ -154,6 +158,11 @@ public class EmployeeBasePageController implements Initializable {
     }
 
     public void activeProjectAction(ActionEvent actionEvent) throws IOException {
+        topActiveProjectsButton.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topHomeButton.setStyle("-fx-border-color: none");
+        topCreateProjectButton.setStyle("-fx-border-color: none");
+        topMyCompanyButton.setStyle("-fx-border-color: none");
 
         Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/ViewProjects.fxml"));
         employeeStackPane.getChildren().removeAll();
@@ -165,6 +174,7 @@ public class EmployeeBasePageController implements Initializable {
         topCreateProjectButton.setStyle(" -fx-border-color: #660099;\n" +
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topHomeButton.setStyle("-fx-border-color: none");
+        topActiveProjectsButton.setStyle("-fx-border-color: none");
         topMyCompanyButton.setStyle("-fx-border-color: none");
 
         Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/CreateProjectPane.fxml"));

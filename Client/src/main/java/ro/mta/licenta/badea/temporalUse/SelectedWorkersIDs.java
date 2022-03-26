@@ -31,6 +31,7 @@ public class SelectedWorkersIDs {
     }
 
 
+
     public static ArrayList<ResourceModel> getListaResurseProiect() {
         return listaResProiect;
     }
@@ -72,12 +73,17 @@ public class SelectedWorkersIDs {
 
     public void clearResourceList(){
         listaResurse.clear();
-        listaResProiect.clear();
+
     }
 
-    public void printList(){
-        for(int i=0;i<this.listaIDs.size();i++){
-            System.out.print(listaIDs.get(i).getFullName()+"***|***\n");
+    public void printListaResurse(){
+        System.out.println("******");
+        for(int i=0;i<listaResProiect.size();i++){
+            System.out.println(listaResProiect.get(i).getDenumire() +" "+listaResProiect.get(i).getCantitate());
         }
+        System.out.println("******");
+
     }
+
+
 }

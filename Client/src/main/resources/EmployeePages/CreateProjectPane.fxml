@@ -136,5 +136,10 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
+      <ImageView fitHeight="134.0" fitWidth="178.0" layoutX="618.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/createProj.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

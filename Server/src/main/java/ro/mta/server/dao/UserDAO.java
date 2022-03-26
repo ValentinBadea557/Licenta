@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -517,6 +518,7 @@ public class UserDAO implements IUserDAO {
             }
         }
 
+        /**Insert Taskuri Generale*/
         ArrayList<TaskGeneral> listaGenerale = project.getListaTaskuriGenerale();
         for (int i = 0; i < listaGenerale.size(); i++) {
             String sqlGeneral = "Insert into Taskuri_Generale " +
@@ -532,11 +534,14 @@ public class UserDAO implements IUserDAO {
             }
         }
 
+        /**Insert Taskuri***/
         ArrayList<Task> listaTaskuri = project.getListaTaskuri();
         for (int i = 0; i < listaTaskuri.size(); i++) {
             int id_general = getIDofGeneralTask(listaTaskuri.get(i).getTaskGeneral());
 
             String sqlNormal = null;
+
+
             if (listaTaskuri.get(i).getTaskParinte() != null) {
                 int id_general_particulat = getIDofGeneralTask(listaTaskuri.get(i).getTaskParinte().getTaskGeneral());
                 listaTaskuri.get(i).getTaskParinte().getTaskGeneral().setID(id_general_particulat);
@@ -545,6 +550,7 @@ public class UserDAO implements IUserDAO {
                         listaTaskuri.get(i).getDuration() + ",'" + listaTaskuri.get(i).getStarttime() + "','" +
                         listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + id_general + "," + getIDofNormalTask(listaTaskuri.get(i).getTaskParinte()) + "); " +
                         "Select SCOPE_IDENTITY();";
+
             } else {
                 sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_General) " +
                         "Values ('" + listaTaskuri.get(i).getName() + "','" + listaTaskuri.get(i).getPeriodicity() + "' ," +
@@ -559,7 +565,6 @@ public class UserDAO implements IUserDAO {
                 ResultSetMetaData meta = rs.getMetaData();
                 while (rs.next()) {
                     id_task = rs.getInt(1);
-                    System.out.println("ID ============" + id_task);
                 }
             } catch (SQLException e) {
                 response.put("Response Create", "Error");
@@ -567,6 +572,13 @@ public class UserDAO implements IUserDAO {
             }
 
             listaTaskuri.get(i).setID(id_task);
+
+            try {
+                createRealTasks(listaTaskuri.get(i));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
 
             String sqlAssignTo = "Insert into Taskuri_Useri " +
                     "Values (" + id_task + "," + listaTaskuri.get(i).getExecutant().getID() + ") ;";
@@ -596,15 +608,86 @@ public class UserDAO implements IUserDAO {
             }
 
         }
-        if(response.has("Response Create")){
-            response.put("Final Response","ok");
-        }else{
-            response.put("Final Response","SQL Exception");
+        if (!response.has("Response Create")) {
+            response.put("Final Response", "ok");
+        } else {
+            response.put("Final Response", "SQL Exception");
         }
 
         System.out.println(response.toString());
         return response.toString();
     }
+
+    @Override
+    public int createRealTasks(Task task) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        int id_task = task.getID();
+        String name = task.getName();
+        int duration = task.getDuration();
+        String periodicity = task.getPeriodicity();
+        Task parent = task.getTaskParinte();
+        int id_parinte;
+
+        LocalDate dataCurenta = task.getStarttime().toLocalDate();
+        LocalDate deadline = task.getDeadline().toLocalDate();
+
+        while (dataCurenta.isBefore(deadline)) {
+            if (parent != null) {
+                id_parinte = getIDofNormalTask(parent);
+                int id_parentReal = 0;
+                System.out.println("testez id:"+id_parinte+" zi:"+dataCurenta);
+                String sqlGetID = "Select * from Taskuri_Reale " +
+                        "Where ID_Task=" + id_parinte + " and Zi='" + dataCurenta + "';";
+
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sqlGetID);
+                int results = 0;
+                while (rs.next()) {
+                    id_parentReal = rs.getInt(1);
+                    System.out.println("Id parent real: " + id_parentReal);
+                    results++;
+                }
+                String sql = null;
+                if (results == 1) {
+                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task,ID_Parinte) " +
+                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + "," + id_parentReal + ");";
+                } else {
+                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task) " +
+                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ");";
+                }
+                stmt = con.createStatement();
+                stmt.execute(sql);
+
+            } else {
+                String sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task) " +
+                        "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ");";
+
+                Statement stmt = con.createStatement();
+                stmt.execute(sql);
+
+            }
+
+            switch (periodicity) {
+                case "No periodicity":
+                    return 0;
+                case "Daily":
+                    dataCurenta = dataCurenta.plusDays(1);
+                    break;
+                case "Weekly":
+                    dataCurenta = dataCurenta.plusWeeks(1);
+                    break;
+                case "Monthly":
+                    dataCurenta = dataCurenta.plusMonths(1);
+                    break;
+            }
+
+        }
+
+        return 0;
+    }
+
 
     @Override
     public int createRoleOrGetRoleID(String role) {
@@ -730,7 +813,7 @@ public class UserDAO implements IUserDAO {
                 "Where PU.ID_USER=" + idUser;
 
         String returned = null;
-        JSONObject errorjson=new JSONObject();
+        JSONObject errorjson = new JSONObject();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -743,10 +826,10 @@ public class UserDAO implements IUserDAO {
                 proiectTemp.setFinished(rs.getInt(4));
                 listaProiecte.add(proiectTemp);
             }
-            returned=gson.toJson(listaProiecte);
+            returned = gson.toJson(listaProiecte);
         } catch (SQLException e) {
-            errorjson.put("Error","SQL Exception");
-            returned=errorjson.toString();
+            errorjson.put("Error", "SQL Exception");
+            returned = errorjson.toString();
             e.printStackTrace();
         }
 
@@ -764,7 +847,7 @@ public class UserDAO implements IUserDAO {
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        Project project=new Project();
+        Project project = new Project();
         return null;
     }
 

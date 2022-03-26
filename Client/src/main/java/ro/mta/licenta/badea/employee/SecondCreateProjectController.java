@@ -88,6 +88,10 @@ public class SecondCreateProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**border radius*/
+        stackPaneView.setStyle("-fx-border-radius:10px;" +
+                "-fx-background-radius:10px; ");
+
         SelectedWorkersIDs lista = new SelectedWorkersIDs();
         for (int i = 0; i < lista.finalList.size(); i++) {
             workers.add(lista.finalList.get(i));
@@ -95,12 +99,12 @@ public class SecondCreateProjectController implements Initializable {
 
         /**Set team table*/
         teamNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        teamNameColumn.setStyle("-fx-alignment: CENTER");
+        teamNameColumn.setStyle("-fx-alignment: CENTER ; ");
         /**Set workers table*/
         idRolesColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
         fullNameRoleColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        idRolesColumn.setStyle("-fx-alignment: CENTER");
-        fullNameRoleColumn.setStyle("-fx-alignment: CENTER");
+        idRolesColumn.setStyle("-fx-alignment: CENTER ; ");
+        fullNameRoleColumn.setStyle("-fx-alignment: CENTER ; ");
         coworkersTableView.setItems(workers);
         /***/
 
@@ -206,16 +210,26 @@ public class SecondCreateProjectController implements Initializable {
         nameResColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
         quantityResColumn.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
         shareableResColumn.setCellValueFactory(new PropertyValueFactory<>("shareable"));
+
+        idResColumn.setStyle("-fx-alignment: CENTER ; ");
+        nameResColumn.setStyle("-fx-alignment: CENTER ;");
+        quantityResColumn.setStyle("-fx-alignment: CENTER ;");
+        shareableResColumn.setStyle("-fx-alignment: CENTER ;");
+
     }
 
     public void rightPageAction(ActionEvent actionEvent) throws Exception {
 
         ProjectTemporalModel project = new ProjectTemporalModel();
-        ArrayList<EmployeeModel> lista = project.getListaOameni();
+
+        SelectedWorkersIDs listaEmp=new SelectedWorkersIDs();
+
+        ArrayList<EmployeeModel> lista = listaEmp.getListaEmployees();
 
         boolean nextpage = true;
 
         for (int i = 0; i < lista.size(); i++) {
+            System.out.println(lista.get(i).getFullName()+" "+lista.get(i).getRole());
             if (lista.get(i).getRole() == null) {
 
                 nextpage = false;

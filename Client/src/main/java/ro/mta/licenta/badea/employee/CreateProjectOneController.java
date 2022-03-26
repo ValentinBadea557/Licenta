@@ -79,6 +79,12 @@ public class CreateProjectOneController implements Initializable {
     @FXML
     void addCoworkersAction(ActionEvent actionEvent) throws Exception {
         root = FXMLLoader.load(getClass().getResource("/MiniPages/AddPeoplePage.fxml"));
+        SelectedWorkersIDs lista = new SelectedWorkersIDs();
+
+        lista.finalList.clear();
+        lista.listaIDs.clear();
+        lista.listaEmployees.clear();
+        workers.clear();
 
         scene = new Scene(root);
         Stage primaryStage = new Stage();
@@ -89,7 +95,6 @@ public class CreateProjectOneController implements Initializable {
         /** Wait for the second stage to close*/
 
         /** Copy the observable list*/
-        SelectedWorkersIDs lista = new SelectedWorkersIDs();
         for (int i = 0; i < lista.finalList.size(); i++) {
             workers.add(lista.finalList.get(i));
         }
@@ -102,7 +107,8 @@ public class CreateProjectOneController implements Initializable {
         listCoworkers.setItems(listaNume);
 
         ProjectTemporalModel project = new ProjectTemporalModel();
-        for(int i=0;i<lista.getSizeOfEmployeesList();i++){
+
+        for (int i = 0; i < lista.getSizeOfEmployeesList(); i++) {
             project.addEmployee(lista.getListaEmployees().get(i));
         }
 
@@ -133,7 +139,10 @@ public class CreateProjectOneController implements Initializable {
                 "-fx-border-color: black; " +
                 "-fx-border-width: 3px; ");
 
-        nextPageButton.setStyle("button-hover-color: #98c1d9; " );
+        nextPageButton.setStyle("button-hover-color: #98c1d9; ");
+
+        ProjectTemporalModel project = new ProjectTemporalModel();
+        project = null;
     }
 
     ObservableList<String> hours =
@@ -184,7 +193,6 @@ public class CreateProjectOneController implements Initializable {
         }
 
 
-
         if (deadlineTimeField.getValue() == null) {
             isempty = true;
             deadlineTimeField.setStyle("-fx-border-color:red");
@@ -226,12 +234,10 @@ public class CreateProjectOneController implements Initializable {
             Gson gson = gsonBuilder.setPrettyPrinting().create();
             paneMaster.getChildren().setAll((Node) FXMLLoader.load(getClass().getResource("/EmployeePages/SecondCreateProjectPane.fxml")));
 
-        }else{
+        } else {
 
             infoLabelField.setText("You must complete all fields to move forward!");
         }
-
-
 
 
     }

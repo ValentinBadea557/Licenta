@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.dao.*;
+import ro.mta.server.entities.Project;
+import ro.mta.server.entities.Task;
 import ro.mta.server.entities.User;
 import ro.mta.server.handlers.HandleUser;
 import ro.mta.server.handlers.HandlerAdmin;
@@ -16,7 +18,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Main {
     private static SSLContext sslContext;
@@ -28,6 +34,7 @@ public class Main {
     private static TrustManagerFactory tmf;
 
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
+
 
         boolean status;
         status = CreateKeyTrustManagerFactory();
@@ -70,9 +77,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        /////////
-
     }
+
 
     private static boolean CreateKeyTrustManagerFactory() throws CertificateException, IOException, NoSuchAlgorithmException {
         boolean retval = true;
