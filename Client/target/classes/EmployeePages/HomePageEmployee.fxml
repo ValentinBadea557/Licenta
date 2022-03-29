@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: #519291;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.EmployeeBasePageController">
+<AnchorPane prefHeight="565.0" prefWidth="1007.0" style="-fx-background-color: #519291;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.EmployeeBasePageController">
    <children>
       <BorderPane layoutY="-2.0" prefHeight="600.0" prefWidth="1000.0">
          <top>
@@ -88,7 +88,7 @@
             </AnchorPane>
          </top>
          <left>
-            <VBox fx:id="slider" prefHeight="506.0" prefWidth="200.0" style="-fx-background-color: #3d5a80;" BorderPane.alignment="CENTER">
+            <VBox fx:id="slider" prefHeight="475.0" prefWidth="200.0" style="-fx-background-color: #3d5a80;" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="homeButton" alignment="CENTER" mnemonicParsing="false" onAction="#homeAction" prefHeight="40.0" prefWidth="200.0" styleClass="sidebaritem2" text="Home">
                      <VBox.margin>
@@ -177,7 +177,10 @@
             </VBox>
          </left>
          <center>
-            <StackPane fx:id="employeeStackPane" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" BorderPane.alignment="CENTER" />
+            <StackPane fx:id="employeeStackPane" prefHeight="465.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin></StackPane>
          </center>
       </BorderPane>
    </children>

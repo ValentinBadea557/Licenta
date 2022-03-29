@@ -70,6 +70,7 @@ public class viewProjectsController implements Initializable {
         try {
             client.sendText(tosend.toString());
             receive = client.receiveText();
+            System.out.println(receive);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +116,7 @@ public class viewProjectsController implements Initializable {
 
                 Scene scene = new Scene(root);
                 Stage primaryStage = new Stage();
-                primaryStage.setTitle("Level 1 Priority");
+                primaryStage.setTitle("Level 3 Priority");
                 primaryStage.setScene(scene);
                 primaryStage.initModality(Modality.APPLICATION_MODAL);
                 primaryStage.showAndWait();

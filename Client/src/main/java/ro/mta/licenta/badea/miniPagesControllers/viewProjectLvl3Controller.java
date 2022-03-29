@@ -15,10 +15,7 @@ import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.employee.LocalDateTimeDeserializer;
 import ro.mta.licenta.badea.employee.LocalDateTimeSerializer;
-import ro.mta.licenta.badea.models.EmployeeModel;
-import ro.mta.licenta.badea.models.ProjectModel;
-import ro.mta.licenta.badea.models.ResourceModel;
-import ro.mta.licenta.badea.models.TeamModel;
+import ro.mta.licenta.badea.models.*;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 
 import java.net.URL;
@@ -122,6 +119,15 @@ public class viewProjectLvl3Controller implements Initializable {
     private ScrollPane allocResScrollPane;
 
     @FXML
+    private TableView<TaskModel> taskTablePeoplePage;
+
+    @FXML
+    private TableColumn<TaskModel, String> taskNamePeoplePage;
+
+    @FXML
+    private TableColumn<TaskModel, Integer> idTaskPeoplePage;
+
+    @FXML
     void modifyResourceAction(ActionEvent event) {
         System.out.println("Clicked!");
     }
@@ -151,7 +157,7 @@ public class viewProjectLvl3Controller implements Initializable {
             project = gson.fromJson(response, ProjectModel.class);
             this.projectLocal = project;
 
-            System.out.println(gson.toJson(project));
+            System.out.println(gson.toJson(projectLocal));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,6 +184,7 @@ public class viewProjectLvl3Controller implements Initializable {
 
         /**Set table People**/
         setTablePeople();
+        setTasksTablePeoplePage();
 
         tablePeople.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -187,7 +194,8 @@ public class viewProjectLvl3Controller implements Initializable {
                 addressLabel.setText(newSelection.getAddress());
                 phoneLabel.setText(newSelection.getPhone());
                 mailLabel.setText(newSelection.getMail());
-
+                setObservableListOfTaskForUser(newSelection);
+                taskTablePeoplePage.setItems(listaTaskuriForUser);
             }
         });
 
@@ -228,16 +236,25 @@ public class viewProjectLvl3Controller implements Initializable {
             }
         });
 
+    }
 
-        /**Set region border radius*/
+    ObservableList<TaskModel> listaTaskuriForUser = FXCollections.observableArrayList();
 
-        regionResources.setStyle("-fx-border-radius:20px;" +
-                "-fx-background-radius:20px; " +
-                "-fx-background-color: WHITE;");
+    public void setObservableListOfTaskForUser(EmployeeModel user) {
+        listaTaskuriForUser.clear();
+        ArrayList<TaskModel> taskuriLocal = projectLocal.getListaTaskuri();
 
-        regionBackground.setStyle("-fx-border-radius:20px;" +
-                "-fx-background-radius:20px; " +
-                "-fx-background-color: WHITE;");
+
+        for (int i = 0; i < taskuriLocal.size(); i++) {
+            if (taskuriLocal.get(i).getExecutant().getID() == user.getID()) {
+                listaTaskuriForUser.add(taskuriLocal.get(i));
+            }
+        }
+    }
+
+    public void setTasksTablePeoplePage(){
+        idTaskPeoplePage.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        taskNamePeoplePage.setCellValueFactory(new PropertyValueFactory<>("name"));
     }
 
     public void setResourceAllocTable() {
@@ -297,28 +314,28 @@ public class viewProjectLvl3Controller implements Initializable {
 
         currentRow = 1;
         currentColumn = 0;
-        int max=nr_max;
+        int max = nr_max;
         for (int i = 0; i < max; i++) {
-            Button quantity= new Button(String.valueOf(nr_max));
+            Button quantity = new Button(String.valueOf(nr_max));
             quantity.setMaxWidth(Double.MAX_VALUE);
             quantity.setMinWidth(Control.USE_PREF_SIZE);
             quantity.setMaxHeight(Double.MAX_VALUE);
-            grid.add(quantity,currentColumn,currentRow);
+            grid.add(quantity, currentColumn, currentRow);
             currentRow++;
             nr_max--;
         }
 
-        Button Task=new Button("Create Database");
+        Button Task = new Button("Create Database");
         Task.setMaxWidth(Double.MAX_VALUE);
         Task.setMinWidth(Control.USE_PREF_SIZE);
         Task.setMaxHeight(Double.MAX_VALUE);
-        grid.add(Task,1,1,1,4);
+        grid.add(Task, 1, 1, 1, 4);
 
-        Button a=new Button("Interface");
+        Button a = new Button("Interface");
         a.setMaxWidth(Double.MAX_VALUE);
         a.setMinWidth(Control.USE_PREF_SIZE);
         a.setMaxHeight(Double.MAX_VALUE);
-        grid.add(a,1,6,4,1);
+        grid.add(a, 1, 6, 4, 1);
         allocResScrollPane.setContent(grid);
 
 //        currentRow = 1;

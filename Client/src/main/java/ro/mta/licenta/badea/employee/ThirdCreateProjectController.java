@@ -168,7 +168,12 @@ public class ThirdCreateProjectController implements Initializable {
             emptyFields = true;
             periodicityField.setStyle("-fx-border-color:red");
         } else {
-            periodicityField.setStyle("-fx-border-color:none");
+            if (periodicityIntervals.contains(periodicityField.getValue()))
+                periodicityField.setStyle("-fx-border-color:none");
+            else {
+                emptyFields = true;
+                periodicityField.setStyle("-fx-border-color:red");
+            }
         }
         if (durationField.getValue() == null) {
             emptyFields = true;
@@ -186,7 +191,12 @@ public class ThirdCreateProjectController implements Initializable {
             emptyFields = true;
             startTimeField.setStyle("-fx-border-color:red");
         } else {
-            startTimeField.setStyle("-fx-border-color:none");
+            if (hours.contains(startTimeField.getValue()))
+                startTimeField.setStyle("-fx-border-color:none");
+            else {
+                emptyFields = true;
+                startTimeField.setStyle("-fx-border-color:red");
+            }
         }
         if (deadlineDateField.getValue() == null) {
             emptyFields = true;
@@ -198,7 +208,12 @@ public class ThirdCreateProjectController implements Initializable {
             emptyFields = true;
             deadlineTimeField.setStyle("-fx-border-color:red");
         } else {
-            deadlineTimeField.setStyle("-fx-border-color:none");
+            if (hours.contains(deadlineTimeField.getValue()))
+                deadlineTimeField.setStyle("-fx-border-color:none");
+            else{
+                emptyFields = true;
+                deadlineTimeField.setStyle("-fx-border-color:red");
+            }
         }
 
         /**check if the desire task is general or not*/
@@ -282,10 +297,10 @@ public class ThirdCreateProjectController implements Initializable {
                         }
                     }
 
-                    String selectedName=assignToComboBox.getValue().toString();
-                    SelectedWorkersIDs lista=new SelectedWorkersIDs();
-                    for(int i=0;i<lista.listaEmployees.size();i++){
-                        if(selectedName.equals(lista.listaEmployees.get(i).getFullName())){
+                    String selectedName = assignToComboBox.getValue().toString();
+                    SelectedWorkersIDs lista = new SelectedWorkersIDs();
+                    for (int i = 0; i < lista.listaEmployees.size(); i++) {
+                        if (selectedName.equals(lista.listaEmployees.get(i).getFullName())) {
                             localTask.setExecutant(lista.listaEmployees.get(i));
                         }
                     }
@@ -334,11 +349,11 @@ public class ThirdCreateProjectController implements Initializable {
     }
 
     public void finishAction(ActionEvent actionEvent) throws Exception {
-        System.out.println("N:"+taskuriNormale.size()+" g:"+taskuriGenerale.size());
+        System.out.println("N:" + taskuriNormale.size() + " g:" + taskuriGenerale.size());
 
         ProjectModel project = new ProjectModel();
-        ProjectTemporalModel tempProject=new ProjectTemporalModel();
-        Client client= Client.getInstance();
+        ProjectTemporalModel tempProject = new ProjectTemporalModel();
+        Client client = Client.getInstance();
 
 
         project.setCoordonator(client.getCurrentUser());
@@ -348,10 +363,10 @@ public class ThirdCreateProjectController implements Initializable {
         project.setDeadline(tempProject.getDeadline());
         project.setListaOameni(tempProject.getListaOameni());
         project.setListaEchipe(tempProject.getListaEchipe());
-        for(int i=0;i<taskuriNormale.size();i++){
+        for (int i = 0; i < taskuriNormale.size(); i++) {
             project.addNormalTask(taskuriNormale.get(i));
         }
-        for(int i=0;i<taskuriGenerale.size();i++){
+        for (int i = 0; i < taskuriGenerale.size(); i++) {
             project.addGeneralTask(taskuriGenerale.get(i));
         }
 
@@ -362,21 +377,21 @@ public class ThirdCreateProjectController implements Initializable {
         String projectJson = gson.toJson(project);
         System.out.println("***\n" + projectJson);
 
-        JSONObject tosend=new JSONObject(projectJson);
-        tosend.put("Type","Create new Project");
+        JSONObject tosend = new JSONObject(projectJson);
+        tosend.put("Type", "Create new Project");
         client.sendText(tosend.toString());
 
 
-        String receive=client.receiveText();
-        JSONObject response=new JSONObject(receive);
+        String receive = client.receiveText();
+        JSONObject response = new JSONObject(receive);
 
         System.out.println(response.toString());
-        if(response.get("Final Response").equals("ok")){
+        if (response.get("Final Response").equals("ok")) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Project Created!");
             alert.setContentText("All information was inserted into Database!");
             alert.showAndWait();
-        }else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error!");
             alert.setContentText("SQL Exception occured!");
@@ -393,15 +408,12 @@ public class ThirdCreateProjectController implements Initializable {
         listaResurse.clear();
 
 
-
         scene = new Scene(root);
         Stage primaryStage = new Stage();
         primaryStage.setTitle("Alloc Resources");
         primaryStage.setScene(scene);
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.showAndWait();
-
-
 
 
         for (int i = 0; i < resourceList.returnSizeOfResourceList(); i++) {
@@ -414,6 +426,11 @@ public class ThirdCreateProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /**Set combo box editable*/
+        periodicityField.setEditable(true);
+        startTimeField.setEditable(true);
+        deadlineTimeField.setEditable(true);
+
         /**Set buttons**/
         cleanButton.setStyle("button-hover-color: #293241;");
         createTaskButton.setStyle("button-hover-color: #293241;");
@@ -477,6 +494,8 @@ public class ThirdCreateProjectController implements Initializable {
             listaNumeEmployees.add(workers.get(i).getFullName());
         }
         assignToComboBox.setItems(listaNumeEmployees);
+
+
     }
 
     public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time) {
@@ -545,7 +564,7 @@ public class ThirdCreateProjectController implements Initializable {
 
     ObservableList<String> periodicityIntervals =
             FXCollections.observableArrayList(
-                    "No Periodicity","Daily", "Weekly", "Monthly"
+                    "No Periodicity", "Daily", "Weekly", "Monthly"
             );
 
     ObservableList<String> hours =

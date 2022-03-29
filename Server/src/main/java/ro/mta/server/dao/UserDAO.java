@@ -807,10 +807,10 @@ public class UserDAO implements IUserDAO {
 
         ArrayList<Project> listaProiecte = new ArrayList<>();
 
-        String sql = "select P.ID_Proiect,P.Denumire,P.Descriere,P.Finished from Proiecte P " +
+        String sql = "select distinct P.ID_Proiect,P.Denumire,P.Descriere,P.Finished from Proiecte P " +
                 "inner join Proiecte_Useri PU " +
                 "on P.ID_Proiect=PU.ID_Proiect " +
-                "Where PU.ID_USER=" + idUser;
+                "Where PU.ID_USER=" + idUser +" OR P.ID_Coordonator="+idUser;
 
         String returned = null;
         JSONObject errorjson = new JSONObject();

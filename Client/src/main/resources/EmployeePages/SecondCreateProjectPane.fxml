@@ -10,15 +10,15 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneMaster" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.SecondCreateProjectController">
+<Pane fx:id="paneMaster" prefHeight="500.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.SecondCreateProjectController">
    <children>
-      <StackPane fx:id="stackPaneView" layoutX="393.0" layoutY="26.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #3d5a80; -fx-border-radius:10px; -fx-background-radius:10px;" />
+      <StackPane fx:id="stackPaneView" layoutX="393.0" layoutY="14.0" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #3d5a80; -fx-border-radius:10px; -fx-background-radius:10px;" />
       <Label layoutX="65.0" layoutY="16.0" text="Teams:">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="68.0" layoutY="165.0" text="Assign roles to coworkers:">
+      <Label layoutX="67.0" layoutY="179.0" text="Assign roles to coworkers:">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -32,32 +32,32 @@
             </ImageView>
          </graphic>
       </Button>
-      <TableView fx:id="teamsTableView" layoutX="65.0" layoutY="48.0" prefHeight="102.0" prefWidth="294.0">
+      <TableView fx:id="teamsTableView" layoutX="65.0" layoutY="48.0" prefHeight="120.0" prefWidth="294.0">
         <columns>
           <TableColumn fx:id="teamNameColumn" prefWidth="286.0" text="Team's Name" />
         </columns>
       </TableView>
-      <TableView fx:id="coworkersTableView" layoutX="65.0" layoutY="193.0" prefHeight="102.0" prefWidth="294.0">
+      <TableView fx:id="coworkersTableView" layoutX="65.0" layoutY="200.0" prefHeight="120.0" prefWidth="294.0">
         <columns>
           <TableColumn fx:id="idRolesColumn" prefWidth="66.0" text="ID" />
           <TableColumn fx:id="fullNameRoleColumn" prefWidth="221.0" text="Full Name" />
         </columns>
       </TableView>
-      <Button fx:id="rightPageButton" layoutX="744.0" layoutY="447.0" mnemonicParsing="false" onAction="#rightPageAction" prefHeight="29.0" prefWidth="49.0">
+      <Button fx:id="rightPageButton" layoutX="717.0" layoutY="440.0" mnemonicParsing="false" onAction="#rightPageAction" prefHeight="37.0" prefWidth="59.0">
          <graphic>
-            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="32.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Images/rightarrow.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Label layoutX="65.0" layoutY="304.0" text="Total Resources:">
+      <Label layoutX="65.0" layoutY="331.0" text="Total Resources:">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="resourceTable" layoutX="65.0" layoutY="338.0" prefHeight="102.0" prefWidth="294.0">
+      <TableView fx:id="resourceTable" layoutX="65.0" layoutY="360.0" prefHeight="120.0" prefWidth="294.0">
         <columns>
           <TableColumn fx:id="idResColumn" prefWidth="55.0" text="ID" />
           <TableColumn fx:id="nameResColumn" prefWidth="95.0" text="Name" />
@@ -65,7 +65,7 @@
             <TableColumn fx:id="shareableResColumn" prefWidth="72.0" text="Shareable" />
         </columns>
       </TableView>
-      <Button fx:id="addResourceButton" layoutX="186.0" layoutY="302.0" mnemonicParsing="false" onAction="#addResourceAction">
+      <Button fx:id="addResourceButton" layoutX="187.0" layoutY="327.0" mnemonicParsing="false" onAction="#addResourceAction">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                <image>

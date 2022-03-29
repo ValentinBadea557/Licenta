@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
@@ -9,6 +13,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,13 +24,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="453.0" prefWidth="833.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.viewProjectLvl3Controller">
+<AnchorPane prefHeight="453.0" prefWidth="833.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.viewProjectLvl3Controller">
     <children>
-        <TabPane prefHeight="459.0" prefWidth="839.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane prefHeight="459.0" prefWidth="839.0" style="-fx-background-color: #3d5a80;" tabClosingPolicy="UNAVAILABLE">
             <tabs>
-                <Tab text="Task Scheduling">
+                <Tab fx:id="taskSchedulingTabOption" text="Task Scheduling">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="840.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="840.0" style="-fx-background-color: #98C1D9;">
                             <children>
                                 <ScrollPane layoutX="14.0" layoutY="45.0" prefHeight="353.0" prefWidth="816.0">
                                     <content>
@@ -45,9 +50,139 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-            <Tab text="Resources">
+            <Tab fx:id="createNewTaskTabOption" text="Create New Task">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #98c1d9;">
+                     <children>
+                        <Region fx:id="regionBackgroundTask" layoutX="33.0" layoutY="14.0" prefHeight="173.0" prefWidth="758.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 20px;" AnchorPane.bottomAnchor="243.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="48.0" AnchorPane.topAnchor="14.0" />
+                        <GridPane layoutX="135.0" layoutY="56.0" prefHeight="121.0" prefWidth="570.0" style="-fx-background-radius: 10px;" AnchorPane.bottomAnchor="253.0" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="134.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="138.0" minWidth="10.0" prefWidth="101.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="196.0" minWidth="10.0" prefWidth="184.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Name:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Periodicity:" textFill="WHITE" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Duration (h) :" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Start Date:" textFill="WHITE" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Start Time:" textFill="WHITE" GridPane.columnIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Deadline Date:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Deadline Time:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="General Task:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField promptText="Name" GridPane.columnIndex="1" />
+                              <ComboBox prefWidth="150.0" promptText="Periodicity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Spinner GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <DatePicker promptText="Date" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <DatePicker promptText="Date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <ComboBox prefWidth="150.0" promptText="Time" GridPane.columnIndex="3" />
+                              <ComboBox prefWidth="150.0" promptText="Time" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <RadioButton mnemonicParsing="false" text="Yes" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton mnemonicParsing="false" text="No" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="60.0" />
+                                 </padding>
+                              </RadioButton>
+                           </children>
+                        </GridPane>
+                        <Label contentDisplay="CENTER" layoutX="348.0" layoutY="25.0" text="Create new Task!" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <TableView layoutX="45.0" layoutY="215.0" prefHeight="122.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="120.0" text="Resource" />
+                            <TableColumn prefWidth="73.0" text="Quantity" />
+                          </columns>
+                        </TableView>
+                        <TableView layoutX="292.0" layoutY="213.0" prefHeight="126.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="54.0" text="ID" />
+                            <TableColumn prefWidth="141.0" text="General Task" />
+                          </columns>
+                        </TableView>
+                        <Region layoutX="549.0" layoutY="199.0" prefHeight="141.0" prefWidth="226.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 20px;" />
+                        <Label layoutX="622.0" layoutY="215.0" text="Parent Task:" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="628.0" layoutY="276.0" text="Assign To:" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox layoutX="588.0" layoutY="235.0" prefWidth="150.0" promptText="Predecessor" />
+                        <ComboBox layoutX="588.0" layoutY="296.0" prefWidth="150.0" promptText="Select an employee" />
+                        <Button layoutX="186.0" layoutY="370.0" mnemonicParsing="false" styleClass="buttonlogin" text="Clear all">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="510.0" layoutY="370.0" mnemonicParsing="false" styleClass="buttonlogin" text="Create Task">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="45.0" layoutY="191.0" text="Label">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="resourcesTabOption" text="Resources">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #98C1D9;">
                      <children>
                         <TableView fx:id="resourcesTable" layoutX="14.0" layoutY="14.0" prefHeight="358.0" prefWidth="346.0" AnchorPane.bottomAnchor="58.0">
                           <columns>
@@ -57,8 +192,8 @@
                               <TableColumn fx:id="shareableResourceColumn" prefWidth="92.79998779296875" text="Shareable" />
                           </columns>
                         </TableView>
-                        <Region fx:id="regionResources" layoutX="420.0" layoutY="14.0" prefHeight="358.0" prefWidth="394.0" style="-fx-background-color: lightgray;" />
-                        <Label alignment="CENTER" layoutX="421.0" layoutY="29.0" prefHeight="18.0" prefWidth="295.0" text="General Information">
+                        <Region fx:id="regionResources" layoutX="420.0" layoutY="14.0" prefHeight="358.0" prefWidth="394.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 20px;" />
+                        <Label alignment="CENTER" layoutX="421.0" layoutY="29.0" prefHeight="18.0" prefWidth="295.0" text="General Information" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font></Label>
@@ -75,33 +210,33 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Name:">
+                              <Label text="Name:" textFill="WHITE">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label text="Shareable:" GridPane.rowIndex="1">
+                              <Label text="Shareable:" textFill="WHITE" GridPane.rowIndex="1">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label text="Description:" GridPane.rowIndex="2">
+                              <Label text="Description:" textFill="WHITE" GridPane.rowIndex="2">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label text="Quantity:" GridPane.rowIndex="4">
+                              <Label text="Quantity:" textFill="WHITE" GridPane.rowIndex="4">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
                               <TextArea fx:id="descriptionResourceText" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2" />
-                              <Label fx:id="resourceNameLabel" text="Name" GridPane.columnIndex="1">
+                              <Label fx:id="resourceNameLabel" textFill="WHITE" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="shareableResourceLabel" text="Name" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label fx:id="shareableResourceLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -110,18 +245,18 @@
                            </children>
                         </GridPane>
                         <Button fx:id="modifyButton" layoutX="568.0" layoutY="261.0" mnemonicParsing="false" onAction="#modifyResourceAction" prefHeight="26.0" prefWidth="98.0" text="Modify" />
-                        <ImageView fitHeight="100.0" fitWidth="101.0" layoutX="716.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="100.0" fitWidth="101.0" layoutX="684.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../Images/output-onlinepngtools.png" />
+                              <Image url="@../Images/resIcon.png" />
                            </image>
                         </ImageView>
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Resource Allocation">
+            <Tab fx:id="resAllocationTabOption" text="Resource Allocation">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #98C1D9;">
                      <children>
                         <TableView fx:id="resourceAllocationTable" layoutX="17.0" layoutY="8.0" prefHeight="382.0" prefWidth="236.0">
                           <columns>
@@ -129,7 +264,7 @@
                             <TableColumn fx:id="nameResAllocColumn" prefWidth="160.0" text="Name" />
                           </columns>
                         </TableView>
-                        <ScrollPane fx:id="allocResScrollPane" layoutX="308.0" layoutY="86.0" prefHeight="303.0" prefWidth="511.0" />
+                        <ScrollPane fx:id="allocResScrollPane" layoutX="308.0" layoutY="86.0" prefHeight="303.0" prefWidth="511.0" style="-fx-background-color: #3d5a80;" />
                         <Label fx:id="resourceAllocNameLabel" layoutX="511.0" layoutY="55.0" prefHeight="27.0" prefWidth="306.0">
                            <font>
                               <Font name="System Bold" size="18.0" />
@@ -144,11 +279,11 @@
                   </AnchorPane>
                </content>
             </Tab>
-                <Tab text="Teams">
+                <Tab fx:id="teamsTabOptions" text="Teams">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="455.0" prefWidth="756.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="455.0" prefWidth="756.0" style="-fx-background-color: #98C1D9;">
                             <children>
-                                <TreeView fx:id="teamsTreeView" layoutX="62.0" layoutY="38.0" prefHeight="333.0" prefWidth="365.0" />
+                                <TreeView fx:id="teamsTreeView" layoutX="62.0" layoutY="38.0" prefHeight="333.0" prefWidth="365.0" style="-fx-background-color: #3d5a80;" />
                                 <ImageView fitHeight="415.0" fitWidth="294.0" layoutX="569.0" layoutY="231.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="150.0">
                                     <image>
                                         <Image url="@../Images/Team-PNG-File.png" />
@@ -163,9 +298,9 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="People">
+                <Tab fx:id="peopleTabOption" text="People">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #98C1D9;">
                             <children>
                                 <TableView fx:id="tablePeople" layoutX="21.0" layoutY="31.0" prefHeight="360.0" prefWidth="278.0" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="30.0">
                                     <columns>
@@ -174,8 +309,8 @@
                                         <TableColumn fx:id="lastNameColumn" prefWidth="110.39996337890625" text="Last Name" />
                                     </columns>
                                 </TableView>
-                                <Region fx:id="regionBackground" layoutX="357.0" layoutY="30.0" prefHeight="360.0" prefWidth="458.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="30.0" />
-                                <Label alignment="CENTER" layoutX="357.0" layoutY="40.0" prefHeight="30.0" prefWidth="457.0" text="General Information" AnchorPane.leftAnchor="357.0" AnchorPane.rightAnchor="25.0">
+                                <Region fx:id="regionBackground" layoutX="357.0" layoutY="30.0" prefHeight="360.0" prefWidth="372.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 20px;" AnchorPane.bottomAnchor="40.0" AnchorPane.topAnchor="30.0" />
+                                <Label alignment="CENTER" layoutX="357.0" layoutY="40.0" prefHeight="30.0" prefWidth="367.0" text="General Information" textFill="WHITE" AnchorPane.leftAnchor="357.0" AnchorPane.rightAnchor="115.0">
                                     <font>
                                         <Font name="System Bold" size="15.0" />
                                     </font>
@@ -194,73 +329,84 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <Label text="Username:">
+                                        <Label text="Username:" textFill="WHITE">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label text="First Name:" GridPane.rowIndex="1">
+                                        <Label text="First Name:" textFill="WHITE" GridPane.rowIndex="1">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label text="Last Name:" GridPane.rowIndex="2">
+                                        <Label text="Last Name:" textFill="WHITE" GridPane.rowIndex="2">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label text="Address:" GridPane.rowIndex="3">
+                                        <Label text="Address:" textFill="WHITE" GridPane.rowIndex="3">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label text="Phone:" GridPane.rowIndex="4">
+                                        <Label text="Phone:" textFill="WHITE" GridPane.rowIndex="4">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label text="Mail:" GridPane.rowIndex="5">
+                                        <Label text="Mail:" textFill="WHITE" GridPane.rowIndex="5">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="usernameLabel" GridPane.columnIndex="1">
+                                        <Label fx:id="usernameLabel" textFill="WHITE" GridPane.columnIndex="1">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="firstNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                        <Label fx:id="firstNameLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="lastNameLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                        <Label fx:id="lastNameLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="addressLabel" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                        <Label fx:id="addressLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="phoneLabel" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                        <Label fx:id="phoneLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
-                                        <Label fx:id="mailLabel" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                        <Label fx:id="mailLabel" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                             <font>
-                                                <Font size="13.0" />
+                                                <Font name="System Bold" size="13.0" />
                                             </font>
                                         </Label>
                                     </children>
                                 </GridPane>
-                                <ImageView fitHeight="56.0" fitWidth="88.0" layoutX="706.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="51.0" fitWidth="80.0" layoutX="734.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
                                         <Image url="@../Images/info.png" />
                                     </image>
                                 </ImageView>
+                        <TableView fx:id="taskTablePeoplePage" layoutX="380.0" layoutY="271.0" prefHeight="104.0" prefWidth="325.0">
+                          <columns>
+                            <TableColumn fx:id="idTaskPeoplePage" prefWidth="75.0" text="ID Task" />
+                            <TableColumn fx:id="taskNamePeoplePage" prefWidth="241.0" text="Task " />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="386.0" layoutY="248.0" text="Tasks to do:" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
                             </children></AnchorPane>
                     </content>
                 </Tab>

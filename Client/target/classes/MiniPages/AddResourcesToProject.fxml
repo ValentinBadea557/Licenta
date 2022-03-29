@@ -10,16 +10,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: WHITE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddResourceToProjectController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: WHITE;" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddResourceToProjectController">
    <children>
       <Label layoutX="31.0" layoutY="30.0" text="Add resources to your Project!">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <ImageView fitHeight="51.0" fitWidth="107.0" layoutX="301.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="73.0" fitWidth="93.0" layoutX="286.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../Images/output-onlinepngtools.png" />
+            <Image url="@../Images/resIcon.png" />
          </image>
       </ImageView>
       <TableView fx:id="resourceTable" layoutX="11.0" layoutY="76.0" prefHeight="139.0" prefWidth="378.0">

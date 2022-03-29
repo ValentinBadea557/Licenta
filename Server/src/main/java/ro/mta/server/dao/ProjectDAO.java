@@ -122,8 +122,10 @@ public class ProjectDAO {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
 
-        String sql = "SELECT * from Taskuri " +
-                "Where ID_Proiect=" + idProject;
+        String sql = "SELECT * from Taskuri T " +
+                "inner join Taskuri_Useri TU " +
+                "on T.ID_Task=TU.ID_Task " +
+                "Where T.ID_Proiect=" + idProject;
 
         ArrayList<Task> listaTaskuri = new ArrayList<>();
         try {
@@ -131,8 +133,10 @@ public class ProjectDAO {
             ResultSet rs = stmt.executeQuery(sql);
             ResultSetMetaData meta = rs.getMetaData();
 
-            while (rs.next()) {
+            System.out.println("aici1234");
 
+            while (rs.next()) {
+                System.out.println("aici12");
                 Task task = new Task();
                 task.setID(rs.getInt(1));
                 task.setName(rs.getString(2));
@@ -150,6 +154,9 @@ public class ProjectDAO {
                 int id_gen = rs.getInt(8);
                 int id_parent = rs.getInt(9);
                 task.setTaskGeneral(getTaskGeneral(id_gen));
+
+                UserDAO usr=new UserDAO();
+                task.setExecutant(usr.getUserbasedOnID(rs.getInt(11)));
 
                 if (id_parent == 0) {
                     task.setTaskParinte(null);
