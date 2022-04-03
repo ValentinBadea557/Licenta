@@ -363,6 +363,8 @@ public class ThirdCreateProjectController implements Initializable {
         project.setDeadline(tempProject.getDeadline());
         project.setListaOameni(tempProject.getListaOameni());
         project.setListaEchipe(tempProject.getListaEchipe());
+        project.setListaResurseCurente(tempProject.getListaResurse());
+
         for (int i = 0; i < taskuriNormale.size(); i++) {
             project.addNormalTask(taskuriNormale.get(i));
         }
@@ -426,6 +428,9 @@ public class ThirdCreateProjectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ProjectTemporalModel p=new ProjectTemporalModel();
+        System.out.println(p.getListaResurse());
+
         /**Set combo box editable*/
         periodicityField.setEditable(true);
         startTimeField.setEditable(true);

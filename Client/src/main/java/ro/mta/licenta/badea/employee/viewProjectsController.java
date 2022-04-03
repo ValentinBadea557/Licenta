@@ -77,8 +77,7 @@ public class viewProjectsController implements Initializable {
 
 
 
-        Type listOfMyClassObject = new TypeToken<ArrayList<ProjectModel>>() {
-        }.getType();
+        Type listOfMyClassObject = new TypeToken<ArrayList<ProjectModel>>() {}.getType();
         List<ProjectModel> listaProiecte = gson.fromJson(receive, listOfMyClassObject);
 
 

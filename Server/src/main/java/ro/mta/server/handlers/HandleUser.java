@@ -2,17 +2,14 @@ package ro.mta.server.handlers;
 
 import com.google.gson.*;
 import org.json.JSONObject;
+import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
+import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.dao.ProjectDAO;
 import ro.mta.server.dao.ResourceDAO;
-import ro.mta.server.dao.TaskGeneralDAO;
 import ro.mta.server.dao.UserDAO;
-import ro.mta.server.entities.TaskGeneral;
 import ro.mta.server.entities.User;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 public class HandleUser implements IHandler {
     private String messageReceived;
@@ -122,20 +119,3 @@ public class HandleUser implements IHandler {
 }
 
 
-class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
-
-    @Override
-    public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-        return new JsonPrimitive(formatter.format(localDateTime));
-    }
-}
-
-class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
-    @Override
-    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-        return LocalDateTime.parse(json.getAsString(),
-                DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
-    }
-}

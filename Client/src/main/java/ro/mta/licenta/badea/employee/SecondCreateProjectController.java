@@ -194,6 +194,9 @@ public class SecondCreateProjectController implements Initializable {
         primaryStage.showAndWait();
 
 
+        ProjectTemporalModel tempProject=new ProjectTemporalModel();
+        tempProject.setListaResurse(resourceList.listaResProiect);
+
         for (int i = 0; i < resourceList.listaResProiect.size(); i++) {
             resources.add(resourceList.listaResProiect.get(i));
         }

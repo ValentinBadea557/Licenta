@@ -84,9 +84,9 @@ public class ResourceDAO implements IResourceDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            JSONObject errorJson=new JSONObject();
-            errorJson.put("Response","SQL Error!");
-            returnString=errorJson.toString();
+            JSONObject errorJson = new JSONObject();
+            errorJson.put("Response", "SQL Error!");
+            returnString = errorJson.toString();
         }
 
         return returnString;
@@ -114,6 +114,37 @@ public class ResourceDAO implements IResourceDAO {
         }
         System.out.println("ID Resursa : " + id);
         return id;
+    }
+
+    @Override
+    public Resource getFullResourceBasedOnID(int idRes) {
+        Database db = new Database();
+        Connection con = db.getConn();
+        String numeResursa = new String();
+        String sql = "Select * from Resurse "
+                + "where ID_Resursa=" + idRes;
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            Resource res = new Resource();
+            while (rs.next()) {
+                res.setID(rs.getInt(1));
+                res.setDenumire(rs.getString(2));
+                res.setCantitate(rs.getInt(3));
+                res.setShareable(rs.getBoolean(4));
+                res.setDescriere(rs.getString(5));
+
+            }
+            return res;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override

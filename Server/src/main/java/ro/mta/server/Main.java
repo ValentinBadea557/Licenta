@@ -6,6 +6,7 @@ import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.dao.*;
 import ro.mta.server.entities.Project;
+import ro.mta.server.entities.Schedule;
 import ro.mta.server.entities.Task;
 import ro.mta.server.entities.User;
 import ro.mta.server.handlers.HandleUser;
@@ -22,6 +23,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Date;
 
 public class Main {
@@ -35,6 +37,15 @@ public class Main {
 
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
+        Schedule sch = new Schedule();
+
+        LocalDate date = LocalDate.of(2022, Month.APRIL, 3);
+        sch.getListOfRealTasks(3009, date);
+        sch.getListOfResources(3009);
+        sch.fillWithZeroWhenResourceIsNotUsed();
+
+        sch.startScheduling();
+        System.exit(123);
 
         boolean status;
         status = CreateKeyTrustManagerFactory();

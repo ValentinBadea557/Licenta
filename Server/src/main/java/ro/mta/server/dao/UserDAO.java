@@ -4,6 +4,8 @@ import com.google.gson.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.Database;
+import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
+import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.entities.*;
 
 
@@ -449,6 +451,21 @@ public class UserDAO implements IUserDAO {
         } catch (SQLException e) {
             response.put("Response Create", "Error");
             e.printStackTrace();
+        }
+
+        /**Insert Project's Resources*/
+        ArrayList<Resource> listaRes=project.getListaResurseCurente();
+        for(int i=0;i<listaRes.size();i++){
+            String sqlResurseAdd="Insert into Resurse_Proiecte " +
+                    "Values ("+project.getID()+","+listaRes.get(i).getID()+","+listaRes.get(i).getCantitate()+");";
+
+            try {
+                Statement stmt = con.createStatement();
+                stmt.execute(sqlResurseAdd);
+            } catch (Exception e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
         }
 
         /**Insert roles and permissions**/
@@ -903,20 +920,3 @@ public class UserDAO implements IUserDAO {
 }
 
 
-class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss");
-
-    @Override
-    public JsonElement serialize(LocalDateTime localDateTime, Type srcType, JsonSerializationContext context) {
-        return new JsonPrimitive(formatter.format(localDateTime));
-    }
-}
-
-class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
-    @Override
-    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-        return LocalDateTime.parse(json.getAsString(),
-                DateTimeFormatter.ofPattern("d::MMM::uuuu HH::mm::ss").withLocale(Locale.ENGLISH));
-    }
-}
