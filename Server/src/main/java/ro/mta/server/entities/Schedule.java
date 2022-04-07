@@ -29,13 +29,6 @@ public class Schedule {
             }
         }
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-
     }
 
 
@@ -44,37 +37,43 @@ public class Schedule {
             setStarttimeAndCompletionTime(listaTaskuri.get(i));
         }
 
+        listaTaskuri.get(0).changeResUsage(2, 7);
+        System.out.println(listaTaskuri.get(0).quantityOfResourceRequest(listaResurse.get(0).getID()));
 
-        int z=1;
-
-        while (z<12) {
-            System.out.println("Iteratia nr: " + z);
-            algorithm();
+        boolean isSolved = false;
+        boolean continueAlgorithm = false;
+        while (!continueAlgorithm) {
+            continueAlgorithm = algorithm();
             recalculateCompletion();
-
-            printStartTimesAndCompletions();
-            System.out.println("\n*******FINISH ITERATIE*******");
-            z++;
-
-            System.out.println();
+            int currentMakespan = getMakespan();
+            if (currentMakespan > 23) {
+                isSolved = false;
+                System.out.println(currentMakespan);
+                System.out.println("Nu exista solutie!");
+                break;
+            }
+            isSolved = true;
         }
+        System.out.println("Is solved? : " + isSolved);
+
+        printStartTimesAndCompletions();
+    }
+
+    public int getMakespan() {
+        int max = listaTaskuri.get(0).getCompletionTime();
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            if (listaTaskuri.get(i).getCompletionTime() > max) {
+                max = listaTaskuri.get(i).getCompletionTime();
+            }
+        }
+
+        return max;
     }
 
     public void recalculateCompletion() {
         for (int i = 0; i < listaTaskuri.size(); i++) {
             TaskReal task = listaTaskuri.get(i);
-//            if (task.getParentID() != 0) {
-//                int parentStart = 0;
-//                for (int j = 0; j < listaTaskuri.size(); j++) {
-//                    if (listaTaskuri.get(j).getID() == task.getParentID()) {
-//                        parentStart = listaTaskuri.get(j).getCompletionTime();
-//                        task.setStartTime(parentStart);
-//                        task.setCompletionTime(parentStart + task.getDuration());
-//                    }
-//                }
-//            } else {
-//                task.setCompletionTime(task.getStartTime() + task.getDuration());
-//            }
+
             if (task.getParentID() != 0) {
                 for (int j = 0; j < listaTaskuri.size(); j++) {
                     if (listaTaskuri.get(j).getID() == task.getParentID()) {
@@ -107,7 +106,7 @@ public class Schedule {
         System.out.println();
 
         /**Print StartTimes and Completions*/
-        printStartTimesAndCompletions();
+         printStartTimesAndCompletions();
 
 
         /**list of completions times*/
@@ -119,7 +118,7 @@ public class Schedule {
         for (int i = 0; i < listWithoutDuplicates.size(); i++) {
 
             int t = listWithoutDuplicates.get(i);
-            System.out.println("\nCurrent T:" + t);
+             System.out.println("\nCurrent T:" + t);
             old_value = listaTaskuri.get(0).getStartTime();
             tobeModified = listaTaskuri.get(0);
 
@@ -127,17 +126,17 @@ public class Schedule {
                 int o = 0;
                 ArrayList<TaskReal> F = new ArrayList<>();
 
-                System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID());
+                  System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID());
 
                 for (int j = 0; j < listaTaskuri.size(); j++) {
 
-                   // System.out.println("Primul modificat: "+tobeModified.getName());
+                    // System.out.println("Primul modificat: "+tobeModified.getName());
                     int start = listaTaskuri.get(j).getStartTime();
                     int completion = listaTaskuri.get(j).getCompletionTime();
                     int resRequest = listaTaskuri.get(j).quantityOfResourceRequest(listaResurse.get(k).getID());
 
                     if ((start < t) && (completion >= t) && (resRequest > 0)) {
-                        System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
+                          System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
                         o += resRequest;
                         F.add(listaTaskuri.get(j));
 
@@ -150,34 +149,34 @@ public class Schedule {
                             int curentArea = listaTaskuri.get(j).getCompletionTime() * listaTaskuri.get(j).quantityOfResourceRequest(listaResurse.get(k).getID());
                             if (curentArea > area) {
                                 tobeModified = listaTaskuri.get(j);
-                                //  System.out.println("Primul modificat va fi:"+tobeModified.getName());
+
                             }
                         }
                     }
 
                     if (o > listaResurse.get(k).getCantitate()) {
 
-                        System.out.println(o + " > " + listaResurse.get(k).getCantitate());
+                           System.out.println(o + " > " + listaResurse.get(k).getCantitate());
                         int currentStart = tobeModified.getStartTime();
                         currentStart++;
                         tobeModified.setStartTime(currentStart);
-                        System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
+                          System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
 
                         return false;
                     }
                 }
             }
         }
-        System.out.println("CORECT****!!!!");
         return true;
 
     }
 
     public void printStartTimesAndCompletions() {
+        System.out.print("Starttimes: ");
         for (int i = 0; i < listaTaskuri.size(); i++) {
             System.out.print(listaTaskuri.get(i).getName() + ":" + listaTaskuri.get(i).getStartTime() + " ");
         }
-        System.out.println();
+        System.out.print("\nCompletions: ");
         for (int i = 0; i < listaTaskuri.size(); i++) {
             System.out.print(listaTaskuri.get(i).getName() + ":" + listaTaskuri.get(i).getCompletionTime() + " ");
         }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TaskReal implements Comparable<TaskReal>{
+public class TaskReal implements Comparable<TaskReal> {
     private int ID;
     private String name;
     private int duration;
@@ -26,22 +26,26 @@ public class TaskReal implements Comparable<TaskReal>{
 
     public HashMap<Integer, Integer> resourceUsage = new HashMap<Integer, Integer>(); //IDres / Quantity
 
-    public int quantityOfResourceRequest(int idResource){
+
+    public int quantityOfResourceRequest(int idResource) {
         return resourceUsage.get(idResource);
     }
 
-    public void addIntoHashMap(int idRes,int quantity){
-        this.resourceUsage.put(idRes,quantity);
+    public void addIntoHashMap(int idRes, int quantity) {
+        this.resourceUsage.put(idRes, quantity);
     }
 
-    public boolean checkIfTaskUseAResource(int idRes){
-        if(resourceUsage.containsKey(idRes)){
+    public boolean checkIfTaskUseAResource(int idRes) {
+        if (resourceUsage.containsKey(idRes)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
+    public void changeResUsage(int idRes, int quantity) {
+        resourceUsage.put(idRes, quantity);
+    }
 
     public TaskReal setResourcesFromDB(int idTaskReal) {
         Database db = new Database();
@@ -78,7 +82,7 @@ public class TaskReal implements Comparable<TaskReal>{
 
                 task.setParentID(rs.getInt(6));
 
-                task.addIntoHashMap(rs.getInt(7),rs.getInt(8));
+                task.addIntoHashMap(rs.getInt(7), rs.getInt(8));
 
             }
 
@@ -159,6 +163,6 @@ public class TaskReal implements Comparable<TaskReal>{
     @Override
     public int compareTo(TaskReal o) {
 
-        return Integer.compare(getStartTime(),o.getStartTime());
+        return Integer.compare(getStartTime(), o.getStartTime());
     }
 }
