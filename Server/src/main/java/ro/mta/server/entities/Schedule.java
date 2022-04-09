@@ -19,6 +19,8 @@ public class Schedule {
     private ArrayList<TaskReal> listaTaskuri = new ArrayList<>();
     private ArrayList<Resource> listaResurse = new ArrayList<>(); // + DURATIONS
     private HashMap<Integer, Integer> schedulingMap = new HashMap<Integer, Integer>(); //id task real / starttime unit
+    private String[][] positionMatrixR1 = new String[7][];
+
 
     public void fillWithZeroWhenResourceIsNotUsed() {
         for (int i = 0; i < listaTaskuri.size(); i++) {
@@ -37,8 +39,8 @@ public class Schedule {
             setStarttimeAndCompletionTime(listaTaskuri.get(i));
         }
 
-        listaTaskuri.get(0).changeResUsage(2, 7);
-        System.out.println(listaTaskuri.get(0).quantityOfResourceRequest(listaResurse.get(0).getID()));
+//        listaTaskuri.get(0).changeResUsage(2, 7);
+//        System.out.println(listaTaskuri.get(0).quantityOfResourceRequest(listaResurse.get(0).getID()));
 
         boolean isSolved = false;
         boolean continueAlgorithm = false;
@@ -57,6 +59,9 @@ public class Schedule {
         System.out.println("Is solved? : " + isSolved);
 
         printStartTimesAndCompletions();
+
+        System.out.println();
+        calculatePositions();
     }
 
     public int getMakespan() {
@@ -87,6 +92,196 @@ public class Schedule {
         }
     }
 
+    public void calculatePositions() {
+        for (int i = 0; i < 7; i++) {
+            positionMatrixR1[i] = new String[12];
+        }
+
+        System.out.println("Incepe pozitionarea!");
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            System.out.print(listaTaskuri.get(i).getName() + " ");
+        }
+
+        for (int i = 0; i < 7; i++) {
+            System.out.println();
+            for (int j = 0; j < 12; j++) {
+                positionMatrixR1[i][j] = "0";
+                System.out.print(positionMatrixR1[i][j] + " ");
+            }
+        }
+
+        System.out.println();
+
+        String m[][] = new String[7][12];
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 12; j++) {
+                m[i][j] = "0";
+            }
+        }
+        f(0, 0, m, 0);
+
+
+        System.exit(123);
+    }
+
+    public int getNoTimeslot(int timeslot) {
+        int no = 0;
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            TaskReal task = listaTaskuri.get(i);
+            if (task.getStartTime() == timeslot)
+                no++;
+        }
+
+        return no;
+    }
+
+    public TaskReal getTaskNoTimeslot(int timeslot, int placedTimeslot) {
+        int no = 0;
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            TaskReal task = listaTaskuri.get(i);
+            if (task.getStartTime() == timeslot) {
+                if (no == placedTimeslot)
+                    return task;
+                else
+                    no++;
+            }
+        }
+
+        return null;
+    }
+
+    int found = 0;
+//placed time splot = index task
+    public void f(int timeslot, int placedTimeslot, String[][] m, int noTaskPut) {
+        if(found == 1)
+            return;
+        if (noTaskPut == 10) {
+            System.out.println("FINISH");
+            printMatrix(m);
+
+            found = 1;
+            return;
+        }
+        if (timeslot > 12)
+            return;
+        if (getNoTimeslot(timeslot) == 0)
+            f(timeslot + 1, 0, m, noTaskPut);
+        else if (placedTimeslot == getNoTimeslot(timeslot))
+            f(timeslot + 1, 0, m, noTaskPut);
+        else {
+            TaskReal task = getTaskNoTimeslot(timeslot, placedTimeslot);
+
+            int nrResurse = task.quantityOfResourceRequest(2);
+
+            for (int rand = 0; rand < (7 - nrResurse + 1); rand++) {
+                int start = task.getStartTime();
+                int durata = task.getDuration();
+
+                System.out.println("Testez pentru :" + task.getName());
+                boolean res = checkSpace(rand, start, nrResurse, durata, m);
+                if (res) {
+                    for (int linie = rand; linie < rand + nrResurse; linie++) {
+                        for (int coloana = start; coloana < start + durata; coloana++) {
+                            m[linie][coloana] = task.getName();
+                        }
+                    }
+//                    printMatrix(m);
+
+                    f(timeslot, placedTimeslot + 1, m, noTaskPut + 1);
+//                    if(found == 1)
+//                        return;
+                    for (int linie = rand; linie < rand + nrResurse; linie++) {
+                        for (int coloana = start; coloana < start + durata; coloana++) {
+                            m[linie][coloana] = "0";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+//    public void func(int myJ) {
+//        for (int i = 0; i < listaTaskuri.size(); i++) {
+//            TaskReal task = listaTaskuri.get(i);
+//            int nrResurse = task.quantityOfResourceRequest(2);
+//
+//            for (int rand = myJ; rand < (7 - nrResurse + 1); rand++) {
+//                int start = task.getStartTime();
+//                int durata = task.getDuration();
+//
+//                System.out.println("Testez pentru :" + task.getName());
+//                boolean res = checkSpace(rand, start, nrResurse, durata, m);
+//                if (res) {
+//                    for (int linie = rand; linie < rand + nrResurse; linie++) {
+//                        for (int coloana = start; coloana < start + durata; coloana++) {
+//                            positionMatrixR1[linie][coloana] = task.getName();
+//                        }
+//                    }
+//                    break;
+//                }
+//                if (res == false && rand == (7 - nrResurse)) {
+//                    System.out.println("NU SE POATE");
+//                    // deleteFromMatrix(listaTaskuri.get(i-1));
+//                    // printMatrix();
+//                    // i-=2;
+//                }
+//
+//            }
+//
+////            printMatrix();
+//            System.out.println();
+//
+//
+//        }
+//    }
+
+    public void deleteFromMatrix(TaskReal task) {
+        String name = task.getName();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 12; j++) {
+                if (positionMatrixR1[i][j].equals(name)) {
+                    positionMatrixR1[i][j] = "0";
+                }
+            }
+        }
+    }
+
+    public void zerosMatrix() {
+        for (int i = 0; i < 7; i++) {
+            System.out.println();
+            for (int j = 0; j < 12; j++) {
+                positionMatrixR1[i][j] = "0";
+            }
+        }
+    }
+
+    public void printMatrix(String[][] m) {
+        System.out.println();
+
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 12; j++) {
+                String p = "00";
+                if (!m[i][j].equals("0"))
+                    p = m[i][j];
+                System.out.print(p + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public boolean checkSpace(int linie, int coloana, int nrRes, int durata, String m[][]) {
+        boolean ok = true;
+        for (int i = linie; i < linie + nrRes; i++) {
+            for (int j = coloana; j < coloana + durata; j++) {
+//                System.out.println("[" + i + "]" + "[" + j + "]");
+                if (!m[i][j].equals("0")) {
+                    ok = false;
+                }
+            }
+        }
+        return ok;
+    }
+
 
     public boolean algorithm() {
 
@@ -106,7 +301,7 @@ public class Schedule {
         System.out.println();
 
         /**Print StartTimes and Completions*/
-         printStartTimesAndCompletions();
+        printStartTimesAndCompletions();
 
 
         /**list of completions times*/
@@ -118,7 +313,7 @@ public class Schedule {
         for (int i = 0; i < listWithoutDuplicates.size(); i++) {
 
             int t = listWithoutDuplicates.get(i);
-             System.out.println("\nCurrent T:" + t);
+            System.out.println("\nCurrent T:" + t);
             old_value = listaTaskuri.get(0).getStartTime();
             tobeModified = listaTaskuri.get(0);
 
@@ -126,7 +321,7 @@ public class Schedule {
                 int o = 0;
                 ArrayList<TaskReal> F = new ArrayList<>();
 
-                  System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID());
+                System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID());
 
                 for (int j = 0; j < listaTaskuri.size(); j++) {
 
@@ -136,7 +331,7 @@ public class Schedule {
                     int resRequest = listaTaskuri.get(j).quantityOfResourceRequest(listaResurse.get(k).getID());
 
                     if ((start < t) && (completion >= t) && (resRequest > 0)) {
-                          System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
+                        System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
                         o += resRequest;
                         F.add(listaTaskuri.get(j));
 
@@ -156,11 +351,11 @@ public class Schedule {
 
                     if (o > listaResurse.get(k).getCantitate()) {
 
-                           System.out.println(o + " > " + listaResurse.get(k).getCantitate());
+                        System.out.println(o + " > " + listaResurse.get(k).getCantitate());
                         int currentStart = tobeModified.getStartTime();
                         currentStart++;
                         tobeModified.setStartTime(currentStart);
-                          System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
+                        System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
 
                         return false;
                     }

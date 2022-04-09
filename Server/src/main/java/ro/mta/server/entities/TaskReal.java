@@ -162,7 +162,6 @@ public class TaskReal implements Comparable<TaskReal> {
 
     @Override
     public int compareTo(TaskReal o) {
-
         return Integer.compare(getStartTime(), o.getStartTime());
     }
 }
