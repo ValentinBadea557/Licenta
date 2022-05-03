@@ -1,6 +1,6 @@
 package ro.mta.server.entities;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Project {
@@ -8,11 +8,10 @@ public class Project {
     private User coordonator;
     private String nume;
     private String descriere;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private ArrayList<Team> listaEchipe;
     private ArrayList<User> listaOameni;
-    private ArrayList<TaskGeneral> listaTaskuriGenerale;
     private ArrayList<Task> listaTaskuri;
     private ArrayList<Resource> listaResurseCurente;
     private ArrayList<Task> listaTaskuriReale;
@@ -51,24 +50,20 @@ public class Project {
         return ID;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
-    }
-
-    public void setListaTaskuriGenerale(ArrayList<TaskGeneral> listaTaskuriGenerale) {
-        this.listaTaskuriGenerale = new ArrayList<>(listaTaskuriGenerale);
     }
 
     public void setListaTaskuri(ArrayList<Task> listaTaskuri) {
@@ -105,10 +100,6 @@ public class Project {
 
     public ArrayList<Task> getListaTaskuri() {
         return listaTaskuri;
-    }
-
-    public ArrayList<TaskGeneral> getListaTaskuriGenerale() {
-        return listaTaskuriGenerale;
     }
 
     public ArrayList<Team> getListaEchipe() {

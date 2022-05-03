@@ -24,7 +24,6 @@ public interface IUserDAO {
     public String createNewProject(String jsonProject);
     public int createRealTasks(Task task) throws SQLException;
     public int createRoleOrGetRoleID(String role);
-    public int getIDofGeneralTask(TaskGeneral general);
     public int getIDofNormalTask(Task task);
     public String viewProjects(int idUser);
     public String getEveryInfoAboutProject(int idProject);

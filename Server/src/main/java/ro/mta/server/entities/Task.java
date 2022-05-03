@@ -1,5 +1,6 @@
 package ro.mta.server.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -8,8 +9,8 @@ public class Task {
     private String name;
     private String periodicity;
     private int duration;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private TaskGeneral taskGeneral;
     private Task parinte;
     private int ID_Proiect;
@@ -24,19 +25,19 @@ public class Task {
         return executant;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 

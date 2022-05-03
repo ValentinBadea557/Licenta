@@ -4,6 +4,8 @@ import com.google.gson.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
 import ro.mta.server.Database;
+import ro.mta.server.GsonDateFormat.LocalDateDeserializer;
+import ro.mta.server.GsonDateFormat.LocalDateSerializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.entities.*;
@@ -424,8 +426,8 @@ public class UserDAO implements IUserDAO {
     @Override
     public String createNewProject(String jsonProject) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         JSONObject response = new JSONObject();
@@ -433,6 +435,7 @@ public class UserDAO implements IUserDAO {
         Database db = new Database();
         Connection con = db.getConn();
 
+        System.out.println(jsonProject);
         Project project = gson.fromJson(jsonProject, Project.class);
 
         /**Insert Project*/
@@ -535,44 +538,23 @@ public class UserDAO implements IUserDAO {
             }
         }
 
-        /**Insert Taskuri Generale*/
-        ArrayList<TaskGeneral> listaGenerale = project.getListaTaskuriGenerale();
-        for (int i = 0; i < listaGenerale.size(); i++) {
-            String sqlGeneral = "Insert into Taskuri_Generale " +
-                    "Values ('" + listaGenerale.get(i).getName() + "','" + listaGenerale.get(i).getPeriodicity() + "','" +
-                    listaGenerale.get(i).getDuration() + "','" + listaGenerale.get(i).getStarttime() + "','" +
-                    listaGenerale.get(i).getDeadline() + "');";
-            try {
-                Statement stmt = con.createStatement();
-                stmt.execute(sqlGeneral);
-            } catch (Exception e) {
-                response.put("Response Create", "Error");
-                e.printStackTrace();
-            }
-        }
-
         /**Insert Taskuri***/
         ArrayList<Task> listaTaskuri = project.getListaTaskuri();
         for (int i = 0; i < listaTaskuri.size(); i++) {
-            int id_general = getIDofGeneralTask(listaTaskuri.get(i).getTaskGeneral());
-
             String sqlNormal = null;
-
-
             if (listaTaskuri.get(i).getTaskParinte() != null) {
-                int id_general_particulat = getIDofGeneralTask(listaTaskuri.get(i).getTaskParinte().getTaskGeneral());
-                listaTaskuri.get(i).getTaskParinte().getTaskGeneral().setID(id_general_particulat);
-                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_General,ID_Task_Parinte)  " +
+
+                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_Task_Parinte)  " +
                         "Values ('" + listaTaskuri.get(i).getName() + "','" + listaTaskuri.get(i).getPeriodicity() + "' ," +
                         listaTaskuri.get(i).getDuration() + ",'" + listaTaskuri.get(i).getStarttime() + "','" +
-                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + id_general + "," + getIDofNormalTask(listaTaskuri.get(i).getTaskParinte()) + "); " +
+                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + getIDofNormalTask(listaTaskuri.get(i).getTaskParinte()) + "); " +
                         "Select SCOPE_IDENTITY();";
 
             } else {
-                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_General) " +
+                sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect) " +
                         "Values ('" + listaTaskuri.get(i).getName() + "','" + listaTaskuri.get(i).getPeriodicity() + "' ," +
                         listaTaskuri.get(i).getDuration() + ",'" + listaTaskuri.get(i).getStarttime() + "','" +
-                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "," + id_general + "); " +
+                        listaTaskuri.get(i).getDeadline() + "' , " + project.getID() + "); " +
                         "Select SCOPE_IDENTITY();";
             }
             int id_task = 0;
@@ -647,8 +629,8 @@ public class UserDAO implements IUserDAO {
         Task parent = task.getTaskParinte();
         int id_parinte;
 
-        LocalDate dataCurenta = task.getStarttime().toLocalDate();
-        LocalDate deadline = task.getDeadline().toLocalDate();
+        LocalDate dataCurenta = task.getStarttime();
+        LocalDate deadline = task.getDeadline();
 
         while (dataCurenta.isBefore(deadline)) {
             if (parent != null) {
@@ -748,38 +730,6 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public int getIDofGeneralTask(TaskGeneral general) {
-        Database db = new Database();
-        Connection con = db.getConn();
-
-        String name = general.getName();
-        String peridicity = general.getPeriodicity();
-        int duration = general.getDuration();
-        LocalDateTime start = general.getStarttime();
-        LocalDateTime deadline = general.getDeadline();
-
-        String sql = "Select * from Taskuri_Generale " +
-                "Where Denumire='" + name + "' and " +
-                "Periodicitate='" + peridicity + "' and Durata=" + duration + " and " +
-                "Starttime='" + start + "' and Deadline='" + deadline + "' ;";
-
-        int id = 0;
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            ResultSetMetaData meta = rs.getMetaData();
-            while (rs.next()) {
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return id;
-    }
-
-    @Override
     public int getIDofNormalTask(Task task) {
         Database db = new Database();
         Connection con = db.getConn();
@@ -787,8 +737,8 @@ public class UserDAO implements IUserDAO {
         String name = task.getName();
         String peridicity = task.getPeriodicity();
         int duration = task.getDuration();
-        LocalDateTime start = task.getStarttime();
-        LocalDateTime deadline = task.getDeadline();
+        LocalDate start = task.getStarttime();
+        LocalDate deadline = task.getDeadline();
 
         String sql = "Select * from Taskuri " +
                 "Where Denumire='" + name + "' and " +

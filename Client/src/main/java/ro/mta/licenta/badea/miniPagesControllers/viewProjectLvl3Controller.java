@@ -13,8 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
-import ro.mta.licenta.badea.employee.LocalDateTimeDeserializer;
-import ro.mta.licenta.badea.employee.LocalDateTimeSerializer;
+import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeDeserializer;
+import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.licenta.badea.models.*;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 

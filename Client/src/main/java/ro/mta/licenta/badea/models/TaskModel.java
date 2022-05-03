@@ -2,6 +2,7 @@ package ro.mta.licenta.badea.models;
 
 import javafx.concurrent.Task;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,9 +14,8 @@ public class TaskModel {
     private String name;
     private String periodicity;
     private int duration;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
-    private GeneralTaskModel taskGeneral;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private TaskModel parinte;
     private int ID_Proiect;
     private ArrayList<ResourceModel> listaResurse;
@@ -23,7 +23,6 @@ public class TaskModel {
 
     public void printTaskInformation(){
         System.out.println("Name: "+name+"\n Periodicity: "+periodicity+"\n Duration: "+duration+"\n Starttime: "+starttime+"\n Deadline: "+deadline);
-        System.out.println("Task General: "+taskGeneral.getName());
         System.out.println("\nLista resurse:\n");
         for(int i=0;i<listaResurse.size();i++){
             System.out.println("Nume resursa: "+listaResurse.get(i).getDenumire()+" Cantitate:"+listaResurse.get(i).getCantitate()+"\n");
@@ -71,19 +70,19 @@ public class TaskModel {
         return ID;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 
@@ -103,9 +102,6 @@ public class TaskModel {
         return ID_Proiect;
     }
 
-    public GeneralTaskModel getTaskGeneral() {
-        return taskGeneral;
-    }
 
     public TaskModel getParinte() {
         return parinte;
@@ -123,7 +119,4 @@ public class TaskModel {
         this.parinte = parinte;
     }
 
-    public void setTaskGeneral(GeneralTaskModel taskGeneral) {
-        this.taskGeneral = taskGeneral;
-    }
 }

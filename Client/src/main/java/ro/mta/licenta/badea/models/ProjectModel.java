@@ -2,6 +2,7 @@ package ro.mta.licenta.badea.models;
 
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -10,11 +11,10 @@ public class ProjectModel {
     private EmployeeModel coordonator;
     private String nume;
     private String descriere;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private ArrayList<TeamModel> listaEchipe = new ArrayList<>();
     private ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
-    private ArrayList<GeneralTaskModel> listaTaskuriGenerale = new ArrayList<>();
     private ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
     private ArrayList<ResourceModel> listaResurseCurente;
     private ArrayList<TaskModel> listaTaskuriReale;
@@ -22,7 +22,7 @@ public class ProjectModel {
 
     public ProjectModel(){}
 
-    public ProjectModel(String nume,EmployeeModel coord,LocalDateTime start,LocalDateTime dead,String descriere){
+    public ProjectModel(String nume, EmployeeModel coord, LocalDate start, LocalDate dead, String descriere){
         this.nume=nume;
         this.coordonator=coord;
         this.starttime=start;
@@ -50,9 +50,6 @@ public class ProjectModel {
         this.listaTaskuri.add(task);
     }
 
-    public void addGeneralTask(GeneralTaskModel gen){
-        this.listaTaskuriGenerale.add(gen);
-    }
 
     public void setFinished(int finished) {
         this.finished = finished;
@@ -74,19 +71,19 @@ public class ProjectModel {
         return ID;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 
@@ -110,9 +107,6 @@ public class ProjectModel {
         return listaOameni;
     }
 
-    public ArrayList<GeneralTaskModel> getListaTaskuriGenerale() {
-        return listaTaskuriGenerale;
-    }
 
     public ArrayList<TaskModel> getListaTaskuri() {
         return listaTaskuri;
@@ -142,7 +136,22 @@ public class ProjectModel {
         this.listaTaskuri = new ArrayList<>(listaTaskuri);
     }
 
-    public void setListaTaskuriGenerale(ArrayList<GeneralTaskModel> listaTaskuriGenerale) {
-        this.listaTaskuriGenerale = new ArrayList<>(listaTaskuriGenerale);
+
+    @Override
+    public String toString() {
+        return "ProjectModel{" +
+                "ID=" + ID +
+                ", coordonator=" + coordonator +
+                ", nume='" + nume + '\'' +
+                ", descriere='" + descriere + '\'' +
+                ", starttime=" + starttime +
+                ", deadline=" + deadline +
+                ", listaEchipe=" + listaEchipe +
+                ", listaOameni=" + listaOameni +
+                ", listaTaskuri=" + listaTaskuri +
+                ", listaResurseCurente=" + listaResurseCurente +
+                ", listaTaskuriReale=" + listaTaskuriReale +
+                ", finished=" + finished +
+                '}';
     }
 }

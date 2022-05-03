@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -61,6 +60,11 @@
                   <Insets left="100.0" />
                </GridPane.margin>
             </TextField>
+            <TextArea fx:id="descriptionField" prefHeight="56.0" prefWidth="268.0" promptText="Description" GridPane.rowIndex="2" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets left="100.0" />
+               </GridPane.margin>
+            </TextArea>
             <DatePicker fx:id="startDateField" editable="false" promptText="Date" showWeekNumbers="true" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets left="100.0" />
@@ -71,37 +75,6 @@
                   <Insets left="100.0" />
                </GridPane.margin>
             </DatePicker>
-            <Label text="Start Time:" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <ComboBox fx:id="startTimeField" prefWidth="100.0" promptText="Time" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <GridPane.margin>
-                  <Insets left="100.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <Label text="Time:" GridPane.columnIndex="1" GridPane.rowIndex="7">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <ComboBox fx:id="deadlineTimeField" prefWidth="100.0" promptText="Time" GridPane.columnIndex="1" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets left="100.0" />
-               </GridPane.margin>
-            </ComboBox>
-            <TextArea fx:id="descriptionField" prefHeight="56.0" prefWidth="268.0" promptText="Description" GridPane.rowIndex="2" GridPane.rowSpan="2">
-               <GridPane.margin>
-                  <Insets left="100.0" />
-               </GridPane.margin>
-            </TextArea>
          </children>
       </GridPane>
       <ListView fx:id="listCoworkers" layoutX="54.0" layoutY="297.0" prefHeight="166.0" prefWidth="255.0" />

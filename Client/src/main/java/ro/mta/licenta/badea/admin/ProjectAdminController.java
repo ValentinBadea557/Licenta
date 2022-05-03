@@ -16,6 +16,7 @@ import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -85,7 +86,7 @@ public class ProjectAdminController implements Initializable {
 
 
     private ObservableList<ProjectModel> projectModels = FXCollections.observableArrayList(
-            new ProjectModel("Soft",new EmployeeModel("Badea","Valentin"), LocalDateTime.now(),LocalDateTime.now(),"descriere 1"),
-            new ProjectModel("Hard",new EmployeeModel("Mihai","Andrei"), LocalDateTime.now(),LocalDateTime.now(),"descriere 2")
+            new ProjectModel("Soft",new EmployeeModel("Badea","Valentin"), LocalDate.now(),LocalDate.now(),"descriere 1"),
+            new ProjectModel("Hard",new EmployeeModel("Mihai","Andrei"), LocalDate.now(),LocalDate.now(),"descriere 2")
     );
 }

@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import ro.mta.licenta.badea.models.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,10 +16,9 @@ public class ProjectTemporalModel {
     private static String nume = new String();
     private static EmployeeModel coordonator;
     private static String descriere = new String();
-    private static LocalDateTime starttime;
-    private static LocalDateTime deadline;
+    private static LocalDate starttime;
+    private static LocalDate deadline;
     private static ArrayList<TeamModel> listaEchipe = new ArrayList<>();
-    private static ArrayList<GeneralTaskModel> listaTaskuriGenerale = new ArrayList<>();
     private static ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
     private static ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
     private static ArrayList<ResourceModel> listaResurse = new ArrayList<>();
@@ -35,7 +35,7 @@ public class ProjectTemporalModel {
     public ProjectTemporalModel() {
     }
 
-    public ProjectTemporalModel(String name, EmployeeModel coordonator, LocalDateTime start, LocalDateTime dead, String descriere) {
+    public ProjectTemporalModel(String name, EmployeeModel coordonator, LocalDate start, LocalDate dead, String descriere) {
         this.nume = name;
         this.coordonator = coordonator;
         this.descriere = descriere;
@@ -83,10 +83,6 @@ public class ProjectTemporalModel {
         ProjectTemporalModel.listaOameni = new ArrayList<>(listaOameni);
     }
 
-    public void addGeneralTask(GeneralTaskModel genTask) {
-        this.listaTaskuriGenerale.add(genTask);
-    }
-
     public void addTask(TaskModel task) {
         this.listaTaskuri.add(task);
     }
@@ -99,11 +95,11 @@ public class ProjectTemporalModel {
         this.nume = nume;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
@@ -111,11 +107,11 @@ public class ProjectTemporalModel {
         this.descriere = details;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 

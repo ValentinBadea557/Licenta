@@ -8,6 +8,7 @@ import ro.mta.server.GsonDateFormat.LocalDateSerializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.dao.ResourceDAO;
+import ro.mta.server.dao.UserDAO;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -17,11 +18,14 @@ import java.util.stream.Collectors;
 
 public class Schedule {
     private ArrayList<TaskReal> listaTaskuri = new ArrayList<>();
+    private ArrayList<User> listaUseri = new ArrayList<>();
     private ArrayList<Resource> listaResurse = new ArrayList<>(); // + DURATIONS
     private HashMap<Integer, Integer> schedulingMap = new HashMap<Integer, Integer>(); //id task real / starttime unit
     private String[][] positionMatrixR1 = new String[7][];
 
-
+    /**
+     * daca resursa nu e utilizata, adauga 0 la cantitatea utilizata
+     */
     public void fillWithZeroWhenResourceIsNotUsed() {
         for (int i = 0; i < listaTaskuri.size(); i++) {
             for (int j = 0; j < listaResurse.size(); j++) {
@@ -30,8 +34,45 @@ public class Schedule {
                 }
             }
         }
-
     }
+
+    public void translateUsersIntoResources() {
+        for (TaskReal task : listaTaskuri) {
+            int idUser = getExecutantOfRealTask(task.getID());
+            idUser = idUser * (-1);
+            task.addIntoHashMap(idUser, 1);
+        }
+        for (User usr : listaUseri) {
+            int id = usr.getID();
+            id = id * (-1);
+            Resource rs = new Resource();
+            rs.setID(id);
+            rs.setDenumire(usr.getFirstname()+" "+usr.getLastname());
+            rs.setCantitate(1);
+            listaResurse.add(rs);
+        }
+    }
+
+    public void printUseri(){
+        for(User usr:listaUseri){
+            System.out.println(usr.getFirstname()+" "+usr.getLastname());
+        }
+    }
+
+    public void printDetailsAboutRes() {
+        for(Resource rs:listaResurse){
+            System.out.println(rs.getID()+" "+rs.getDenumire());
+        }
+        System.out.println("\n");
+        for(TaskReal task:listaTaskuri){
+            System.out.println(task.getName());
+            for(Resource rs:listaResurse){
+                System.out.println("\t "+rs.getDenumire()+" :"+task.getQuantityOfResourceRequest(rs.getID()));
+            }
+        }
+    }
+
+
 
 
     public void startScheduling() {
@@ -61,7 +102,7 @@ public class Schedule {
         printStartTimesAndCompletions();
 
         System.out.println();
-        calculatePositions();
+        calculatePositions(listaResurse.get(1));
     }
 
     public int getMakespan() {
@@ -92,9 +133,10 @@ public class Schedule {
         }
     }
 
-    public void calculatePositions() {
-        for (int i = 0; i < 7; i++) {
-            positionMatrixR1[i] = new String[12];
+    public void calculatePositions(Resource res) {
+        System.out.println(res.getDenumire() + " Quantity:" + res.getCantitate() + " Makespan:" + getMakespan());
+        for (int i = 0; i < res.getCantitate(); i++) {
+            positionMatrixR1[i] = new String[getMakespan()];
         }
 
         System.out.println("Incepe pozitionarea!");
@@ -102,9 +144,9 @@ public class Schedule {
             System.out.print(listaTaskuri.get(i).getName() + " ");
         }
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < res.getCantitate(); i++) {
             System.out.println();
-            for (int j = 0; j < 12; j++) {
+            for (int j = 0; j < getMakespan(); j++) {
                 positionMatrixR1[i][j] = "0";
                 System.out.print(positionMatrixR1[i][j] + " ");
             }
@@ -112,13 +154,15 @@ public class Schedule {
 
         System.out.println();
 
-        String m[][] = new String[7][12];
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 12; j++) {
+        String m[][] = new String[res.getCantitate()][getMakespan()];
+        for (int i = 0; i < res.getCantitate(); i++) {
+            for (int j = 0; j < getMakespan(); j++) {
                 m[i][j] = "0";
             }
         }
-        f(0, 0, m, 0);
+
+
+        f(0, 0, m, 0, res);
 
 
         System.exit(123);
@@ -151,43 +195,45 @@ public class Schedule {
     }
 
     int found = 0;
-//placed time splot = index task
-    public void f(int timeslot, int placedTimeslot, String[][] m, int noTaskPut) {
-        if(found == 1)
+
+    //placed time splot = index task
+    public void f(int timeslot, int placedTimeslot, String[][] m, int noTaskPut, Resource res) {
+        if (found == 1)
             return;
-        if (noTaskPut == 10) {
+        if (noTaskPut == listaTaskuri.size()) {
+            System.out.println("Am pus :" + noTaskPut);
             System.out.println("FINISH");
-            printMatrix(m);
+            printMatrix(m, res.getCantitate(), getMakespan());
 
             found = 1;
             return;
         }
-        if (timeslot > 12)
+        if (timeslot > getMakespan())
             return;
         if (getNoTimeslot(timeslot) == 0)
-            f(timeslot + 1, 0, m, noTaskPut);
+            f(timeslot + 1, 0, m, noTaskPut, res);
         else if (placedTimeslot == getNoTimeslot(timeslot))
-            f(timeslot + 1, 0, m, noTaskPut);
+            f(timeslot + 1, 0, m, noTaskPut, res);
         else {
             TaskReal task = getTaskNoTimeslot(timeslot, placedTimeslot);
 
-            int nrResurse = task.quantityOfResourceRequest(2);
+            int nrResurse = task.getQuantityOfResourceRequest(res.getID());
 
-            for (int rand = 0; rand < (7 - nrResurse + 1); rand++) {
+            for (int rand = 0; rand < (res.getCantitate() - nrResurse + 1); rand++) {
                 int start = task.getStartTime();
                 int durata = task.getDuration();
 
-                System.out.println("Testez pentru :" + task.getName());
-                boolean res = checkSpace(rand, start, nrResurse, durata, m);
-                if (res) {
+                // System.out.println("Testez pentru :" + task.getName());
+                boolean result = checkSpace(rand, start, nrResurse, durata, m);
+                if (result) {
                     for (int linie = rand; linie < rand + nrResurse; linie++) {
                         for (int coloana = start; coloana < start + durata; coloana++) {
                             m[linie][coloana] = task.getName();
                         }
                     }
-//                    printMatrix(m);
+                    // printMatrix(m,res.getCantitate(),getMakespan());
 
-                    f(timeslot, placedTimeslot + 1, m, noTaskPut + 1);
+                    f(timeslot, placedTimeslot + 1, m, noTaskPut + 1, res);
 //                    if(found == 1)
 //                        return;
                     for (int linie = rand; linie < rand + nrResurse; linie++) {
@@ -199,6 +245,7 @@ public class Schedule {
             }
         }
     }
+
 
 //    public void func(int myJ) {
 //        for (int i = 0; i < listaTaskuri.size(); i++) {
@@ -235,31 +282,12 @@ public class Schedule {
 //        }
 //    }
 
-    public void deleteFromMatrix(TaskReal task) {
-        String name = task.getName();
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (positionMatrixR1[i][j].equals(name)) {
-                    positionMatrixR1[i][j] = "0";
-                }
-            }
-        }
-    }
 
-    public void zerosMatrix() {
-        for (int i = 0; i < 7; i++) {
-            System.out.println();
-            for (int j = 0; j < 12; j++) {
-                positionMatrixR1[i][j] = "0";
-            }
-        }
-    }
-
-    public void printMatrix(String[][] m) {
+    public void printMatrix(String[][] m, int linii, int coloana) {
         System.out.println();
 
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 12; j++) {
+        for (int i = 0; i < linii; i++) {
+            for (int j = 0; j < coloana; j++) {
                 String p = "00";
                 if (!m[i][j].equals("0"))
                     p = m[i][j];
@@ -282,6 +310,15 @@ public class Schedule {
         return ok;
     }
 
+    public int getNumberOfTasksPerResource(Resource res) {
+        int no = 0;
+        for (int i = 0; i < listaTaskuri.size(); i++) {
+            if (listaTaskuri.get(i).getQuantityOfResourceRequest(res.getID()) > 0) {
+                no++;
+            }
+        }
+        return no;
+    }
 
     public boolean algorithm() {
 
@@ -328,7 +365,7 @@ public class Schedule {
                     // System.out.println("Primul modificat: "+tobeModified.getName());
                     int start = listaTaskuri.get(j).getStartTime();
                     int completion = listaTaskuri.get(j).getCompletionTime();
-                    int resRequest = listaTaskuri.get(j).quantityOfResourceRequest(listaResurse.get(k).getID());
+                    int resRequest = listaTaskuri.get(j).getQuantityOfResourceRequest(listaResurse.get(k).getID());
 
                     if ((start < t) && (completion >= t) && (resRequest > 0)) {
                         System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
@@ -340,8 +377,8 @@ public class Schedule {
                             tobeModified = listaTaskuri.get(j);
                             old_value = listaTaskuri.get(j).getStartTime();
                         } else {
-                            int area = tobeModified.getCompletionTime() * tobeModified.quantityOfResourceRequest(listaResurse.get(k).getID());
-                            int curentArea = listaTaskuri.get(j).getCompletionTime() * listaTaskuri.get(j).quantityOfResourceRequest(listaResurse.get(k).getID());
+                            int area = tobeModified.getCompletionTime() * tobeModified.getQuantityOfResourceRequest(listaResurse.get(k).getID());
+                            int curentArea = listaTaskuri.get(j).getCompletionTime() * listaTaskuri.get(j).getQuantityOfResourceRequest(listaResurse.get(k).getID());
                             if (curentArea > area) {
                                 tobeModified = listaTaskuri.get(j);
 
@@ -366,6 +403,7 @@ public class Schedule {
 
     }
 
+
     public void printStartTimesAndCompletions() {
         System.out.print("Starttimes: ");
         for (int i = 0; i < listaTaskuri.size(); i++) {
@@ -379,6 +417,9 @@ public class Schedule {
 
     }
 
+    /**
+     * Seteaza starttime si completion time in functie de task-ul parinte
+     */
     public void setStarttimeAndCompletionTime(TaskReal task) {
         for (int i = 0; i < listaTaskuri.size(); i++) {
             if (listaTaskuri.get(i).getParentID() != 0) {
@@ -403,6 +444,33 @@ public class Schedule {
 
     }
 
+
+    public int getExecutantOfRealTask(int idTaskReal) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "select TU.ID_User from Taskuri_Reale TR\n" +
+                "inner join Taskuri T\n" +
+                "on TR.ID_Task=T.ID_Task\n" +
+                "inner join Taskuri_Useri TU\n" +
+                "on TU.ID_Task=T.ID_Task\n" +
+                "where TR.ID="+idTaskReal;
+
+        int idUser = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            while (rs.next()) {
+                idUser = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return idUser;
+    }
 
     public void getListOfRealTasks(int idProject, LocalDate day) {
         if (this.listaTaskuri != null)
@@ -436,8 +504,42 @@ public class Schedule {
                 listaLocalTasks.add(task.setResourcesFromDB(idTask));
             }
 
+
+
             this.listaTaskuri = listaLocalTasks;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getListOfPeople(int idProject) {
+        listaUseri.clear();
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "select PU.ID_USER from Proiecte P\n" +
+                "inner join Proiecte_Useri PU\n" +
+                "on P.ID_Proiect=PU.ID_Proiect\n" +
+                "where P.ID_Proiect=" + idProject;
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            while (rs.next()) {
+                ResourceDAO res = new ResourceDAO();
+                UserDAO usrD = new UserDAO();
+                User usr = new User();
+                int idUser = rs.getInt(1);
+
+                usr = usrD.getUserbasedOnID(idUser);
+
+                this.listaUseri.add(usr);
+
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

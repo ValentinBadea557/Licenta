@@ -22,8 +22,8 @@ public class ProjectDAO {
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         String sql = "Select * from Proiecte " +
@@ -43,17 +43,16 @@ public class ProjectDAO {
                 project.setNume(rs.getString(3));
                 project.setDescriere(rs.getString(4));
 
-                Timestamp starttime = rs.getTimestamp(5);
-                project.setStarttime(starttime.toLocalDateTime());
+            //    Timestamp starttime = rs.getTimestamp(5);
+                project.setStarttime(rs.getDate(5).toLocalDate());
 
-                Timestamp deadline = rs.getTimestamp(6);
-                project.setDeadline(deadline.toLocalDateTime());
+             //   Timestamp deadline = rs.getTimestamp(6);
+                project.setDeadline(rs.getDate(6).toLocalDate());
 
                 project.setFinished(rs.getInt(7));
 
                 project.setListaEchipe(getTeamsOfProject(IDproject));
                 project.setListaOameni(getUsersOfProject(IDproject));
-                project.setListaTaskuriGenerale(getTaskuriGenerale(IDproject));
                 project.setListaTaskuri(getListaTaskuri(IDproject));
                 project.setListaResurseCurente(getListaResurseFolosite(IDproject));
             }
@@ -212,8 +211,8 @@ public class ProjectDAO {
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
 
@@ -236,11 +235,11 @@ public class ProjectDAO {
                 task.setPeriodicity(rs.getString(3));
                 task.setDuration(rs.getInt(4));
 
-                Timestamp starttime = rs.getTimestamp(5);
-                task.setStarttime(starttime.toLocalDateTime());
+               // Timestamp starttime = rs.getTimestamp(5);
+                task.setStarttime(rs.getDate(5).toLocalDate());
 
-                Timestamp deadline = rs.getTimestamp(6);
-                task.setDeadline(deadline.toLocalDateTime());
+              //  Timestamp deadline = rs.getTimestamp(6);
+                task.setDeadline(rs.getDate(6).toLocalDate());
 
                 task.setID_Proiect(idProject);
 
@@ -311,8 +310,8 @@ public class ProjectDAO {
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         String sql = "Select * from Taskuri T " +
@@ -331,11 +330,11 @@ public class ProjectDAO {
                 task.setPeriodicity(rs.getString(3));
                 task.setDuration(rs.getInt(4));
 
-                Timestamp starttime = rs.getTimestamp(5);
-                task.setStarttime(starttime.toLocalDateTime());
+             //   Timestamp starttime = rs.getTimestamp(5);
+                task.setStarttime(rs.getDate(5).toLocalDate());
 
-                Timestamp deadline = rs.getTimestamp(6);
-                task.setDeadline(deadline.toLocalDateTime());
+               // Timestamp deadline = rs.getTimestamp(6);
+                task.setDeadline(rs.getDate(6).toLocalDate());
 
             }
         } catch (SQLException e) {

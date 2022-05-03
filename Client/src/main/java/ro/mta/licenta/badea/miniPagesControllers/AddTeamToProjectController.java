@@ -28,9 +28,6 @@ public class AddTeamToProjectController implements Initializable {
     private DatePicker deadlineField;
 
     @FXML
-    private ComboBox<String> deadlineTimeComboBox;
-
-    @FXML
     private TableColumn<WorkerModel, String> fullNameColumn;
 
     @FXML
@@ -38,9 +35,6 @@ public class AddTeamToProjectController implements Initializable {
 
     @FXML
     private DatePicker starttimeDateField;
-
-    @FXML
-    private ComboBox<String> starttimeTimeComboBox;
 
     @FXML
     private TableView<WorkerModel> tableWorkersView;
@@ -54,21 +48,8 @@ public class AddTeamToProjectController implements Initializable {
         this.customerSelectCallback = callback ;
     }
 
-    ObservableList<String> hours =
-            FXCollections.observableArrayList(
-                    "00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30",
-                    "07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30",
-                    "15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30",
-                    "23:00","23:30"
-            );
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        /** Set combo boxes*/
-        starttimeTimeComboBox.getItems().clear();
-        deadlineTimeComboBox.getItems().clear();
-        starttimeTimeComboBox.setItems(hours);
-        deadlineTimeComboBox.setItems(hours);
 
         /**Get list of employees*/
         SelectedWorkersIDs lista= new SelectedWorkersIDs();
@@ -108,24 +89,14 @@ public class AddTeamToProjectController implements Initializable {
         }else{
             starttimeDateField.setStyle("-fx-border-color:none");
         }
-        if(starttimeTimeComboBox.getValue()==null){
-            isempty=true;
-            starttimeTimeComboBox.setStyle("-fx-border-color:red");
-        }else{
-            starttimeTimeComboBox.setStyle("-fx-border-color:none");
-        }
+
         if(deadlineField.getValue()==null){
             isempty=true;
             deadlineField.setStyle("-fx-border-color:red");
         }else{
             deadlineField.setStyle("-fx-border-color:none");
         }
-        if(deadlineTimeComboBox.getValue()==null){
-            isempty=true;
-            deadlineTimeComboBox.setStyle("-fx-border-color:red");
-        }else{
-            deadlineTimeComboBox.setStyle("-fx-border-color:none");
-        }
+
         if(tableWorkersView.getSelectionModel().getSelectedItems().isEmpty()){
             tableWorkersView.setStyle("-fx-border-color:red");
             isempty=true;
@@ -138,10 +109,9 @@ public class AddTeamToProjectController implements Initializable {
             String name = teamNameField.getText().toString();
             LocalDate startDate = starttimeDateField.getValue();
             LocalDate deadDate = deadlineField.getValue();
-            String startTime = starttimeTimeComboBox.getValue();
-            String deadTime = deadlineTimeComboBox.getValue();
-            LocalDateTime finalStartTime = returnFinalDateTimeFormat(startDate, startTime);
-            LocalDateTime finalDeadline = returnFinalDateTimeFormat(deadDate, deadTime);
+
+//            LocalDateTime finalStartTime = returnFinalDateTimeFormat(startDate, startTime);
+//            LocalDateTime finalDeadline = returnFinalDateTimeFormat(deadDate, deadTime);
 
 
             /** Get selected workers from table*/
@@ -156,8 +126,8 @@ public class AddTeamToProjectController implements Initializable {
                 }
             }
             echipa.setName(name);
-            echipa.setStarttime(finalStartTime);
-            echipa.setDeadline(finalDeadline);
+            echipa.setStarttime(startDate);
+            echipa.setDeadline(deadDate);
 
             ProjectTemporalModel proiectNew = new ProjectTemporalModel();
             proiectNew.addTeam(echipa);

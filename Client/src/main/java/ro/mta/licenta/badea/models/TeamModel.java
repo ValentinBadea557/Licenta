@@ -2,14 +2,15 @@ package ro.mta.licenta.badea.models;
 
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TeamModel {
     private int ID;
     private String name;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private int ID_proiect;
     private ArrayList<EmployeeModel> listaEmployees =new ArrayList<>();
 
@@ -36,11 +37,11 @@ public class TeamModel {
         return ID;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
@@ -48,11 +49,11 @@ public class TeamModel {
         return ID_proiect;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 

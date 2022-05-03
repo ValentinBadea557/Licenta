@@ -37,15 +37,20 @@ public class Main {
 
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
-        Schedule sch = new Schedule();
-
-        LocalDate date = LocalDate.of(2022, Month.APRIL, 3);
-        sch.getListOfRealTasks(3009, date);
-        sch.getListOfResources(3009);
-        sch.fillWithZeroWhenResourceIsNotUsed();
-
-        sch.startScheduling();
-        System.exit(123);
+//        Schedule sch = new Schedule();
+//
+//        LocalDate date = LocalDate.of(2022, Month.MAY, 15);
+//
+//        sch.getListOfRealTasks(4006, date);
+//        sch.getListOfPeople(4006);
+//        sch.printUseri();
+//        sch.getListOfResources(4006);
+//        sch.translateUsersIntoResources();
+//        sch.fillWithZeroWhenResourceIsNotUsed();
+//        sch.printDetailsAboutRes();
+//
+//        sch.startScheduling();
+//        System.exit(123);
 
         boolean status;
         status = CreateKeyTrustManagerFactory();
