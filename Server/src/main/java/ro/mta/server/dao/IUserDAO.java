@@ -28,6 +28,7 @@ public interface IUserDAO {
     public String viewProjects(int idUser);
     public String getEveryInfoAboutProject(int idProject);
 
+    public int deleteAllDataAboutAProject(int idProject);
 
     /**Functions used by admins*/
     public String addUserPlusCompany(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);

@@ -1,13 +1,14 @@
 package ro.mta.server.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Team {
     private int ID;
     private String name;
-    private LocalDateTime starttime;
-    private LocalDateTime deadline;
+    private LocalDate starttime;
+    private LocalDate deadline;
     private ArrayList<User> listaEmployees;
     private int ID_proiect;
 
@@ -35,19 +36,19 @@ public class Team {
         return ID;
     }
 
-    public LocalDateTime getStarttime() {
+    public LocalDate getStarttime() {
         return starttime;
     }
 
-    public LocalDateTime getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setStarttime(LocalDateTime starttime) {
+    public void setStarttime(LocalDate starttime) {
         this.starttime = starttime;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 

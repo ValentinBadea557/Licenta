@@ -10,18 +10,18 @@ public class Project {
     private String descriere;
     private LocalDate starttime;
     private LocalDate deadline;
-    private ArrayList<Team> listaEchipe;
-    private ArrayList<User> listaOameni;
-    private ArrayList<Task> listaTaskuri;
-    private ArrayList<Resource> listaResurseCurente;
-    private ArrayList<Task> listaTaskuriReale;
+    private ArrayList<Team> listaEchipe = new ArrayList<>();
+    private ArrayList<User> listaOameni = new ArrayList<>();
+    private ArrayList<Task> listaTaskuri = new ArrayList<>();
+    private ArrayList<Resource> listaResurseCurente = new ArrayList<>();
+    private ArrayList<TaskReal> listaTaskuriReale = new ArrayList<>();
     private int finished;
 
-    public void setListaTaskuriReale(ArrayList<Task> listaTaskuriReale) {
+    public void setListaTaskuriReale(ArrayList<TaskReal> listaTaskuriReale) {
         this.listaTaskuriReale = new ArrayList<>(listaTaskuriReale);
     }
 
-    public ArrayList<Task> getListaTaskuriReale() {
+    public ArrayList<TaskReal> getListaTaskuriReale() {
         return listaTaskuriReale;
     }
 

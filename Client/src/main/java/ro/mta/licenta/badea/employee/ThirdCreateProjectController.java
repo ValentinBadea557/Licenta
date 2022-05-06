@@ -18,9 +18,6 @@ import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateDeserializer;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateSerializer;
-import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeDeserializer;
-import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeSerializer;
-import ro.mta.licenta.badea.models.GeneralTaskModel;
 import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.models.ResourceModel;
 import ro.mta.licenta.badea.models.TaskModel;
@@ -30,7 +27,6 @@ import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -229,7 +225,7 @@ public class ThirdCreateProjectController implements Initializable {
     }
 
     public void finishAction(ActionEvent actionEvent) throws Exception {
-        System.out.println("N:" + taskuriNormale.size() );
+        System.out.println("N:" + taskuriNormale.size());
 
         ProjectModel project = new ProjectModel();
         ProjectTemporalModel tempProject = new ProjectTemporalModel();
@@ -257,10 +253,8 @@ public class ThirdCreateProjectController implements Initializable {
         System.out.println("***\n" + projectJson);
 
 
-
         JSONObject tosend = new JSONObject(projectJson);
         tosend.put("Type", "Create new Project");
-
 
 
         client.sendText(tosend.toString());
@@ -282,6 +276,7 @@ public class ThirdCreateProjectController implements Initializable {
             alert.showAndWait();
         }
 
+        tempProject.clearAllList();
     }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {
@@ -364,24 +359,6 @@ public class ThirdCreateProjectController implements Initializable {
 
     }
 
-    public LocalDateTime returnFinalDateTimeFormat(LocalDate date, String time) {
-        /**get infomartion from LocalDate*/
-        int year = date.getYear();
-        int month = date.getMonth().getValue();
-        int day = date.getDayOfMonth();
-
-        /**get hour and minute from combobox time*/
-        String[] timeTokenizer = time.split(":");
-
-        int hour = Integer.valueOf(timeTokenizer[0]);
-        int minutes = Integer.valueOf(timeTokenizer[1]);
-        int seconds = 1;
-
-        /**return final format that match with SQL format*/
-        LocalDateTime finalDateTime = LocalDateTime.of(year, month, day, hour, minutes, seconds);
-
-        return finalDateTime;
-    }
 
     public void clearInputFields() {
         this.taskNameField.setText("");

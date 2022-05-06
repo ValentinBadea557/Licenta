@@ -15,20 +15,25 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
+import ro.mta.licenta.badea.GsonDateFormat.LocalDateDeserializer;
+import ro.mta.licenta.badea.GsonDateFormat.LocalDateSerializer;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeSerializer;
+import ro.mta.licenta.badea.ThreadToRunLoading;
 import ro.mta.licenta.badea.models.ProjectModel;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+
+import static java.lang.Thread.sleep;
 
 public class viewProjectsController implements Initializable {
     @FXML
@@ -59,8 +64,8 @@ public class viewProjectsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         Client client = Client.getInstance();
@@ -113,13 +118,20 @@ public class viewProjectsController implements Initializable {
                 data.setData(String.valueOf(tableActive.getSelectionModel().getSelectedItem().getID()));
 
                 root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel3.fxml"));
+               // root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+
+
 
                 Scene scene = new Scene(root);
                 Stage primaryStage = new Stage();
+
                 primaryStage.setTitle("Level 3 Priority");
                 primaryStage.setScene(scene);
                 primaryStage.initModality(Modality.APPLICATION_MODAL);
+
+
                 primaryStage.showAndWait();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

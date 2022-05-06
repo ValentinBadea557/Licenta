@@ -43,10 +43,10 @@ public class ProjectDAO {
                 project.setNume(rs.getString(3));
                 project.setDescriere(rs.getString(4));
 
-            //    Timestamp starttime = rs.getTimestamp(5);
+                //    Timestamp starttime = rs.getTimestamp(5);
                 project.setStarttime(rs.getDate(5).toLocalDate());
 
-             //   Timestamp deadline = rs.getTimestamp(6);
+                //   Timestamp deadline = rs.getTimestamp(6);
                 project.setDeadline(rs.getDate(6).toLocalDate());
 
                 project.setFinished(rs.getInt(7));
@@ -55,6 +55,7 @@ public class ProjectDAO {
                 project.setListaOameni(getUsersOfProject(IDproject));
                 project.setListaTaskuri(getListaTaskuri(IDproject));
                 project.setListaResurseCurente(getListaResurseFolosite(IDproject));
+                project.setListaTaskuriReale(getRealTasks(IDproject));
             }
             returned = gson.toJson(project);
 
@@ -70,105 +71,110 @@ public class ProjectDAO {
     }
 
 
-//    public ArrayList<TaskReal> getRealTasks(int IDproject) {
-//        Database db = new Database();
-//        Connection con = db.getConn();
-//
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
-//        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
-//        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-//        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-//        Gson gson = gsonBuilder.setPrettyPrinting().create();
-//
-//        String sql = "SELECT * from Taskuri_Reale TR " +
-//                "inner join Taskuri T " +
-//                "on TR.ID_Task=T.ID_Task " +
-//                "Where T.ID_Proiect=" + IDproject;
-//
-//        ArrayList<TaskReal> localList = new ArrayList<>();
-//
-//        try {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            ResultSetMetaData meta = rs.getMetaData();
-//
-//
-//            while (rs.next()) {
-//                TaskReal task = new TaskReal();
-//
-//                task.setID(rs.getInt(1));
-//                task.setName(rs.getString(2));
-//                task.setDuration(rs.getInt(3));
-//
-//                Timestamp day = rs.getTimestamp(4);
-//                task.setDay(day.toLocalDateTime().toLocalDate());
-//
-//
-//                task.setOriginTask(getTask(rs.getInt(5)));
-//                task.setParent(getTaskRealBasedOnID(rs.getInt(6)));
-//
-//
-//                localList.add(task);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println(gson.toJson(localList));
-//        return null;
-//    }
-//
-//    public TaskReal getTaskRealBasedOnID(int idTaskReal) {
-//        Database db = new Database();
-//        Connection con = db.getConn();
-//
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-//        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-//        Gson gson = gsonBuilder.setPrettyPrinting().create();
-//
-//        String sql = "SELECT * from Taskuri_Reale TR " +
-//                "Where TR.ID=" + idTaskReal;
-//
-//        try {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            ResultSetMetaData meta = rs.getMetaData();
-//
-//            TaskReal task = new TaskReal();
-//            while (rs.next()) {
-//
-//
-//                task.setID(rs.getInt(1));
-//                task.setName(rs.getString(2));
-//                task.setDuration(rs.getInt(3));
-//
-//                Timestamp day = rs.getTimestamp(4);
-//                task.setDay(day.toLocalDateTime().toLocalDate());
-//
-//                int idOrigin = rs.getInt(5);
-//
-//                task.setOriginTask(getTask(rs.getInt(6)));
-//
-//            }
-//
-//            return task;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
-//
+    public ArrayList<TaskReal> getRealTasks(int IDproject) {
+        Database db = new Database();
+        Connection con = db.getConn();
 
-    public ArrayList<Resource> getListaResurseFolosite(int IDproject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        String sql = "SELECT * from Taskuri_Reale TR " +
+                "inner join Taskuri T " +
+                "on TR.ID_Task=T.ID_Task " +
+                "Where T.ID_Proiect=" + IDproject;
+
+        ArrayList<TaskReal> localList = new ArrayList<>();
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+
+            while (rs.next()) {
+                TaskReal task = new TaskReal();
+
+                task.setID(rs.getInt(1));
+                task = task.setResourcesFromDB(task.getID());
+                task.setName(rs.getString(2));
+                task.setDuration(rs.getInt(3));
+
+                Timestamp day = rs.getTimestamp(4);
+                task.setDay(day.toLocalDateTime().toLocalDate());
+
+
+                task.setOriginTask(getTask(rs.getInt(5)));
+                task.setParentID(rs.getInt(6));
+
+                task.setStartTime(rs.getInt(7));
+                if (rs.wasNull()) {
+                    task.setStartTime(-1);
+                }
+
+                localList.add(task);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(gson.toJson(localList));
+        return localList;
+    }
+
+    public TaskReal getTaskRealBasedOnID(int idTaskReal) {
         Database db = new Database();
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        String sql = "SELECT * from Taskuri_Reale TR " +
+                "Where TR.ID=" + idTaskReal;
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            TaskReal task = new TaskReal();
+            while (rs.next()) {
+
+
+                task.setID(rs.getInt(1));
+                task.setName(rs.getString(2));
+                task.setDuration(rs.getInt(3));
+
+                Timestamp day = rs.getTimestamp(4);
+                task.setDay(day.toLocalDateTime().toLocalDate());
+
+                int idOrigin = rs.getInt(5);
+
+                task.setOriginTask(getTask(rs.getInt(6)));
+
+            }
+
+            return task;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public ArrayList<Resource> getListaResurseFolosite(int IDproject) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         String sql = "select  R.ID_Resursa, R.Denumire, R.Shareable , R.Descriere, Sum(RT.Cantitate) as Cantitate from Resurse R\n" +
@@ -235,20 +241,19 @@ public class ProjectDAO {
                 task.setPeriodicity(rs.getString(3));
                 task.setDuration(rs.getInt(4));
 
-               // Timestamp starttime = rs.getTimestamp(5);
+                // Timestamp starttime = rs.getTimestamp(5);
                 task.setStarttime(rs.getDate(5).toLocalDate());
 
-              //  Timestamp deadline = rs.getTimestamp(6);
+                //  Timestamp deadline = rs.getTimestamp(6);
                 task.setDeadline(rs.getDate(6).toLocalDate());
 
                 task.setID_Proiect(idProject);
 
-                int id_gen = rs.getInt(8);
-                int id_parent = rs.getInt(9);
-                task.setTaskGeneral(getTaskGeneral(id_gen));
+                int id_parent = rs.getInt(8);
+
 
                 UserDAO usr = new UserDAO();
-                task.setExecutant(usr.getUserbasedOnID(rs.getInt(11)));
+                task.setExecutant(usr.getUserbasedOnID(rs.getInt(10)));
 
                 if (id_parent == 0) {
                     task.setTaskParinte(null);
@@ -266,44 +271,6 @@ public class ProjectDAO {
         return listaTaskuri;
     }
 
-    public TaskGeneral getTaskGeneral(int idGeneral) {
-        Database db = new Database();
-        Connection con = db.getConn();
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-
-        String sql = "select * from Taskuri_Generale\n" +
-                "WHERE ID=" + idGeneral;
-
-        TaskGeneral general = new TaskGeneral();
-
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            ResultSetMetaData meta = rs.getMetaData();
-            while (rs.next()) {
-
-                general.setID(rs.getInt(1));
-                general.setName(rs.getString(2));
-                general.setPeriodicity(rs.getString(3));
-                general.setDuration(rs.getInt(4));
-
-                Timestamp starttime = rs.getTimestamp(5);
-                general.setStarttime(starttime.toLocalDateTime());
-
-                Timestamp deadline = rs.getTimestamp(6);
-                general.setDeadline(deadline.toLocalDateTime());
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return general;
-    }
 
     public Task getTask(int idTask) {
         Database db = new Database();
@@ -314,8 +281,10 @@ public class ProjectDAO {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        String sql = "Select * from Taskuri T " +
-                "Where ID_Task=" + idTask;
+        String sql = "select * from Taskuri T\n" +
+                "inner join Taskuri_Useri TU\n" +
+                "on T.ID_Task=TU.ID_Task \n" +
+                "Where T.ID_Task=" + idTask;
 
         Task task = new Task();
 
@@ -330,12 +299,15 @@ public class ProjectDAO {
                 task.setPeriodicity(rs.getString(3));
                 task.setDuration(rs.getInt(4));
 
-             //   Timestamp starttime = rs.getTimestamp(5);
+                //   Timestamp starttime = rs.getTimestamp(5);
                 task.setStarttime(rs.getDate(5).toLocalDate());
 
-               // Timestamp deadline = rs.getTimestamp(6);
+                // Timestamp deadline = rs.getTimestamp(6);
                 task.setDeadline(rs.getDate(6).toLocalDate());
 
+                int idUser = rs.getInt(10);
+                UserDAO usr = new UserDAO();
+                task.setExecutant(usr.getUserbasedOnID(idUser));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -344,56 +316,14 @@ public class ProjectDAO {
         return task;
     }
 
-    public ArrayList<TaskGeneral> getTaskuriGenerale(int idProject) {
-        Database db = new Database();
-        Connection con = db.getConn();
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-        Gson gson = gsonBuilder.setPrettyPrinting().create();
-
-        String sqlGeneral = "select distinct TG.ID,TG.Denumire,TG.Periodicitate,TG.Durata,TG.Starttime,TG.Deadline from Taskuri_Generale TG\n" +
-                "inner join Taskuri T\n" +
-                "on T.ID_General=TG.ID\n" +
-                "inner join Proiecte P\n" +
-                "on P.ID_Proiect=T.ID_Proiect\n" +
-                "where P.ID_Proiect=" + idProject;
-
-        ArrayList<TaskGeneral> listaGenerale = new ArrayList<>();
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sqlGeneral);
-            ResultSetMetaData meta = rs.getMetaData();
-            while (rs.next()) {
-                TaskGeneral general = new TaskGeneral();
-                general.setID(rs.getInt(1));
-                general.setName(rs.getString(2));
-                general.setPeriodicity(rs.getString(3));
-                general.setDuration(rs.getInt(4));
-
-                Timestamp starttime = rs.getTimestamp(5);
-                general.setStarttime(starttime.toLocalDateTime());
-
-                Timestamp deadline = rs.getTimestamp(6);
-                general.setDeadline(deadline.toLocalDateTime());
-
-                listaGenerale.add(general);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return listaGenerale;
-    }
 
     public ArrayList<User> getUsersOfProject(int idProject) {
         Database db = new Database();
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         String sqlUseri = "select U.ID_User,Username,DP.Nume,DP.Prenume,DP.Adresa,DP.Email,DP.Telefon,Per.Nivel,RO.Denumire from Useri U\n" +
@@ -437,8 +367,8 @@ public class ProjectDAO {
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         String sqlTeam = "Select * from Echipe E " +
@@ -456,11 +386,11 @@ public class ProjectDAO {
                 auxTeam.setID(rs.getInt(1));
                 auxTeam.setName(rs.getString(2));
 
-                Timestamp starttime = rs.getTimestamp(3);
-                auxTeam.setStarttime(starttime.toLocalDateTime());
+                // Timestamp starttime = rs.getTimestamp(3);
+                auxTeam.setStarttime(rs.getDate(3).toLocalDate());
 
-                Timestamp deadline = rs.getTimestamp(4);
-                auxTeam.setDeadline(deadline.toLocalDateTime());
+                //Timestamp deadline = rs.getTimestamp(4);
+                auxTeam.setDeadline(rs.getDate(4).toLocalDate());
 
                 auxTeam.setID_proiect(IDproject);
                 listaEchipe.add(auxTeam);

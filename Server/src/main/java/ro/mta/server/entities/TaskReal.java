@@ -24,7 +24,7 @@ public class TaskReal implements Comparable<TaskReal> {
     private int startTime;
     private int completionTime;
 
-    public HashMap<Integer, Integer> resourceUsage = new HashMap<Integer, Integer>(); //IDres / Quantity
+    private HashMap<Integer, Integer> resourceUsage = new HashMap<Integer, Integer>(); //IDres / Quantity
 
     public void printResourceUsage(){
         for (Integer key: resourceUsage.keySet()) {

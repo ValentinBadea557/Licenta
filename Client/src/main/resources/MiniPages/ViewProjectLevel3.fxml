@@ -32,7 +32,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="840.0" style="-fx-background-color: #98C1D9;">
                             <children>
-                                <ScrollPane layoutX="14.0" layoutY="45.0" prefHeight="353.0" prefWidth="816.0">
+                                <ScrollPane layoutX="14.0" layoutY="45.0" prefHeight="368.0" prefWidth="512.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="311.0">
                                     <content>
                                         <GridPane fx:id="gridScheduling">
                                             <rowConstraints>
@@ -46,6 +46,18 @@
                                         <Font name="System Bold" size="14.0" />
                                     </font>
                                 </Label>
+                        <TableView fx:id="tableTaskNotScheduled" layoutX="548.0" layoutY="75.0" prefHeight="333.0" prefWidth="276.0">
+                          <columns>
+                            <TableColumn fx:id="idColumnTaskNotSch" prefWidth="41.0" text="ID" />
+                            <TableColumn fx:id="nameColumnTaskNotSch" prefWidth="131.0" text="Name" />
+                              <TableColumn fx:id="dayColumnTaskNotSch" prefWidth="99.0" text="Day" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="548.0" layoutY="45.0" text="Tasks which could NOT be scheduled:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
                             </children>
                         </AnchorPane>
                     </content>

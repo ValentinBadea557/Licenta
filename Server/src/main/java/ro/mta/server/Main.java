@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONObject;
+import ro.mta.server.GsonDateFormat.LocalDateDeserializer;
+import ro.mta.server.GsonDateFormat.LocalDateSerializer;
 import ro.mta.server.dao.*;
 import ro.mta.server.entities.Project;
 import ro.mta.server.entities.Schedule;
@@ -39,18 +41,20 @@ public class Main {
 
 //        Schedule sch = new Schedule();
 //
-//        LocalDate date = LocalDate.of(2022, Month.MAY, 15);
 //
-//        sch.getListOfRealTasks(4006, date);
-//        sch.getListOfPeople(4006);
+//        sch.setTheSchedulingForEntireProject(5013);
+//        LocalDate date = LocalDate.of(2022, Month.MAY, 22);
+//
+//        sch.getListOfRealTasks(5013, date);
+//        sch.getListOfPeople(5013);
 //        sch.printUseri();
-//        sch.getListOfResources(4006);
+//        sch.getListOfResources(5013);
 //        sch.translateUsersIntoResources();
 //        sch.fillWithZeroWhenResourceIsNotUsed();
 //        sch.printDetailsAboutRes();
 //
 //        sch.startScheduling();
-//        System.exit(123);
+ //       System.exit(123);
 
         boolean status;
         status = CreateKeyTrustManagerFactory();
@@ -246,6 +250,13 @@ class ClientHandler extends Thread {
                             if (userJSON.get("Type").toString().equals("Exit")) {
                                 System.out.println("Clientul a inchis aplicatia");
                                 continueReceiving = false;
+                                break;
+                            }
+                            if (userJSON.get("Type").toString().equals("Logout")) {
+                                System.out.println("Logout");
+                                JSONObject logOutResponse = new JSONObject();
+                                logOutResponse.put("Logout Response", "ok");
+                                sendMessage(logOutResponse.toString());
                                 break;
                             }
 

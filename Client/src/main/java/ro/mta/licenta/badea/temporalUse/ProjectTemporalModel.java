@@ -7,7 +7,6 @@ import ro.mta.licenta.badea.models.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +22,18 @@ public class ProjectTemporalModel {
     private static ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
     private static ArrayList<ResourceModel> listaResurse = new ArrayList<>();
 
+    public void clearAllList() {
+        if (this != null) {
+            if (!listaOameni.isEmpty())
+                listaOameni.clear();
+            if (!listaEchipe.isEmpty())
+                listaEchipe.clear();
+            if (!listaResurse.isEmpty())
+                listaResurse.clear();
+            if (!listaTaskuri.isEmpty())
+                listaTaskuri.clear();
+        }
+    }
 
     public static void setListaResurse(ArrayList<ResourceModel> listaResurse) {
         ProjectTemporalModel.listaResurse = new ArrayList<>(listaResurse);
@@ -53,13 +64,13 @@ public class ProjectTemporalModel {
         }
     }
 
-    public void printEmployees(){
-        for(int i=0;i<listaOameni.size();i++){
-            System.out.println("** "+ listaOameni.get(i).getID()+" *\n");
+    public void printEmployees() {
+        for (int i = 0; i < listaOameni.size(); i++) {
+            System.out.println("** " + listaOameni.get(i).getID() + " *\n");
         }
     }
 
-    public void cleanListaEmployees(){
+    public void cleanListaEmployees() {
         listaOameni.clear();
     }
 

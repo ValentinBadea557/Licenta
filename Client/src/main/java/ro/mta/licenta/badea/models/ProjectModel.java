@@ -3,7 +3,6 @@ package ro.mta.licenta.badea.models;
 import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ProjectModel {
@@ -17,7 +16,7 @@ public class ProjectModel {
     private ArrayList<EmployeeModel> listaOameni = new ArrayList<>();
     private ArrayList<TaskModel> listaTaskuri = new ArrayList<>();
     private ArrayList<ResourceModel> listaResurseCurente;
-    private ArrayList<TaskModel> listaTaskuriReale;
+    private ArrayList<TaskRealModel> listaTaskuriReale;
     private int finished;
 
     public ProjectModel(){}
@@ -34,11 +33,11 @@ public class ProjectModel {
         this.listaResurseCurente = new ArrayList<>(listaResurseCurente);
     }
 
-    public ArrayList<TaskModel> getListaTaskuriReale() {
+    public ArrayList<TaskRealModel> getListaTaskuriReale() {
         return listaTaskuriReale;
     }
 
-    public void setListaTaskuriReale(ArrayList<TaskModel> listaTaskuriReale) {
+    public void setListaTaskuriReale(ArrayList<TaskRealModel> listaTaskuriReale) {
         this.listaTaskuriReale = new ArrayList<>(listaTaskuriReale);
     }
 

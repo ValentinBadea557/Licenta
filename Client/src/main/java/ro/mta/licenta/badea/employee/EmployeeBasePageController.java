@@ -131,6 +131,7 @@ public class EmployeeBasePageController implements Initializable {
         jsonlogout.put("Type", "Logout");
         client.sendText(jsonlogout.toString());
         String response = client.receiveText();
+        System.out.println(response);
 
         JSONObject responselogout = new JSONObject(response);
         if (responselogout.get("Logout Response").toString().equals("ok")) {

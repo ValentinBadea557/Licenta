@@ -11,7 +11,6 @@ public class Task {
     private int duration;
     private LocalDate starttime;
     private LocalDate deadline;
-    private TaskGeneral taskGeneral;
     private Task parinte;
     private int ID_Proiect;
     private ArrayList<Resource> listaResurse;
@@ -57,9 +56,7 @@ public class Task {
         this.name = name;
     }
 
-    public void setTaskGeneral(TaskGeneral taskGeneral) {
-        this.taskGeneral = taskGeneral;
-    }
+
 
     public void setListaResurse(ArrayList<Resource> listaResurse) {
         this.listaResurse = listaResurse;
@@ -97,9 +94,6 @@ public class Task {
         return listaResurse;
     }
 
-    public TaskGeneral getTaskGeneral() {
-        return taskGeneral;
-    }
 
     public void setTaskParinte(Task taskParinte) {
         this.parinte = taskParinte;

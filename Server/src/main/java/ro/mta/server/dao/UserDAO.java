@@ -6,8 +6,6 @@ import org.json.JSONObject;
 import ro.mta.server.Database;
 import ro.mta.server.GsonDateFormat.LocalDateDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateSerializer;
-import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
-import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.entities.*;
 
 
@@ -17,10 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class UserDAO implements IUserDAO {
     public User utilizator;
@@ -435,8 +430,8 @@ public class UserDAO implements IUserDAO {
         Database db = new Database();
         Connection con = db.getConn();
 
-        System.out.println(jsonProject);
         Project project = gson.fromJson(jsonProject, Project.class);
+
 
         /**Insert Project*/
         String sql = "Insert into Proiecte " +
@@ -449,7 +444,7 @@ public class UserDAO implements IUserDAO {
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
                 project.setID(rs.getInt(1));
-                System.out.println("ID:" + rs.getInt(1));
+                System.out.println("ID proiect creat:" + rs.getInt(1));
             }
         } catch (SQLException e) {
             response.put("Response Create", "Error");
@@ -457,10 +452,10 @@ public class UserDAO implements IUserDAO {
         }
 
         /**Insert Project's Resources*/
-        ArrayList<Resource> listaRes=project.getListaResurseCurente();
-        for(int i=0;i<listaRes.size();i++){
-            String sqlResurseAdd="Insert into Resurse_Proiecte " +
-                    "Values ("+project.getID()+","+listaRes.get(i).getID()+","+listaRes.get(i).getCantitate()+");";
+        ArrayList<Resource> listaRes = project.getListaResurseCurente();
+        for (int i = 0; i < listaRes.size(); i++) {
+            String sqlResurseAdd = "Insert into Resurse_Proiecte " +
+                    "Values (" + project.getID() + "," + listaRes.get(i).getID() + "," + listaRes.get(i).getCantitate() + ");";
 
             try {
                 Statement stmt = con.createStatement();
@@ -489,7 +484,7 @@ public class UserDAO implements IUserDAO {
                 e.printStackTrace();
             }
             int id_role = createRoleOrGetRoleID(listaEmployees.get(i).getRole());
-
+            System.out.println("ID role:"+ id_role+" IDproject="+project.getID()+" IDuser="+listaEmployees.get(i).getID()+" Id permision="+id_permission);
             String sql2 = "Insert into Proiecte_Useri " +
                     "Values (" + project.getID() + "," + listaEmployees.get(i).getID() + "," + id_role + "," + id_permission + ");";
 
@@ -611,11 +606,15 @@ public class UserDAO implements IUserDAO {
             response.put("Final Response", "ok");
         } else {
             response.put("Final Response", "SQL Exception");
+            deleteAllDataAboutAProject(project.getID());
         }
 
         System.out.println(response.toString());
         return response.toString();
     }
+
+
+
 
     @Override
     public int createRealTasks(Task task) throws SQLException {
@@ -743,7 +742,7 @@ public class UserDAO implements IUserDAO {
         String sql = "Select * from Taskuri " +
                 "Where Denumire='" + name + "' and " +
                 "Periodicitate='" + peridicity + "' and Durata=" + duration + " and " +
-                "Starttime='" + start + "' and Deadline='" + deadline + "' and ID_General=" + task.getTaskGeneral().getID() + " ;";
+                "Starttime='" + start + "' and Deadline='" + deadline + "' ;";
 
         int id = 0;
         try {
@@ -761,15 +760,14 @@ public class UserDAO implements IUserDAO {
         return id;
     }
 
-
     @Override
     public String viewProjects(int idUser) {
         Database db = new Database();
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         ArrayList<Project> listaProiecte = new ArrayList<>();
@@ -810,12 +808,58 @@ public class UserDAO implements IUserDAO {
         Connection con = db.getConn();
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         Project project = new Project();
         return null;
+    }
+
+    /**Use on createProject function to delete all inserted data in case of sql exception*/
+    @Override
+    public int deleteAllDataAboutAProject(int idProject) {
+        Database db = new Database();
+        Connection con = db.getConn();
+        String sql="delete RT from Resurse_Taskuri RT\n" +
+                "inner join Taskuri T\n" +
+                "ON T.ID_Task=RT.ID_Task\n" +
+                "where T.ID_Proiect="+idProject +";\n" +
+                "delete TU from Taskuri_Useri TU\n" +
+                "inner join Taskuri T\n" +
+                "ON T.ID_Task=TU.ID_Task\n" +
+                "where T.ID_Proiect="+idProject+";\n" +
+                "delete RP from Resurse_Proiecte RP\n" +
+                "inner join Proiecte P\n" +
+                "on RP.ID_Proiect=P.ID_Proiect\n" +
+                "WHERE P.ID_Proiect="+idProject+";\n" +
+                "delete PU from Proiecte_Useri PU\n" +
+                "where PU.ID_Proiect="+idProject+";\n" +
+                "delete EU from Echipe_Useri EU\n" +
+                "inner join Echipe E\n" +
+                "on EU.ID_Echipa=E.ID_Echipa\n" +
+                "WHERE E.ID_Proiect="+idProject+";\n" +
+                "delete from Echipe\n" +
+                "where Echipe.ID_Proiect="+idProject+";\n" +
+                "delete TR from Taskuri_Reale TR\n" +
+                "inner join Taskuri T\n" +
+                "on TR.ID_Task=T.ID_Task\n" +
+                "where T.ID_Proiect="+idProject+";\n" +
+                "delete from Taskuri\n" +
+                "where Taskuri.ID_Proiect="+idProject+";\n" +
+                "delete from Proiecte \n" +
+                "where Proiecte.ID_Proiect="+idProject+";\n";
+
+        int result=0;
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            result=1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            result=0;
+        }
+        return result;
     }
 
 
