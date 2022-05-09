@@ -39,10 +39,10 @@ public class Main {
 
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
-//        Schedule sch = new Schedule();
-//
-//
-//        sch.setTheSchedulingForEntireProject(5013);
+        Schedule sch = new Schedule();
+
+
+        sch.setTheSchedulingForEntireProject(5013);
 //        LocalDate date = LocalDate.of(2022, Month.MAY, 22);
 //
 //        sch.getListOfRealTasks(5013, date);

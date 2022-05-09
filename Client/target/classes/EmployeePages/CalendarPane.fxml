@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane fx:id="entirePane" prefHeight="486.0" prefWidth="807.0" style="-fx-background-color: #e0fbfc;" styleClass="linear-grad-to-top-left" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CalendarController">
    <children>
-      <ScrollPane fx:id="scrollPane" layoutX="68.0" layoutY="40.0" prefHeight="403.0" prefWidth="702.0" style="-fx-background-color: #98c1d9;" AnchorPane.leftAnchor="68.0" AnchorPane.rightAnchor="37.0">
+      <ScrollPane fx:id="scrollPane" layoutX="14.0" layoutY="41.0" prefHeight="403.0" prefWidth="599.0" style="-fx-background-color: #98c1d9;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="194.0">
          <content>
             <GridPane fx:id="gridPane" prefHeight="30.0" prefWidth="64.0">
               <rowConstraints>
@@ -16,5 +18,10 @@
             </GridPane>
          </content>
       </ScrollPane>
+      <ImageView fitHeight="150.0" fitWidth="174.0" layoutX="619.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/listOfProjects.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

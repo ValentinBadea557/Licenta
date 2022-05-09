@@ -177,15 +177,12 @@ public class ProjectDAO {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        String sql = "select  R.ID_Resursa, R.Denumire, R.Shareable , R.Descriere, Sum(RT.Cantitate) as Cantitate from Resurse R\n" +
-                "inner join Resurse_Taskuri RT\n" +
-                "on R.ID_Resursa=RT.ID_Resursa\n" +
-                "inner join Taskuri T\n" +
-                "on T.ID_Task=RT.ID_Task\n" +
+        String sql = "select  R.ID_Resursa, R.Denumire, R.Shareable , R.Descriere, RP.Cantitate from Resurse R\n" +
+                "inner join Resurse_Proiecte RP\n" +
+                "on RP.ID_Resursa=R.ID_Resursa\n" +
                 "inner join Proiecte P\n" +
-                "on T.ID_Proiect=P.ID_Proiect\n" +
-                "Where P.ID_Proiect=" + IDproject + "\n" +
-                "Group by R.ID_Resursa, R.Denumire, R.Shareable, R.Descriere";
+                "on P.ID_Proiect=RP.ID_Proiect\n" +
+                "Where P.ID_Proiect="+IDproject;
 
         ArrayList<Resource> listaResurse = new ArrayList<>();
 

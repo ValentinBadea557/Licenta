@@ -46,6 +46,12 @@
     -fx-background-color: #e6b800;
 }
 
+.scroll-pane > .viewport  {
+-fx-background-color: #3d5a80;
+-fx-border-color:black;
+-fx-border:2px;
+}
+
 /*
 3d5a80
 98c1d9

@@ -80,6 +80,42 @@ public class TaskRealModel {
         return completionTime;
     }
 
+    public void addIntoHashMap(int idRes, int quantity) {
+        this.resourceUsage.put(idRes, quantity);
+    }
+
+    public String printResourceUsage(){
+        String retunedString = null;
+        for (Integer key: resourceUsage.keySet()) {
+            retunedString+="\nkey : " + key+" value : " + resourceUsage.get(key)+"\n";
+        }
+         return retunedString;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskRealModel{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", duration=" + duration +
+                ", day=" + day +
+                ", originTask=" + originTask +
+                ", parentID=" + parentID +
+                ", startTime=" + startTime +
+                ", completionTime=" + completionTime +
+                "\n"+printResourceUsage()+
+                '}';
+
+    }
+
+    public boolean checkIfTaskUseAResource(int idRes) {
+        if (resourceUsage.containsKey(idRes)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void setCompletionTime(int completionTime) {
         this.completionTime = completionTime;
     }

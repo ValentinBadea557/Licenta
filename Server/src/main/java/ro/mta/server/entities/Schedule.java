@@ -48,7 +48,7 @@ public class Schedule {
             getListOfPeople(5013, dataCalendaristica);
             translateUsersIntoResources();
             fillWithZeroWhenResourceIsNotUsed();
-            // printDetailsAboutRes();
+             printDetailsAboutRes();
 
 
 
@@ -59,7 +59,7 @@ public class Schedule {
                 }
             } else {
                 for (TaskReal task : listaTaskuri) {
-                    System.out.println(task.getID() + " " + task.getName() + " S:" + task.getStartTime() + " D:" + task.getCompletionTime());
+                    //System.out.println(task.getID() + " " + task.getName() + " S:" + task.getStartTime() + " D:" + task.getCompletionTime());
                     setStartPointsForTask(task.getID(), task.getStartTime());
                 }
                 System.out.println("Lista pentru care nu se poate realiza ordonarea:");
@@ -72,7 +72,7 @@ public class Schedule {
                 }
             }
 
-
+//
 //            for(Resource r:listaResurse){
 //                found=0;
 //                calculatePositions(r);
@@ -86,7 +86,8 @@ public class Schedule {
 
         }
 
-        //  calculatePositions(listaResurse.get(0));
+
+         // calculatePositions(listaResurse.get(0));
 
 
     }
@@ -171,20 +172,21 @@ public class Schedule {
 //        listaTaskuri.get(0).changeResUsage(2, 7);
 //        System.out.println(listaTaskuri.get(0).quantityOfResourceRequest(listaResurse.get(0).getID()));
 
-        boolean isSolved = false;
+        boolean isSolved = true;
         boolean continueAlgorithm = false;
         while (!continueAlgorithm) {
             continueAlgorithm = algorithm();
             recalculateCompletion();
-            int currentMakespan = getMakespan();
-            if (currentMakespan > 24) {
-                isSolved = false;
-                System.out.println(currentMakespan);
-                System.out.println("Nu exista solutie!");
-                break;
-            }
-            isSolved = true;
+
         }
+        int currentMakespan = getMakespan();
+        if (currentMakespan > 24) {
+            isSolved = false;
+            System.out.println(currentMakespan);
+            System.out.println("Nu exista solutie!");
+
+        }
+
         System.out.println("Is solved? : " + isSolved);
         //   printStartTimesAndCompletions();
         //   System.out.println();
@@ -277,8 +279,6 @@ public class Schedule {
 
         return null;
     }
-
-
     //placed time splot = index task
     public void RecursiveFunction(int timeslot, int placedTimeslot, String[][] m, int noTaskPut, Resource res) {
         if (found == 1)
@@ -328,41 +328,6 @@ public class Schedule {
             }
         }
     }
-
-//    public void func(int myJ) {
-//        for (int i = 0; i < listaTaskuri.size(); i++) {
-//            TaskReal task = listaTaskuri.get(i);
-//            int nrResurse = task.quantityOfResourceRequest(2);
-//
-//            for (int rand = myJ; rand < (7 - nrResurse + 1); rand++) {
-//                int start = task.getStartTime();
-//                int durata = task.getDuration();
-//
-//                System.out.println("Testez pentru :" + task.getName());
-//                boolean res = checkSpace(rand, start, nrResurse, durata, m);
-//                if (res) {
-//                    for (int linie = rand; linie < rand + nrResurse; linie++) {
-//                        for (int coloana = start; coloana < start + durata; coloana++) {
-//                            positionMatrixR1[linie][coloana] = task.getName();
-//                        }
-//                    }
-//                    break;
-//                }
-//                if (res == false && rand == (7 - nrResurse)) {
-//                    System.out.println("NU SE POATE");
-//                    // deleteFromMatrix(listaTaskuri.get(i-1));
-//                    // printMatrix();
-//                    // i-=2;
-//                }
-//
-//            }
-//
-////            printMatrix();
-//            System.out.println();
-//
-//
-//        }
-//    }
 
     public void printMatrix(String[][] m, int linii, int coloana) {
         System.out.println();
@@ -431,7 +396,7 @@ public class Schedule {
         for (int i = 0; i < listWithoutDuplicates.size(); i++) {
 
             int t = listWithoutDuplicates.get(i);
-            // System.out.println("\nCurrent T:" + t);
+            System.out.println("\nCurrent T:" + t);
             old_value = listaTaskuri.get(0).getStartTime();
             tobeModified = listaTaskuri.get(0);
 
@@ -439,17 +404,17 @@ public class Schedule {
                 int o = 0;
                 ArrayList<TaskReal> F = new ArrayList<>();
 
-                //    System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID());
+                System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID() + " "+ listaResurse.get(k).getDenumire());
 
                 for (int j = 0; j < listaTaskuri.size(); j++) {
 
-                    // System.out.println("Primul modificat: "+tobeModified.getName());
+                    //System.out.println("Primul modificat: "+tobeModified.getName());
                     int start = listaTaskuri.get(j).getStartTime();
                     int completion = listaTaskuri.get(j).getCompletionTime();
                     int resRequest = listaTaskuri.get(j).getQuantityOfResourceRequest(listaResurse.get(k).getID());
 
                     if ((start < t) && (completion >= t) && (resRequest > 0)) {
-                        //        System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
+                        System.out.println(listaTaskuri.get(j).getName() + " -> O =" + o + " + " + resRequest);
                         o += resRequest;
                         F.add(listaTaskuri.get(j));
 
@@ -469,11 +434,11 @@ public class Schedule {
 
                     if (o > listaResurse.get(k).getCantitate()) {
 
-                        //   System.out.println(o + " > " + listaResurse.get(k).getCantitate());
+                        System.out.println(o + " > " + listaResurse.get(k).getCantitate());
                         int currentStart = tobeModified.getStartTime();
                         currentStart++;
                         tobeModified.setStartTime(currentStart);
-                        //   System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
+                        System.out.println("Modific " + tobeModified.getName() + " val noua:" + tobeModified.getStartTime());
 
                         return false;
                     }

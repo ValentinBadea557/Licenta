@@ -60,7 +60,7 @@ public class EmployeeBasePageController implements Initializable {
     private Button topHomeButton;
 
     @FXML
-    private Button topMyCompanyButton;
+    private Button topPersonalInfoButton;
 
     @FXML
     private Button activeProjectsButton;
@@ -73,7 +73,7 @@ public class EmployeeBasePageController implements Initializable {
         topHomeButton.setStyle(" -fx-border-color: #660099;\n" +
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topCreateProjectButton.setStyle("-fx-border-color: none");
-        topMyCompanyButton.setStyle("-fx-border-color: none");
+        topPersonalInfoButton.setStyle("-fx-border-color: none");
 
 
         /** Set home page*/
@@ -150,7 +150,7 @@ public class EmployeeBasePageController implements Initializable {
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topActiveProjectsButton.setStyle("-fx-border-color: none");
         topCreateProjectButton.setStyle("-fx-border-color: none");
-        topMyCompanyButton.setStyle("-fx-border-color: none");
+        topPersonalInfoButton.setStyle("-fx-border-color: none");
 
         Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/CalendarPane.fxml"));
         employeeStackPane.getChildren().removeAll();
@@ -163,7 +163,7 @@ public class EmployeeBasePageController implements Initializable {
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topHomeButton.setStyle("-fx-border-color: none");
         topCreateProjectButton.setStyle("-fx-border-color: none");
-        topMyCompanyButton.setStyle("-fx-border-color: none");
+        topPersonalInfoButton.setStyle("-fx-border-color: none");
 
         Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/ViewProjects.fxml"));
         employeeStackPane.getChildren().removeAll();
@@ -176,7 +176,7 @@ public class EmployeeBasePageController implements Initializable {
                 "    -fx-border-width: 0px 0px 3px 0px;");
         topHomeButton.setStyle("-fx-border-color: none");
         topActiveProjectsButton.setStyle("-fx-border-color: none");
-        topMyCompanyButton.setStyle("-fx-border-color: none");
+        topPersonalInfoButton.setStyle("-fx-border-color: none");
 
         Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/CreateProjectPane.fxml"));
         employeeStackPane.getChildren().removeAll();

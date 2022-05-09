@@ -99,13 +99,19 @@ public class viewProjectsController implements Initializable {
         /**Set table*/
 
         idActiveColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        idActiveColumn.setStyle("-fx-alignment: CENTER ; ");
         nameActiveColumn.setCellValueFactory(new PropertyValueFactory<>("nume"));
+        nameActiveColumn.setStyle("-fx-alignment: CENTER ; ");
         descriptionActiveColumn.setCellValueFactory(new PropertyValueFactory<>("descriere"));
+        descriptionActiveColumn.setStyle("-fx-alignment: CENTER ; ");
         tableActive.setItems(activeList);
 
         idFinishColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        idFinishColumn.setStyle("-fx-alignment: CENTER ; ");
         nameFinishedColumn.setCellValueFactory(new PropertyValueFactory<>("nume"));
+        nameFinishedColumn.setStyle("-fx-alignment: CENTER ; ");
         dsecriptionFinishColumn.setCellValueFactory(new PropertyValueFactory<>("descriere"));
+        dsecriptionFinishColumn.setStyle("-fx-alignment: CENTER ; ");
         tableFinish.setItems(finishedList);
 
         tableActive.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -129,7 +135,7 @@ public class viewProjectsController implements Initializable {
                 primaryStage.setScene(scene);
                 primaryStage.initModality(Modality.APPLICATION_MODAL);
 
-
+                primaryStage.setResizable(false);
                 primaryStage.showAndWait();
 
             } catch (IOException e) {
