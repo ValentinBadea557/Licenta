@@ -100,19 +100,26 @@ public class HandleUser implements IHandler {
             case "Create new Project":
                 json.remove("Type");
                 result = user.createNewProject(json.toString());
-                this.messageToSend=result;
+                this.messageToSend = result;
                 break;
 
             case "ViewProjects":
-                int id=json.getInt("IDuser");
-                result=user.viewProjects(id);
-                this.messageToSend=result;
+                int id = json.getInt("IDuser");
+                result = user.viewProjects(id);
+                this.messageToSend = result;
                 break;
 
             case "Get Project":
-                int id_project=json.getInt("IDproject");
-                result=proiect.getProject(id_project);
-                this.messageToSend=result;
+                int id_project = json.getInt("IDproject");
+                result = proiect.getProject(id_project);
+                this.messageToSend = result;
+                break;
+
+            case "Add new task to project":
+
+                json.remove("Type");
+                result = user.addNewTaskToProject(json.toString());
+                this.messageToSend = result;
                 break;
         }
     }

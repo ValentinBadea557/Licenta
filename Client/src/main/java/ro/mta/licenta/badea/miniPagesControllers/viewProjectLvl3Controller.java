@@ -27,8 +27,10 @@ import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.licenta.badea.ThreadToRunLoading;
 import ro.mta.licenta.badea.models.*;
+import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.SenderText;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -145,11 +147,6 @@ public class viewProjectLvl3Controller implements Initializable {
     private TableColumn<TaskModel, Integer> idTaskPeoplePage;
 
     @FXML
-    void modifyResourceAction(ActionEvent event) {
-        System.out.println("Clicked!");
-    }
-
-    @FXML
     private TableColumn<TaskRealModel, LocalDate> dayColumnTaskNotSch;
 
     @FXML
@@ -169,6 +166,45 @@ public class viewProjectLvl3Controller implements Initializable {
 
     @FXML
     private Label selectedResourceLabel;
+
+    @FXML
+    private DatePicker createNewTaskDeadline;
+
+    @FXML
+    private Spinner<Integer> createNewTaskDuration;
+
+    @FXML
+    private TextField createNewTaskName;
+
+    @FXML
+    private ComboBox<String> createNewTaskPeriodicity;
+
+    @FXML
+    private DatePicker createNewTaskStart;
+
+    @FXML
+    private TableView<ResourceModel> resourcesToNewTaskTable;
+
+    @FXML
+    private TableColumn<ResourceModel, String> resourceNameNewTask;
+
+    @FXML
+    private TableColumn<ResourceModel, Integer> resourceQuantityNewTask;
+
+    @FXML
+    private Button allocResourceNewTaskButton;
+
+    @FXML
+    private ComboBox<String> assignToNewTaskComboBox;
+
+    @FXML
+    private ComboBox<String> predecesorNewTaskComboBox;
+
+    @FXML
+    private Button createNewTaskButton;
+
+    @FXML
+    private Label labelNewTaskMessage;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -221,7 +257,7 @@ public class viewProjectLvl3Controller implements Initializable {
         setSchedulingTable();
 
         /**Set Add New Task Tab*/
-
+        setFieldForNewTaskTab();
 
         /**Set modify Resource Tab*/
         setResourceModifyTab();
@@ -240,35 +276,9 @@ public class viewProjectLvl3Controller implements Initializable {
         fillWithZeroWhenResourceIsNotUsed();
         calculateCompletionTime();
 
-//        for(TaskRealModel task:projectLocal.getListaTaskuriReale()){
-//            System.out.println(task.toString());
-//        }
-
-//        LocalDate day = LocalDate.now().plusDays(3);
-//        System.out.println(day);
-//        ArrayList<TaskRealModel> listaTaskuriRealePerDay = new ArrayList<>();
-//
-//        for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
-//            if (task.getDay().equals(day) && task.getStartTime() >= 0) {
-//                listaTaskuriRealePerDay.add(task);
-//                System.out.println(task.toString());
-//            }
-//        }
-    //    System.out.println(listaTaskuriRealePerDay.size());
-
-
-//        for (ResourceModel rs : projectLocal.getListaResurseCurente()) {
-//            positionMap.clear();
-//            calculatePositions(rs, listaTaskuriRealePerDay);
-//            for (Integer key : positionMap.keySet()) {
-//                System.out.println("key : " + key + " value : " + positionMap.get(key));
-//            }
-//        }
-
-
     }
 
-    ObservableList<TaskModel> listaTaskuriForUser = FXCollections.observableArrayList();
+
 
     public void setTeamsTab() {
         ImageView img = new ImageView("/Images/employees.png");
@@ -368,9 +378,6 @@ public class viewProjectLvl3Controller implements Initializable {
             }
         });
 
-
-
-
     }
 
     public void setObservableListOfTaskForUser(EmployeeModel user) {
@@ -429,17 +436,17 @@ public class viewProjectLvl3Controller implements Initializable {
     public void setResourceAllocGrid(ResourceModel rs, LocalDate day) {
 
         ArrayList<TaskRealModel> listaTaskuriRealePerDay = new ArrayList<>();
-        System.out.println("Current day :"+day + " size project: "+projectLocal.getListaTaskuriReale().size());
+        System.out.println("Current day :" + day + " size project: " + projectLocal.getListaTaskuriReale().size());
         for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
-            if (task.getDay().equals(day) && task.getStartTime() >= 0 && task.getQuantityOfResourceRequest(rs.getId())>0) {
+            if (task.getDay().equals(day) && task.getStartTime() >= 0 && task.getQuantityOfResourceRequest(rs.getId()) > 0) {
                 listaTaskuriRealePerDay.add(task);
                 //System.out.println(task.toString());
             }
         }
-        System.out.println("Size day:"+listaTaskuriRealePerDay.size());
-        System.out.println("Resource:"+ rs.toString());
+        System.out.println("Size day:" + listaTaskuriRealePerDay.size());
+        System.out.println("Resource:" + rs.toString());
 
-        if(listaTaskuriRealePerDay.size()!=0) {
+        if (listaTaskuriRealePerDay.size() != 0) {
             GridPane grid = new GridPane();
 
             int currentRow = 0;
@@ -490,16 +497,16 @@ public class viewProjectLvl3Controller implements Initializable {
                 System.out.println("key : " + key + " value : " + positionMap.get(key));
             }
 
-            System.out.println("Size:"+listaTaskuriRealePerDay.size());
-            for(TaskRealModel task:listaTaskuriRealePerDay){
-                Button taskBtn=new Button(task.getName());
+            System.out.println("Size:" + listaTaskuriRealePerDay.size());
+            for (TaskRealModel task : listaTaskuriRealePerDay) {
+                Button taskBtn = new Button(task.getName());
                 taskBtn.setStyle("-fx-background-color:#E0FBFC;" +
                         "-fx-border-color:black");
                 taskBtn.setMaxWidth(Double.MAX_VALUE);
                 taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                 taskBtn.setMaxHeight(Double.MAX_VALUE);
-                grid.add(taskBtn,task.getStartTime()+1,positionMap.get(task.getID())+1,
-                        task.getDuration(),task.getQuantityOfResourceRequest(rs.getId()));
+                grid.add(taskBtn, task.getStartTime() + 1, positionMap.get(task.getID()) + 1,
+                        task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
             }
 
 //            Button Task = new Button("Create Database");
@@ -517,8 +524,7 @@ public class viewProjectLvl3Controller implements Initializable {
             allocResScrollPane.setFitToHeight(true);
             allocResScrollPane.setContent(grid);
 
-        }
-        else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setContentText("There is no task for selected day!");
@@ -615,8 +621,8 @@ public class viewProjectLvl3Controller implements Initializable {
         ObservableList<TaskRealModel> listaTasksReal = FXCollections.observableArrayList();
 
         /**To do get lista TaskUnscheduled*/
-        for(TaskRealModel task:projectLocal.getListaTaskuriReale()){
-            if(task.getStartTime()<0){
+        for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
+            if (task.getStartTime() < 0) {
                 listaTasksReal.add(task);
             }
         }
@@ -642,6 +648,243 @@ public class viewProjectLvl3Controller implements Initializable {
         tablePeople.setItems(listaEmployees);
     }
 
+
+
+    @FXML
+    void allocResourceToNewTaskAction(ActionEvent event) throws IOException {
+
+        SelectedWorkersIDs resourceList = new SelectedWorkersIDs();
+        resourceList.listaResProiect.clear();
+        for (ResourceModel rs : projectLocal.getListaResurseCurente()) {
+            resourceList.listaResProiect.add(rs);
+        }
+
+
+        Parent root = FXMLLoader.load(getClass().getResource("/MiniPages/AddResourcesToTask.fxml"));
+
+        resourceList.listaResurse.clear();
+        listaResurseNewTask.clear();
+
+
+        Scene scene = new Scene(root);
+        Stage primaryStage = new Stage();
+        primaryStage.setTitle("Alloc Resources");
+        primaryStage.setScene(scene);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
+
+        for (int i = 0; i < resourceList.listaResurse.size(); i++) {
+            listaResurseNewTask.add(resourceList.listaResurse.get(i));
+        }
+
+        resourcesToNewTaskTable.setItems(listaResurseNewTask);
+    }
+
+    @FXML
+    void createNewTaskAction(ActionEvent event) throws Exception {
+        boolean isempty = false;
+        if (createNewTaskName.getText() == null || createNewTaskName.getText().trim().isEmpty()) {
+            isempty = true;
+            createNewTaskName.setStyle("-fx-border-color:red");
+        } else {
+            createNewTaskName.setStyle("-fx-border-color:none");
+        }
+        if (createNewTaskPeriodicity.getValue() == null) {
+            isempty = true;
+            createNewTaskPeriodicity.setStyle("-fx-border-color:red");
+        } else {
+            createNewTaskPeriodicity.setStyle("-fx-border-color:none");
+        }
+        if (createNewTaskStart.getValue() == null) {
+            isempty = true;
+            createNewTaskStart.setStyle("-fx-border-color:red");
+        } else {
+            createNewTaskStart.setStyle("-fx-border-color:none");
+        }
+        if (createNewTaskDeadline.getValue() == null) {
+            isempty = true;
+            createNewTaskDeadline.setStyle("-fx-border-color:red");
+        } else {
+            createNewTaskDeadline.setStyle("-fx-border-color:none");
+        }
+        if (listaResurseNewTask.size() == 0) {
+            isempty = true;
+            resourcesToNewTaskTable.setStyle("-fx-border-color:red");
+        } else {
+            resourcesToNewTaskTable.setStyle("-fx-border-color:none");
+        }
+        if (assignToNewTaskComboBox.getValue() == null) {
+            isempty = true;
+            assignToNewTaskComboBox.setStyle("-fx-border-color:red");
+        } else {
+            assignToNewTaskComboBox.setStyle("-fx-border-color:none");
+        }
+
+        if (isempty) {
+            labelNewTaskMessage.setText("Fields uncompleted!");
+        } else {
+            labelNewTaskMessage.setText("");
+            TaskModel task = new TaskModel();
+            task.setName(createNewTaskName.getText());
+            task.setPeriodicity(createNewTaskPeriodicity.getValue().toString());
+            task.setDuration(createNewTaskDuration.getValue());
+            task.setStarttime(createNewTaskStart.getValue());
+            task.setDeadline(createNewTaskDeadline.getValue());
+
+            ArrayList<ResourceModel> listaResCurrentTask = new ArrayList<>();
+            for (ResourceModel rs : listaResurseNewTask) {
+                listaResCurrentTask.add(rs);
+            }
+            task.setListaResurse(listaResCurrentTask);
+
+            if (predecesorNewTaskComboBox.getValue() != null) {
+                String parent = predecesorNewTaskComboBox.getValue();
+                for (TaskModel ts : projectLocal.getListaTaskuri()) {
+                    if (ts.getName().equals(parent)) {
+                        task.setParinte(ts);
+                    }
+                }
+            }
+            for (EmployeeModel em : projectLocal.getListaOameni()) {
+                String fullname = assignToNewTaskComboBox.getValue();
+                if (em.getFullName().equals(fullname)) {
+                    System.out.println("Executant:"+em.getFullName());
+                    task.setExecutant(em);
+                }
+            }
+
+
+            task.setID_Proiect(projectLocal.getID());
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+            gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+            Gson gson = gsonBuilder.setPrettyPrinting().create();
+            String stringJson = gson.toJson(task);
+            System.out.println("***\n" + stringJson);
+
+            Client client = Client.getInstance();
+            JSONObject tosend = new JSONObject(stringJson);
+            tosend.put("Type", "Add new task to project");
+
+            client.sendText(tosend.toString());
+
+            String result = client.receiveText();
+            JSONObject response = new JSONObject(result);
+
+            if (response.get("Final Response").equals("ok")) {
+                JSONObject tosend2=new JSONObject();
+                tosend2.put("Type", "Get Project");
+                tosend2.put("IDproject", projectLocal.getID());
+                client.sendText(tosend2.toString());
+                String receive=client.receiveText();
+                this.projectLocal=gson.fromJson(receive,ProjectModel.class);
+                System.out.println(gson.toJson(projectLocal));
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Project Created!");
+                alert.setContentText("Task was inserted and a new scheduling is available!");
+                alert.showAndWait();
+
+                resetAllTables();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error!");
+                alert.setContentText("SQL Exception occured!");
+                alert.showAndWait();
+            }
+
+        }
+
+
+    }
+
+    @FXML
+    void modifyResourceAction(ActionEvent event) {
+
+        System.out.println("Clicked!");
+    }
+
+    ObservableList<TaskModel> listaTaskuriForUser = FXCollections.observableArrayList();
+    ObservableList<EmployeeModel> listaEmployee = FXCollections.observableArrayList();
+    private ObservableList<ResourceModel> listaResurseNewTask = FXCollections.observableArrayList();
+    private ObservableList<String> listaTaskuriTotale = FXCollections.observableArrayList();
+    private ObservableList<String> listaUseri = FXCollections.observableArrayList();
+    ObservableList<String> periodicityIntervals =
+            FXCollections.observableArrayList(
+                    "No Periodicity", "Daily", "Weekly", "Monthly"
+            );
+
+    public void resetAllTables(){
+        setTableTaskNotScheduled();
+        setSchedulingTable();
+
+        /**Set Add New Task Tab*/
+        setFieldForNewTaskTab();
+
+        /**Set modify Resource Tab*/
+        setResourceModifyTab();
+
+        /**Resource Allocation Tab*/
+        setViewResourceAllocationTab();
+
+        /**Teams Tab*/
+        setTeamsTab();
+
+        /**People Tab*/
+        setPeopleTab();
+
+
+        /**Check Positions**/
+        fillWithZeroWhenResourceIsNotUsed();
+        calculateCompletionTime();
+    }
+
+    public void setFieldForNewTaskTab() {
+        resourceNameNewTask.setCellValueFactory(new PropertyValueFactory<>("denumire"));
+        resourceNameNewTask.setStyle("-fx-alignment: CENTER ; ");
+        resourceQuantityNewTask.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
+        resourceQuantityNewTask.setStyle("-fx-alignment: CENTER ; ");
+
+        SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100);
+        spinner.setValue(1);
+        createNewTaskDuration.setValueFactory(spinner);
+
+        createNewTaskPeriodicity.setItems(periodicityIntervals);
+
+        createNewTaskStart.setValue(projectLocal.getStarttime());
+        createNewTaskStart.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(projectLocal.getDeadline()) || item.isBefore(projectLocal
+                                .getStarttime()));
+                    }
+                });
+
+        createNewTaskDeadline.setValue(projectLocal.getDeadline());
+        createNewTaskDeadline.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(projectLocal.getDeadline()) || item.isBefore(createNewTaskStart.getValue().plusDays(1)));
+                    }
+                });
+
+        for (TaskModel task : projectLocal.getListaTaskuri()) {
+            listaTaskuriTotale.add(task.getName());
+        }
+        for (EmployeeModel emp : projectLocal.getListaOameni()) {
+            listaUseri.add(emp.getFullName());
+        }
+
+
+        predecesorNewTaskComboBox.setItems(listaTaskuriTotale);
+        assignToNewTaskComboBox.setItems(listaUseri);
+
+    }
 
     /**
      * Functions to print Resources' allocation

@@ -13,7 +13,7 @@
 }
 
 .sidebaritem2:hover{
-    -fx-text-fill:black;
+    -fx-text-fill:white;
     -fx-border-color: BLACK;
     -fx-background-color: #98c1d9;
     -fx-border-width: 0px 0px 0px 6px;

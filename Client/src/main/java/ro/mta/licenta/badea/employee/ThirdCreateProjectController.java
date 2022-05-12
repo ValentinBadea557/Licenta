@@ -321,16 +321,6 @@ public class ThirdCreateProjectController implements Initializable {
         periodicityField.getItems().clear();
         periodicityField.setItems(periodicityIntervals);
 
-        /**Hide tables for normal tasks*/
-//        allResourceLabel.setVisible(false);
-//        allocResourceButton.setVisible(false);
-//        tableResourcesView.setVisible(false);
-//        taskParinteLabel.setVisible(false);
-//        taskuriParinteComboBox.setVisible(false);
-//        assignToComboBox.setVisible(false);
-//        assignToLabel.setVisible(false);
-//        lastPane.setVisible(false);
-
         /**Deactivate fields for normal task*/
         tableResourcesView.setEditable(false);
         taskuriParinteComboBox.setEditable(false);
@@ -389,7 +379,6 @@ public class ThirdCreateProjectController implements Initializable {
     private ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
 
     private ObservableList<TaskModel> taskuriNormale = FXCollections.observableArrayList();
-
 
     private ObservableList<WorkerModel> workers = FXCollections.observableArrayList();
 

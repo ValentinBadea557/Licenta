@@ -484,7 +484,7 @@ public class UserDAO implements IUserDAO {
                 e.printStackTrace();
             }
             int id_role = createRoleOrGetRoleID(listaEmployees.get(i).getRole());
-            System.out.println("ID role:"+ id_role+" IDproject="+project.getID()+" IDuser="+listaEmployees.get(i).getID()+" Id permision="+id_permission);
+            System.out.println("ID role:" + id_role + " IDproject=" + project.getID() + " IDuser=" + listaEmployees.get(i).getID() + " Id permision=" + id_permission);
             String sql2 = "Insert into Proiecte_Useri " +
                     "Values (" + project.getID() + "," + listaEmployees.get(i).getID() + "," + id_role + "," + id_permission + ");";
 
@@ -613,7 +613,97 @@ public class UserDAO implements IUserDAO {
         return response.toString();
     }
 
+    @Override
+    public String addNewTaskToProject(String jsonTask) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
 
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        JSONObject response = new JSONObject();
+        Task task = gson.fromJson(jsonTask, Task.class);
+
+        String sqlNormal = null;
+        if (task.getTaskParinte() != null) {
+
+            sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect,ID_Task_Parinte)  " +
+                    "Values ('" + task.getName() + "','" + task.getPeriodicity() + "' ," +
+                    task.getDuration() + ",'" + task.getStarttime() + "','" +
+                    task.getDeadline() + "' , " + task.getID_Proiect() + "," + getIDofNormalTask(task.getTaskParinte()) + "); " +
+                    "Select SCOPE_IDENTITY();";
+
+        } else {
+            sqlNormal = "Insert into Taskuri(Denumire,Periodicitate,Durata,Starttime,Deadline,ID_Proiect) " +
+                    "Values ('" + task.getName() + "','" + task.getPeriodicity() + "' ," +
+                    task.getDuration() + ",'" + task.getStarttime() + "','" +
+                    task.getDeadline() + "' , " + task.getID_Proiect() + "); " +
+                    "Select SCOPE_IDENTITY();";
+        }
+        int id_task = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sqlNormal);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                id_task = rs.getInt(1);
+                System.out.println("ID TASK:" + id_task);
+                task.setID(id_task);
+            }
+        } catch (SQLException e) {
+            response.put("Response Create", "Error");
+            e.printStackTrace();
+        }
+
+        System.out.println("**\n" + gson.toJson(task) + "\n****");
+        try {
+            createRealTasks(task);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Executant id:" + task.getExecutant().getID());
+        String sqlAssignTo = "Insert into Taskuri_Useri " +
+                "Values (" + id_task + "," + task.getExecutant().getID() + ") ;";
+
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sqlAssignTo);
+        } catch (Exception e) {
+            response.put("Response Create", "Error");
+            e.printStackTrace();
+        }
+
+        ArrayList<Resource> listaResurseTask = task.getListaResurse();
+        for (int j = 0; j < listaResurseTask.size(); j++) {
+            System.out.println("ID TASK:" + task.getID() + " ID RES+" + listaResurseTask.get(j).getID());
+            String sqlTaskResource = "Insert into Resurse_Taskuri " +
+                    "Values (" + listaResurseTask.get(j).getID() + "," + task.getID() + "," + listaResurseTask.get(j).getCantitate() + "); ";
+
+            try {
+                Statement stmt = con.createStatement();
+                stmt.execute(sqlTaskResource);
+            } catch (Exception e) {
+                response.put("Response Create", "Error");
+                e.printStackTrace();
+            }
+
+        }
+
+        Schedule sch = new Schedule();
+        sch.setTheSchedulingForEntireProject(task.getID_Proiect());
+        if (!response.has("Response Create")) {
+            response.put("Final Response", "ok");
+        } else {
+            response.put("Final Response", "SQL Exception");
+        }
+
+        System.out.println(response.toString());
+        return response.toString();
+
+    }
 
 
     @Override
@@ -635,7 +725,7 @@ public class UserDAO implements IUserDAO {
             if (parent != null) {
                 id_parinte = getIDofNormalTask(parent);
                 int id_parentReal = 0;
-                System.out.println("testez id:"+id_parinte+" zi:"+dataCurenta);
+
                 String sqlGetID = "Select * from Taskuri_Reale " +
                         "Where ID_Task=" + id_parinte + " and Zi='" + dataCurenta + "';";
 
@@ -644,23 +734,25 @@ public class UserDAO implements IUserDAO {
                 int results = 0;
                 while (rs.next()) {
                     id_parentReal = rs.getInt(1);
-                    System.out.println("Id parent real: " + id_parentReal);
+
                     results++;
                 }
                 String sql = null;
+
+
                 if (results == 1) {
-                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task,ID_Parinte) " +
-                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + "," + id_parentReal + ");";
+                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task,ID_Parinte,Startpoint) " +
+                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + "," + id_parentReal + ",NULL);";
                 } else {
-                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task) " +
-                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ");";
+                    sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task,Startpoint) " +
+                            "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ",NULL);";
                 }
                 stmt = con.createStatement();
                 stmt.execute(sql);
 
             } else {
-                String sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task) " +
-                        "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ");";
+                String sql = "Insert into Taskuri_Reale(Nume,Durata,Zi,ID_Task,Startpoint) " +
+                        "Values('" + name + "'," + duration + ",'" + dataCurenta + "'," + id_task + ",NULL);";
 
                 Statement stmt = con.createStatement();
                 stmt.execute(sql);
@@ -775,7 +867,7 @@ public class UserDAO implements IUserDAO {
         String sql = "select distinct P.ID_Proiect,P.Denumire,P.Descriere,P.Finished from Proiecte P " +
                 "inner join Proiecte_Useri PU " +
                 "on P.ID_Proiect=PU.ID_Proiect " +
-                "Where PU.ID_USER=" + idUser +" OR P.ID_Coordonator="+idUser;
+                "Where PU.ID_USER=" + idUser + " OR P.ID_Coordonator=" + idUser;
 
         String returned = null;
         JSONObject errorjson = new JSONObject();
@@ -816,48 +908,51 @@ public class UserDAO implements IUserDAO {
         return null;
     }
 
-    /**Use on createProject function to delete all inserted data in case of sql exception*/
+
+    /**
+     * Use on createProject function to delete all inserted data in case of sql exception
+     */
     @Override
     public int deleteAllDataAboutAProject(int idProject) {
         Database db = new Database();
         Connection con = db.getConn();
-        String sql="delete RT from Resurse_Taskuri RT\n" +
+        String sql = "delete RT from Resurse_Taskuri RT\n" +
                 "inner join Taskuri T\n" +
                 "ON T.ID_Task=RT.ID_Task\n" +
-                "where T.ID_Proiect="+idProject +";\n" +
+                "where T.ID_Proiect=" + idProject + ";\n" +
                 "delete TU from Taskuri_Useri TU\n" +
                 "inner join Taskuri T\n" +
                 "ON T.ID_Task=TU.ID_Task\n" +
-                "where T.ID_Proiect="+idProject+";\n" +
+                "where T.ID_Proiect=" + idProject + ";\n" +
                 "delete RP from Resurse_Proiecte RP\n" +
                 "inner join Proiecte P\n" +
                 "on RP.ID_Proiect=P.ID_Proiect\n" +
-                "WHERE P.ID_Proiect="+idProject+";\n" +
+                "WHERE P.ID_Proiect=" + idProject + ";\n" +
                 "delete PU from Proiecte_Useri PU\n" +
-                "where PU.ID_Proiect="+idProject+";\n" +
+                "where PU.ID_Proiect=" + idProject + ";\n" +
                 "delete EU from Echipe_Useri EU\n" +
                 "inner join Echipe E\n" +
                 "on EU.ID_Echipa=E.ID_Echipa\n" +
-                "WHERE E.ID_Proiect="+idProject+";\n" +
+                "WHERE E.ID_Proiect=" + idProject + ";\n" +
                 "delete from Echipe\n" +
-                "where Echipe.ID_Proiect="+idProject+";\n" +
+                "where Echipe.ID_Proiect=" + idProject + ";\n" +
                 "delete TR from Taskuri_Reale TR\n" +
                 "inner join Taskuri T\n" +
                 "on TR.ID_Task=T.ID_Task\n" +
-                "where T.ID_Proiect="+idProject+";\n" +
+                "where T.ID_Proiect=" + idProject + ";\n" +
                 "delete from Taskuri\n" +
-                "where Taskuri.ID_Proiect="+idProject+";\n" +
+                "where Taskuri.ID_Proiect=" + idProject + ";\n" +
                 "delete from Proiecte \n" +
-                "where Proiecte.ID_Proiect="+idProject+";\n";
+                "where Proiecte.ID_Proiect=" + idProject + ";\n";
 
-        int result=0;
+        int result = 0;
         try {
             Statement stmt = con.createStatement();
             stmt.execute(sql);
-            result=1;
+            result = 1;
         } catch (SQLException e) {
             e.printStackTrace();
-            result=0;
+            result = 0;
         }
         return result;
     }

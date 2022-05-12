@@ -184,9 +184,6 @@ public class EmployeeBasePageController implements Initializable {
 
     }
 
-    public void myCompanyAction(ActionEvent actionEvent) throws IOException {
-    }
-
     public void personalInfoAction(ActionEvent actionEvent) throws IOException {
     }
 

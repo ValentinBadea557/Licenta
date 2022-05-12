@@ -22,6 +22,7 @@ public interface IUserDAO {
     public User getUserbasedOnID(int idUser);
     public String selectListOfEmployeesNotAdmins(int ID_company);
     public String createNewProject(String jsonProject);
+    public String addNewTaskToProject(String jsonTask);
     public int createRealTasks(Task task) throws SQLException;
     public int createRoleOrGetRoleID(String role);
     public int getIDofNormalTask(Task task);
@@ -33,7 +34,6 @@ public interface IUserDAO {
     /**Functions used by admins*/
     public String addUserPlusCompany(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);
     public String addOnlyUser(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);
-
     public String AdministratorViewAllEmployees(int IDuseradmin);
 
 

@@ -79,7 +79,6 @@ public class AddResourceToTaskController implements Initializable {
 
         ArrayList<ResourceModel> listaTemporala = (ArrayList<ResourceModel>) lista.getListaResurseProiect().clone();
 
-
         for (int i = 0; i < listaTemporala.size(); i++) {
             resurseModels.add(listaTemporala.get(i));
         }
