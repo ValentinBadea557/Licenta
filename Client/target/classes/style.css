@@ -4,6 +4,29 @@
     -fx-border-width: 0px 0px 3px 0px;
 }
 */
+.root {
+    button-hover-color: -fx-hover-base  ;
+
+    /*#AB9518*/
+}
+
+
+#menubackground{
+-fx-background-image: url("Images/background.jpg");
+
+}
+
+#viewProjectPane{
+    -fx-background-image: url("Images/background.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+#projectViewLv3{
+    -fx-background-image: url("Images/background.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
 
 .sidebaritem:hover{
     -fx-text-fill:white;
@@ -19,6 +42,13 @@
     -fx-border-width: 0px 0px 0px 6px;
 }
 
+.buttonProjects{
+    -fx-background-radius:25px;
+}
+.buttonProjects:hover{
+    -fx-background-color: #98c1d9;
+}
+
 .linear-grad-to-top-left{
    -fx-background-color: linear-gradient(to top left, #008060 ,   #00807C);
 }
@@ -27,10 +57,7 @@
     -fx-background-color:black;
 }
 
-.root {
-    button-hover-color: -fx-hover-base  ;
-    /*#AB9518*/
-}
+
 
 .registerbutton:hover{
   -fx-color: button-hover-color ;
@@ -46,10 +73,45 @@
     -fx-background-color: #e6b800;
 }
 
+.table-row-cell:odd{
+    -fx-background-color: #ffeb99;
+}
+
+.table-row-cell:odd:selected{
+    -fx-background-color: #4db8ff;
+    -fx-text-fill:white;
+}
+
+
+.progress-indicator .percentage {
+    -fx-fill: #ff0000 ;
+}
+
 .scroll-pane > .viewport  {
--fx-background-color: #3d5a80;
--fx-border-color:black;
--fx-border:2px;
+-fx-background-color: rgba(255,255,255,0.15);
+}
+
+.redbutton{
+    -fx-background-color:#ff3333;
+    -fx-background-radius:15px;
+
+}
+
+.redbutton:hover{
+     -fx-background-color:#990000;
+     -fx-color: button-hover-color ;
+     -fx-text-fill:white;
+}
+
+.greenButton{
+    -fx-background-color:#00ff55;
+    -fx-background-radius:15px;
+}
+
+.greenButton:hover{
+    -fx-background-color:#00802b;
+    -fx-color: button-hover-color ;
+    -fx-text-fill:white;
 }
 
 /*

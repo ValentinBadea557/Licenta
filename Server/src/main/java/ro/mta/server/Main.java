@@ -40,8 +40,10 @@ public class Main {
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
 //        Schedule sch = new Schedule();
+//        LocalDate d=LocalDate.of(2022,5,15);
+//        sch.checkIfItIsFeasbileWithMoreResources(3224,5013,d);
 //
-//
+//        System.exit(123);
 //        sch.setTheSchedulingForEntireProject(5013);
 //        LocalDate date = LocalDate.of(2022, Month.MAY, 22);
 //
@@ -54,7 +56,7 @@ public class Main {
 //        sch.printDetailsAboutRes();
 //
 //        sch.startScheduling();
- //       System.exit(123);
+ //
 
         boolean status;
         status = CreateKeyTrustManagerFactory();

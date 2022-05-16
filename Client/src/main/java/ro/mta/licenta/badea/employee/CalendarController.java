@@ -34,7 +34,7 @@ public class CalendarController implements Initializable {
 
 
             gridPane.setVgap(5);
-
+            gridPane.setHgap(3);
             int numRows = 8;
             int numColumns = 25;
             for (int row = 0; row < numRows; row++) {
@@ -97,8 +97,8 @@ public class CalendarController implements Initializable {
             test3.setMaxWidth(Double.MAX_VALUE);
             gridPane.add(test3, 2, 2, 4, 1);
 
-            gridPane.setStyle("-fx-background-color:#98c1d9");
-            scrollPane.setStyle("-fx-background-color:#98c1d9");
+            gridPane.setStyle("-fx-background-color:#ffffe6");
+            //scrollPane.setStyle("-fx-background-color:#98c1d9");
         } catch (Exception e) {
             e.printStackTrace();
         }

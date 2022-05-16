@@ -27,6 +27,63 @@ public class Schedule {
     int found = 0;
 
 
+    public void checkIfTasksDurationCanBeShorter(int idTaskReal, int idProject, LocalDate dataDeCercetat) {
+        getListOfResources(idProject);
+        getListOfRealTasks(idProject, dataDeCercetat);
+        getListOfPeople(idProject, dataDeCercetat);
+        translateUsersIntoResources();
+        fillWithZeroWhenResourceIsNotUsed();
+
+        startScheduling();
+        for (TaskReal task : listaTaskuri) {
+            if (task.getCompletionTime() > 24 && task.getStartTime() < 23 && task.getID() == idTaskReal) {
+                System.out.println(task.getName() + " " + task.getStartTime() + " " + task.getCompletionTime());
+                int oldDuration = task.getDuration();
+                int newDuration = 23 - task.getStartTime();
+                task.setDuration(newDuration);
+                recalculateCompletion();
+                System.out.println(task.getName() + " " + task.getStartTime() + " " + task.getCompletionTime());
+
+            }
+        }
+
+
+    }
+
+    public void checkIfItIsFeasbileWithMoreResources(int idTaskReal, int idProject, LocalDate dataDeCercetat) {
+        getListOfResources(idProject);
+        getListOfRealTasks(idProject, dataDeCercetat);
+        getListOfPeople(idProject, dataDeCercetat);
+        translateUsersIntoResources();
+        fillWithZeroWhenResourceIsNotUsed();
+
+        TaskReal taskDeCercetat = new TaskReal();
+        for (TaskReal task : listaTaskuri) {
+            if (task.getID() == idTaskReal) {
+                taskDeCercetat = task;
+            }
+        }
+        ArrayList<Resource> resurse = new ArrayList<>();
+        for (Resource rs : listaResurse) {
+            if (taskDeCercetat.getQuantityOfResourceRequest(rs.getID()) > 0 && rs.getID() > 0) {
+                System.out.println(rs.getDenumire());
+                resurse.add(rs);
+            }
+        }
+
+        for (int i = 0; i < 15; i++)
+            for (Resource rs : resurse) {
+                for (Resource r : listaResurse) {
+                    if (rs.getID() == r.getID()) {
+                        r.setCantitate(r.getCantitate() + 1);
+                        startScheduling();
+                    }
+                }
+            }
+
+    }
+
+
     public void setTheSchedulingForEntireProject(int idProject) {
 
         getAllDates(idProject);
@@ -48,8 +105,7 @@ public class Schedule {
             getListOfPeople(5013, dataCalendaristica);
             translateUsersIntoResources();
             fillWithZeroWhenResourceIsNotUsed();
-             printDetailsAboutRes();
-
+            printDetailsAboutRes();
 
 
             if (startScheduling()) {
@@ -87,7 +143,7 @@ public class Schedule {
         }
 
 
-         // calculatePositions(listaResurse.get(0));
+        // calculatePositions(listaResurse.get(0));
 
 
     }
@@ -279,6 +335,7 @@ public class Schedule {
 
         return null;
     }
+
     //placed time splot = index task
     public void RecursiveFunction(int timeslot, int placedTimeslot, String[][] m, int noTaskPut, Resource res) {
         if (found == 1)
@@ -404,7 +461,7 @@ public class Schedule {
                 int o = 0;
                 ArrayList<TaskReal> F = new ArrayList<>();
 
-                System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID() + " "+ listaResurse.get(k).getDenumire());
+                System.out.println("RESURSA CURENTA : " + listaResurse.get(k).getID() + " " + listaResurse.get(k).getDenumire());
 
                 for (int j = 0; j < listaTaskuri.size(); j++) {
 
@@ -489,7 +546,7 @@ public class Schedule {
 
     }
 
-    public void setNullStartPointForTask(int idTaskReal){
+    public void setNullStartPointForTask(int idTaskReal) {
         Database db = new Database();
         Connection con = db.getConn();
 

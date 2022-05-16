@@ -88,7 +88,7 @@
             </AnchorPane>
          </top>
          <left>
-            <VBox fx:id="slider" prefHeight="475.0" prefWidth="200.0" style="-fx-background-color: #3d5a80;" BorderPane.alignment="CENTER">
+            <VBox id="menubackground" fx:id="slider" prefHeight="475.0" prefWidth="200.0" style="-fx-background-color: #3d5a80; -fx-border-color: white; -fx-border-width: 2;" stylesheets="@../style.css" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="homeButton" alignment="CENTER" mnemonicParsing="false" onAction="#homeAction" prefHeight="40.0" prefWidth="200.0" styleClass="sidebaritem2" text="Home">
                      <VBox.margin>
@@ -162,7 +162,7 @@
             </VBox>
          </left>
          <center>
-            <StackPane fx:id="employeeStackPane" prefHeight="465.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" BorderPane.alignment="CENTER">
+            <StackPane id="viewProjectPane" fx:id="employeeStackPane" prefHeight="465.0" prefWidth="807.0" stylesheets="@../style.css" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin></StackPane>
