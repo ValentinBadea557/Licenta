@@ -14,12 +14,13 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.ThirdCreateProjectController">
+<AnchorPane prefHeight="500.0" prefWidth="807.0" style="-fx-background-color: #98c1d9;" styleClass="createProjectPane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.ThirdCreateProjectController">
    <children>
-      <Pane layoutX="226.0" layoutY="22.0" prefHeight="135.0" prefWidth="653.0" style="-fx-background-color: #3d5a80; -fx-border-radius: 10px; -fx-background-radius: 10px;" AnchorPane.leftAnchor="226.0" AnchorPane.rightAnchor="14.0">
+      <Pane layoutX="226.0" layoutY="22.0" prefHeight="135.0" prefWidth="653.0" style="-fx-background-color: #98c1d9; -fx-border-radius: 10px; -fx-background-radius: 10px;" AnchorPane.leftAnchor="226.0" AnchorPane.rightAnchor="14.0">
          <children>
             <GridPane layoutX="46.0" layoutY="8.0" prefHeight="120.0" prefWidth="476.0">
               <columnConstraints>
@@ -34,27 +35,27 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Name:" textFill="WHITE">
+                  <Label text="Name:">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="Periodicity:" textFill="WHITE" GridPane.rowIndex="1">
+                  <Label text="Periodicity:" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="Duration (h) :" textFill="WHITE" GridPane.rowIndex="2">
+                  <Label text="Duration (h) :" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="Start Date:" textFill="WHITE" GridPane.columnIndex="2">
+                  <Label text="Start Date:" GridPane.columnIndex="2">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="Deadline Date:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label text="Deadline Date:" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -68,16 +69,17 @@
             </GridPane>
          </children>
       </Pane>
-      <Pane fx:id="lastPane" layoutX="520.0" layoutY="172.0" prefHeight="174.0" prefWidth="207.0" style="-fx-background-color: #3d5a80; -fx-background-radius: 10px;">
+      <Region layoutX="226.0" layoutY="172.0" prefHeight="47.0" prefWidth="225.0" style="-fx-background-color: #98c1d9; -fx-background-radius: 20px;" />
+      <Pane fx:id="lastPane" layoutX="520.0" layoutY="172.0" prefHeight="174.0" prefWidth="207.0" style="-fx-background-color: #98c1d9; -fx-background-radius: 10px;">
          <children>
-            <Label fx:id="assignToLabel" layoutX="69.0" layoutY="87.0" text="Assign to:" textFill="WHITE">
+            <Label fx:id="assignToLabel" layoutX="69.0" layoutY="87.0" text="Assign to:">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
             <ComboBox fx:id="assignToComboBox" layoutX="25.0" layoutY="113.0" prefWidth="150.0" promptText="Select an employee" />
             <ComboBox fx:id="taskuriParinteComboBox" layoutX="25.0" layoutY="34.0" prefWidth="150.0" promptText="Predecessor" />
-            <Label fx:id="taskParinteLabel" layoutX="66.0" layoutY="5.0" text="Parent Task:" textFill="WHITE">
+            <Label fx:id="taskParinteLabel" layoutX="66.0" layoutY="5.0" text="Parent Task:">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -89,36 +91,36 @@
           <TableColumn fx:id="taskNameColumn" prefWidth="206.0" text="Normal Tasks" />
         </columns>
       </TableView>
-      <Button fx:id="createTaskButton" layoutX="672.0" layoutY="387.0" mnemonicParsing="false" onAction="#createTaskAction" prefHeight="31.0" prefWidth="111.0" styleClass="buttonlogin" text="Create task" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="24.0">
+      <Button fx:id="createTaskButton" layoutX="510.0" layoutY="381.0" mnemonicParsing="false" onAction="#createTaskAction" prefHeight="31.0" prefWidth="111.0" styleClass="greenButton" text="Create task" AnchorPane.bottomAnchor="88.0" AnchorPane.rightAnchor="186.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Label fx:id="allResourceLabel" layoutX="271.0" layoutY="172.0" text="Alloc resources:" AnchorPane.bottomAnchor="307.0" AnchorPane.leftAnchor="271.0">
+      <Label fx:id="allResourceLabel" layoutX="243.0" layoutY="185.0" text="Alloc resources:" AnchorPane.bottomAnchor="294.0" AnchorPane.leftAnchor="243.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TableView fx:id="tableResourcesView" layoutX="256.0" layoutY="210.0" prefHeight="124.0" prefWidth="200.0" AnchorPane.bottomAnchor="166.0" AnchorPane.leftAnchor="256.0">
+      <TableView fx:id="tableResourcesView" layoutX="226.0" layoutY="222.0" prefHeight="124.0" prefWidth="200.0" AnchorPane.bottomAnchor="154.0" AnchorPane.leftAnchor="226.0">
         <columns>
           <TableColumn fx:id="resourceNameColumn" prefWidth="199.0" text="Resource" />
         </columns>
       </TableView>
-      <Button fx:id="allocResourceButton" layoutX="387.0" layoutY="170.0" mnemonicParsing="false" onAction="#allocResourceAction" prefHeight="25.0" prefWidth="16.0" AnchorPane.bottomAnchor="305.0" AnchorPane.leftAnchor="387.0">
+      <Button fx:id="allocResourceButton" layoutX="361.0" layoutY="180.0" mnemonicParsing="false" onAction="#allocResourceAction" prefHeight="31.0" prefWidth="46.0" AnchorPane.bottomAnchor="289.0" AnchorPane.leftAnchor="361.0">
          <graphic>
-            <ImageView fitHeight="20.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="24.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Images/addIcon.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="cleanButton" layoutX="526.0" layoutY="387.0" mnemonicParsing="false" onAction="#cleanAction" prefHeight="31.0" prefWidth="111.0" styleClass="buttonlogin" text="Clear all" AnchorPane.bottomAnchor="82.0" AnchorPane.rightAnchor="170.0">
+      <Button fx:id="cleanButton" layoutX="361.0" layoutY="381.0" mnemonicParsing="false" onAction="#cleanAction" prefHeight="31.0" prefWidth="111.0" styleClass="redbutton" text="Clear all" AnchorPane.bottomAnchor="88.0" AnchorPane.rightAnchor="335.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="finishButton" layoutX="672.0" layoutY="447.0" mnemonicParsing="false" onAction="#finishAction" prefHeight="21.0" prefWidth="111.0" styleClass="buttonlogin" text="Finish" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="24.0">
+      <Button fx:id="finishButton" layoutX="672.0" layoutY="447.0" mnemonicParsing="false" onAction="#finishAction" prefHeight="21.0" prefWidth="111.0" styleClass="greenButton" text="Finish" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="24.0">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

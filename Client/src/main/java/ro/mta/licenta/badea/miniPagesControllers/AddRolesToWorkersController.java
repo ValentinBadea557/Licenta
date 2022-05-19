@@ -112,7 +112,7 @@ public class AddRolesToWorkersController implements Initializable {
                             lista.listaEmployees.get(j).setPermision(permisiuni);
 
                             resultLabel.setText("Role and permissions added!");
-                            resultLabel.setStyle("-fx-text-fill:White");
+                            resultLabel.setStyle("-fx-text-fill: green;");
                         }
                     }
                 }

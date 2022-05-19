@@ -6,6 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -242,8 +244,8 @@ public class viewProjectLvl3Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        clearTaskButton.setStyle("button-hover-color: #293241; " );
-        createNewTaskButton.setStyle("button-hover-color: #293241; " );
+        clearTaskButton.setStyle("button-hover-color: #293241; ");
+        createNewTaskButton.setStyle("button-hover-color: #293241; ");
 
         /**Get all information about current project**/
         SenderText data = new SenderText();
@@ -261,31 +263,82 @@ public class viewProjectLvl3Controller implements Initializable {
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
         ProjectModel project = new ProjectModel();
+
+        Parent root = null;
         try {
-            client.sendText(tosend.toString());
+            root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            Parent root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+        Scene scene = new Scene(root);
+        Stage primaryStage = new Stage();
 
-            Scene scene = new Scene(root);
-            Stage primaryStage = new Stage();
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        try {
+            // client.sendText(tosend.toString());
 
-            primaryStage.initStyle(StageStyle.UNDECORATED);
+
+
+
+            Service<ProjectModel> service = new Service<ProjectModel>() {
+                @Override
+                protected Task<ProjectModel> createTask() {
+                    return new Task<ProjectModel>() {
+                        @Override
+                        protected ProjectModel call() throws Exception {
+                            SenderText data = new SenderText();
+                            int id = Integer.parseInt(data.getData());
+
+                            Client client = Client.getInstance();
+                            JSONObject tosend = new JSONObject();
+
+                            tosend.put("Type", "Get Project");
+                            tosend.put("IDproject", id);
+
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+                            gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+                            Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+                            client.sendText(tosend.toString());
+                            String response = client.receiveText();
+
+
+                            ProjectModel project = gson.fromJson(response, ProjectModel.class);
+                            projectLocal = project ;
+
+                            return project;
+                        }
+                    };
+
+                }
+            };
+            service.start();
+
+            service.setOnSucceeded(event -> {
+                primaryStage.hide();
+            });
 
             primaryStage.setScene(scene);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
-            primaryStage.show();
+            primaryStage.showAndWait();
 
-            String response = client.receiveText();
 
-            project = gson.fromJson(response, ProjectModel.class);
-            this.projectLocal = project;
 
-            primaryStage.close();
+            //primaryStage.close();
 
-            System.out.println(gson.toJson(projectLocal));
+//            String response = client.receiveText();
+//
+//            project = gson.fromJson(response, ProjectModel.class);
+//            this.projectLocal = project;
+
+
+            //System.out.println(gson.toJson(projectLocal));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
 
         /**Start setting pages**/
         /**Overview Tab*/
@@ -570,11 +623,11 @@ public class viewProjectLvl3Controller implements Initializable {
                                 if (task.getParentID() == taskreal.getID())
                                     parent = taskreal;
                             }
-                            alert.setContentText("Name : "+task.getName()+"\n" +
-                                    "Duration : "+task.getDuration()+"\n" +
-                                    "Start Point : " +task.getStartTime()+"\n" +
-                                    "Executor : " + task.getOriginTask().getExecutant().getFullName()+"\n" +
-                                    "Parent : "+parent.getName());
+                            alert.setContentText("Name : " + task.getName() + "\n" +
+                                    "Duration : " + task.getDuration() + "\n" +
+                                    "Start Point : " + task.getStartTime() + "\n" +
+                                    "Executor : " + task.getOriginTask().getExecutant().getFullName() + "\n" +
+                                    "Parent : " + parent.getName());
 
                             alert.showAndWait();
 
@@ -632,6 +685,8 @@ public class viewProjectLvl3Controller implements Initializable {
 
         for (int i = 0; i < 24; i++) {
             Button button = new Button(hour + "-" + (hour + 1));
+            button.setStyle("-fx-background-color:#e6b800; " +
+                    "-fx-text-fill:black;");
             hour++;
             if (hour == 24) {
                 hour = 0;
@@ -647,7 +702,8 @@ public class viewProjectLvl3Controller implements Initializable {
         currentColumn = 0;
         for (int i = 0; i < 10; i++) {
             Button button1 = new Button(currentDate.plusDays(i).toString());
-
+            button1.setStyle("-fx-background-color:#e6b800; " +
+                    "-fx-text-fill:black;");
             // printTasksForCurrentUserOnSelectedDay(currentDate.plusDays(i));
 
             gridScheduling.add(button1, currentColumn, currentRow);
@@ -660,6 +716,8 @@ public class viewProjectLvl3Controller implements Initializable {
             for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
                 if (task.getDay().isEqual(currentDate.plusDays(i)) && idClient == task.getOriginTask().getExecutant().getID() && task.getStartTime() >= 0) {
                     Button taskBtn = new Button(task.getName());
+                    taskBtn.setStyle("-fx-background-color:#E0FBFC;" +
+                            "-fx-border-color:black");
                     taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                     taskBtn.setMaxWidth(Double.MAX_VALUE);
                     gridScheduling.add(taskBtn, task.getStartTime() + 1, currentRow, task.getDuration(), 1);

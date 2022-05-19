@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #3d5a80; -fx-border-radius:10px; -fx-background-radius:10px;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddTeamToProjectController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: #98c1d9; -fx-border-radius: 10px; -fx-background-radius: 10px;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.AddTeamToProjectController">
    <children>
       <GridPane layoutX="19.0" layoutY="68.0" prefHeight="102.0" prefWidth="364.0" AnchorPane.bottomAnchor="230.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="68.0">
         <columnConstraints>
@@ -28,17 +28,17 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" text="Name:" textFill="WHITE">
+            <Label alignment="CENTER" text="Name:">
                <font>
                   <Font name="System Bold Italic" size="13.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" text="Startime :" textFill="WHITE" GridPane.rowIndex="1">
+            <Label alignment="CENTER" text="Startime :" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold Italic" size="13.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" text="Deadline :" textFill="WHITE" GridPane.rowIndex="2">
+            <Label alignment="CENTER" text="Deadline :" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold Italic" size="13.0" />
                </font>
@@ -54,13 +54,13 @@
           <TableColumn fx:id="fullNameColumn" prefWidth="284.0" text="Full Name" />
         </columns>
       </TableView>
-      <Label alignment="CENTER" layoutX="4.0" layoutY="175.0" prefHeight="25.0" prefWidth="400.0" text="Select coworkers you want to add to the team" textFill="WHITE" AnchorPane.leftAnchor="4.0">
+      <Label alignment="CENTER" layoutX="4.0" layoutY="175.0" prefHeight="25.0" prefWidth="400.0" text="Select coworkers you want to add to the team" AnchorPane.leftAnchor="4.0">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
       <Button fx:id="createTeamButton" layoutX="162.0" layoutY="347.0" mnemonicParsing="false" onAction="#createTeamAction" text="Create Team" />
-      <Label layoutX="27.0" layoutY="21.0" text="Let's create a new team!" textFill="WHITE">
+      <Label layoutX="27.0" layoutY="21.0" text="Let's create a new team!">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>

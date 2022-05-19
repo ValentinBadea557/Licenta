@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -237,7 +239,6 @@ public class viewProjectsController implements Initializable {
                         e.printStackTrace();
                     }
                     // root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
-
 
                     Scene scene = new Scene(root);
                     Stage primaryStage = new Stage();

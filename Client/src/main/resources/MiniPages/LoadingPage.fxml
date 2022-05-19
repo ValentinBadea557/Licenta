@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="133.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.LoadingPageController">
+<AnchorPane prefHeight="133.0" prefWidth="290.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.miniPagesControllers.LoadingPageController">
    <children>
       <HBox alignment="CENTER" layoutX="14.0" layoutY="64.0" prefHeight="84.0" prefWidth="290.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
@@ -25,7 +25,7 @@
                </HBox.margin></Circle>
          </children>
       </HBox>
-      <Label layoutX="118.0" layoutY="14.0" text="Loading">
+      <Label layoutX="118.0" layoutY="14.0" text="Loading...">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

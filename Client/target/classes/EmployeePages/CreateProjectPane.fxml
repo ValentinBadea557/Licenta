@@ -16,19 +16,20 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="paneMaster" prefHeight="500.0" prefWidth="807.0" style="-fx-background-color: #e0fbfc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CreateProjectOneController">
+<Pane fx:id="paneMaster" prefHeight="500.0" prefWidth="807.0" style="-fx-background-color: #e0fbfc;" styleClass="createProjectPane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.mta.licenta.badea.employee.CreateProjectOneController">
    <children>
-      <Region fx:id="regionShape" layoutX="18.0" layoutY="21.0" prefHeight="462.0" prefWidth="573.0" style="-fx-background-color: #98c1d9;" />
-      <GridPane layoutX="32.0" layoutY="33.0" prefHeight="154.0" prefWidth="544.0">
+      <Region fx:id="regionShape" layoutX="18.0" layoutY="21.0" prefHeight="462.0" prefWidth="573.0" style="-fx-background-color: #98c1d9; -fx-background-radius: 20px;" />
+      <GridPane layoutX="32.0" layoutY="33.0" prefHeight="154.0" prefWidth="431.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="216.0" minWidth="10.0" prefWidth="118.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="326.0" minWidth="10.0" prefWidth="326.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -45,32 +46,32 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Start date:" GridPane.rowIndex="5">
+            <Label text="Start date:" GridPane.rowIndex="6">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Deadline:" GridPane.rowIndex="7">
+            <Label text="Deadline:" GridPane.rowIndex="8">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="projectNameField" promptText="Name">
+            <TextField fx:id="projectNameField" promptText="Name" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="100.0" />
                </GridPane.margin>
             </TextField>
-            <TextArea fx:id="descriptionField" prefHeight="56.0" prefWidth="268.0" promptText="Description" GridPane.rowIndex="2" GridPane.rowSpan="2">
+            <TextArea fx:id="descriptionField" prefHeight="56.0" prefWidth="268.0" promptText="Description" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets left="100.0" />
                </GridPane.margin>
             </TextArea>
-            <DatePicker fx:id="startDateField" editable="false" promptText="Date" showWeekNumbers="true" GridPane.rowIndex="5">
+            <DatePicker fx:id="startDateField" editable="false" promptText="Date" showWeekNumbers="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets left="100.0" />
                </GridPane.margin>
             </DatePicker>
-            <DatePicker fx:id="deadlineDateField" promptText="Date" showWeekNumbers="true" GridPane.rowIndex="7">
+            <DatePicker fx:id="deadlineDateField" promptText="Date" showWeekNumbers="true" GridPane.columnIndex="1" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="100.0" />
                </GridPane.margin>
@@ -92,16 +93,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="deleteCoworkerButton" layoutX="225.0" layoutY="208.0" mnemonicParsing="false" onAction="#deleteCoworkersAction" prefHeight="30.0" prefWidth="40.0">
-         <graphic>
-            <ImageView fitHeight="30.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Images/trashIcon.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Button>
-      <Button fx:id="nextPageButton" layoutX="666.0" layoutY="430.0" mnemonicParsing="false" onAction="#nextPageAction" styleClass="buttonlogin">
+      <Button fx:id="nextPageButton" layoutX="719.0" layoutY="426.0" mnemonicParsing="false" onAction="#nextPageAction" styleClass="buttonlogin">
          <graphic>
             <ImageView fitHeight="37.0" fitWidth="69.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -115,7 +107,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <ImageView fitHeight="134.0" fitWidth="178.0" layoutX="618.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="134.0" fitWidth="178.0" layoutX="430.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/createProj.png" />
          </image>
