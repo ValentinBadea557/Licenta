@@ -164,6 +164,19 @@ public class TaskReal implements Comparable<TaskReal> {
         this.originTask = originTask;
     }
 
+    @Override
+    public String toString() {
+        return "TaskReal{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", duration=" + duration +
+                ", day=" + day +
+                ", originTask=" + originTask +
+                ", parentID=" + parentID +
+                ", startTime=" + startTime +
+                ", completionTime=" + completionTime +
+                '}';
+    }
 
     @Override
     public int compareTo(TaskReal o) {

@@ -1,14 +1,18 @@
 package ro.mta.server.handlers;
 
 import com.google.gson.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
 import ro.mta.server.dao.ProjectDAO;
 import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.UserDAO;
+import ro.mta.server.entities.Resource;
+import ro.mta.server.entities.Schedule;
 import ro.mta.server.entities.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class HandleUser implements IHandler {
@@ -50,8 +54,9 @@ public class HandleUser implements IHandler {
 
         UserDAO user = new UserDAO();
         ProjectDAO proiect = new ProjectDAO();
-
-        String result;
+        ResourceDAO rs = new ResourceDAO();
+        Schedule sch = new Schedule();
+        String result = new String();
 
         switch (type) {
             case "Login":
@@ -119,6 +124,51 @@ public class HandleUser implements IHandler {
 
                 json.remove("Type");
                 result = user.addNewTaskToProject(json.toString());
+                this.messageToSend = result;
+                break;
+
+            case "Resource new quantity":
+                json.remove("Type");
+                int idProject = json.getInt("IDproject");
+                int idRes = json.getInt("IDresource");
+                int newQuantity = json.getInt("Quantity");
+
+                System.out.println(idProject + " " + idRes + " " + newQuantity);
+
+                result = rs.modifyResourceForProject(idProject, idRes, newQuantity);
+                this.messageToSend = result;
+                break;
+
+            case "Request Recommendations":
+                System.out.println("Recomandare");
+                int idTaskReal = json.getInt("idTaskReal");
+                int idProjectRecomandation = json.getInt("idProject");
+
+                result = sch.taskRecommandations(idTaskReal, idProjectRecomandation);
+                this.messageToSend = result;
+                break;
+
+            case "Modify Resources":
+                System.out.println("Modify Resources");
+                JSONArray array = json.getJSONArray("Modificari");
+                int idPrj = json.getInt("IDproject");
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject obj = array.getJSONObject(i);
+                    int idtask = obj.getInt("IDtask");
+                    int newQuantityTask = obj.getInt("MaximQuantity");
+                    int idResursaTask = obj.getInt("IDresursa");
+                    result = rs.modifyResourceForTask(idtask, idResursaTask, newQuantityTask);
+                }
+                sch.setTheSchedulingForEntireProject(idPrj);
+
+                this.messageToSend = result;
+                break;
+
+            case "Decrease Duration":
+                int idtask = json.getInt("IDtask");
+                int durationToDecrease = json.getInt("ValueToDecrease");
+                result = rs.modifyTaskDuration(idtask, durationToDecrease);
+                sch.setTheSchedulingForEntireProject(json.getInt("IDproject"));
                 this.messageToSend = result;
                 break;
         }

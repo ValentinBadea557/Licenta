@@ -2,6 +2,7 @@ package ro.mta.licenta.badea.miniPagesControllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,6 +30,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateDeserializer;
@@ -48,6 +50,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static java.lang.Thread.sleep;
@@ -279,8 +282,6 @@ public class viewProjectLvl3Controller implements Initializable {
             // client.sendText(tosend.toString());
 
 
-
-
             Service<ProjectModel> service = new Service<ProjectModel>() {
                 @Override
                 protected Task<ProjectModel> createTask() {
@@ -306,7 +307,7 @@ public class viewProjectLvl3Controller implements Initializable {
 
 
                             ProjectModel project = gson.fromJson(response, ProjectModel.class);
-                            projectLocal = project ;
+                            projectLocal = project;
 
                             return project;
                         }
@@ -325,7 +326,6 @@ public class viewProjectLvl3Controller implements Initializable {
             primaryStage.showAndWait();
 
 
-
             //primaryStage.close();
 
 //            String response = client.receiveText();
@@ -338,7 +338,7 @@ public class viewProjectLvl3Controller implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
 
         /**Start setting pages**/
         /**Overview Tab*/
@@ -603,12 +603,19 @@ public class viewProjectLvl3Controller implements Initializable {
 
             positionMap.clear();
             calculatePositions(rs, listaTaskuriRealePerDay);
+            System.out.println("Taskuri pe ziua curenta: " + listaTaskuriRealePerDay.size());
 
+            System.out.println(positionMap.size());
             for (Integer key : positionMap.keySet()) {
+                for (TaskRealModel taskk : listaTaskuriRealePerDay) {
+                    if (taskk.getID() == key)
+                        System.out.println(taskk.getName());
+                }
                 System.out.println("key : " + key + " value : " + positionMap.get(key));
+
             }
 
-            System.out.println("Size:" + listaTaskuriRealePerDay.size());
+
             for (TaskRealModel task : listaTaskuriRealePerDay) {
                 Button taskBtn = new Button(task.getName());
                 taskBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -640,6 +647,8 @@ public class viewProjectLvl3Controller implements Initializable {
                 taskBtn.setMaxWidth(Double.MAX_VALUE);
                 taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                 taskBtn.setMaxHeight(Double.MAX_VALUE);
+
+                System.out.println("Current task: " + task.getID() + " " + positionMap.get(task.getID()));
                 grid.add(taskBtn, task.getStartTime() + 1, positionMap.get(task.getID()) + 1,
                         task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
             }
@@ -766,15 +775,194 @@ public class viewProjectLvl3Controller implements Initializable {
             Client client = Client.getInstance();
             JSONObject tosend = new JSONObject();
             tosend.put("Type", "Request Recommendations");
-            tosend.put("IDtask", idSelected);
+            tosend.put("idTaskReal", idSelected);
+            tosend.put("idProject", projectLocal.getID());
+            tosend.put("dataCurenta", tableTaskNotScheduled.getSelectionModel().getSelectedItem().getDay());
+
+            String receive = null;
             try {
                 client.sendText(tosend.toString());
 
-                String receive = client.receiveText();
+                receive = client.receiveText();
+                System.out.println(receive);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+            JSONObject response = new JSONObject(receive);
+            if (response.get("Response").equals("Modify Number Of Resources Alloc")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Server Response");
+                alert.setHeaderText("Suggestion");
+
+                String modificari = new String();
+                JSONArray array = response.getJSONArray("Modificari");
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject obj = array.getJSONObject(i);
+                    System.out.println(obj.toString());
+                    modificari += "Current task requests " + obj.get("RequestedQuantity") + " " + obj.get("ResourceName") + " " +
+                            "but only " + obj.get("MaximQuantity") + " available\n";
+                }
+                modificari += "\n Do you want to change the amount of resource requested by task?";
+
+                alert.setContentText(modificari);
+                alert.getDialogPane().getButtonTypes().clear();
+                alert.getDialogPane().getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+
+                    Parent root = null;
+                    try {
+                        root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Scene scene = new Scene(root);
+                    Stage primaryStage = new Stage();
+                    primaryStage.initStyle(StageStyle.UNDECORATED);
+
+                    Task<JSONObject> task = new Task<JSONObject>() {
+                        @Override
+                        protected JSONObject call() throws Exception {
+                            JSONObject send = new JSONObject();
+                            send.put("Type", "Modify Resources");
+                            send.put("IDproject", projectLocal.getID());
+                            send.put("Modificari", array);
+
+                            try {
+                                client.sendText(send.toString());
+                                String responseModify = client.receiveText();
+
+                                JSONObject responseModifyQuantity = new JSONObject(responseModify);
+                                return responseModifyQuantity;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    };
+
+                    task.setOnSucceeded(event -> {
+                        if (task.getValue().get("Result").equals("OK")) {
+                            System.out.println("AICI");
+                            service.restart();
+                            service.setOnSucceeded(eventService -> {
+                                primaryStage.hide();
+
+                            });
+                        } else {
+                            Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                            alert2.setTitle("Request Response");
+                            alert2.setHeaderText("ERROR!");
+                            alert2.setContentText("Some error occurred!");
+                            alert2.showAndWait();
+                        }
+                    });
+                    new Thread(task).start();
+
+                    primaryStage.setScene(scene);
+                    primaryStage.initModality(Modality.APPLICATION_MODAL);
+                    primaryStage.showAndWait();
+
+                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                    alert3.setTitle("Request Response");
+                    alert3.setHeaderText("All done!");
+                    alert3.setContentText("Everything is good! A new scheduling is now available!");
+                    alert3.showAndWait();
+
+                    resetAllTables();
+
+
+                } else if (result.isPresent() && result.get() == ButtonType.NO) {
+                    System.out.println("Cancel");
+
+                }
+            } else if (response.get("Response").equals("Modify Duration")) {
+                System.out.println(response);
+                Alert alertaDuration = new Alert(Alert.AlertType.INFORMATION);
+                alertaDuration.setTitle("Server Response");
+                alertaDuration.setHeaderText("Suggestion");
+                String content = new String();
+                JSONObject obj = response.getJSONObject("Modificari");
+                System.out.println(obj);
+                content += "Current task exceed the timeline with " + obj.get("ToBeSubstracted") + " hours.\n";
+                content += "\nWould you like to decrease the duration of the task?";
+                alertaDuration.setContentText(content);
+                alertaDuration.getDialogPane().getButtonTypes().clear();
+                alertaDuration.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+
+                Optional<ButtonType> result = alertaDuration.showAndWait();
+
+                if (result.isPresent() && result.get() == ButtonType.YES) {
+                    Parent root = null;
+                    try {
+                        root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Scene scene = new Scene(root);
+                    Stage primaryStage = new Stage();
+                    primaryStage.initStyle(StageStyle.UNDECORATED);
+
+                    Task<JSONObject> task = new Task<JSONObject>() {
+                        @Override
+                        protected JSONObject call() throws Exception {
+                            JSONObject send = new JSONObject();
+                            send.put("Type", "Decrease Duration");
+                            send.put("IDtask", obj.get("IDtask"));
+                            send.put("IDproject",projectLocal.getID());
+                            send.put("ValueToDecrease", obj.get("ToBeSubstracted"));
+
+                            try {
+                                client.sendText(send.toString());
+                                String responseModifyDuration = client.receiveText();
+
+                                JSONObject JsonresponseModifyDuration = new JSONObject(responseModifyDuration);
+                                return JsonresponseModifyDuration;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    };
+
+                    task.setOnSucceeded(event -> {
+                        if (task.getValue().get("Result").equals("OK")) {
+                            System.out.println("AICI");
+                            service.restart();
+                            service.setOnSucceeded(eventService -> {
+                                primaryStage.hide();
+
+                            });
+                        } else {
+                            Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                            alert2.setTitle("Request Response");
+                            alert2.setHeaderText("ERROR!");
+                            alert2.setContentText("Some error occurred!");
+                            alert2.showAndWait();
+                        }
+                    });
+                    new Thread(task).start();
+
+                    primaryStage.setScene(scene);
+                    primaryStage.initModality(Modality.APPLICATION_MODAL);
+                    primaryStage.showAndWait();
+
+                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                    alert3.setTitle("Request Response");
+                    alert3.setHeaderText("All done!");
+                    alert3.setContentText("Everything is good! A new scheduling is now available!");
+                    alert3.showAndWait();
+
+                    resetAllTables();
+                } else {
+                    System.out.println("No");
+                }
+            }
 
         });
     }
@@ -948,24 +1136,99 @@ public class viewProjectLvl3Controller implements Initializable {
     }
 
     @FXML
-    void modifyResourceAction(ActionEvent event) {
+    void modifyResourceAction(ActionEvent eventClick) throws Exception {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        selectedResource.setCantitate(quantitySpinner.getValue());
-        JSONObject tosend = new JSONObject(selectedResource);
-        tosend.put("Type", "Resource new quantity");
-        tosend.put("IDproject", projectLocal.getID());
+        Task<JSONObject> task = new Task<JSONObject>() {
+            @Override
+            protected JSONObject call() throws Exception {
+                selectedResource.setCantitate(quantitySpinner.getValue());
+                JSONObject tosend = new JSONObject();
+                tosend.put("Type", "Resource new quantity");
+                tosend.put("IDproject", projectLocal.getID());
+                tosend.put("IDresource", selectedResource.getId());
+                tosend.put("Quantity", quantitySpinner.getValue());
+                System.out.println(gson.toJson(tosend));
+                Client client = Client.getInstance();
+                client.sendText(tosend.toString());
+                String response = client.receiveText();
+                JSONObject result = new JSONObject(response);
+                return result;
+            }
+        };
 
-        tosend.remove("Type");
-        tosend.remove("IDproject");
-        ResourceModel rs = gson.fromJson(tosend.toString(), ResourceModel.class);
-        System.out.println(gson.toJson(rs));
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene scene = new Scene(root);
+        Stage primaryStage = new Stage();
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        task.setOnSucceeded(event -> {
+            if (task.getValue().get("Result").equals("OK")) {
+                System.out.println("AICI");
+                service.restart();
+                service.setOnSucceeded(eventService -> {
+                    primaryStage.hide();
+
+                });
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Request Response");
+                alert.setHeaderText("ERROR!");
+                alert.setContentText("Some error occurred!");
+                alert.showAndWait();
+            }
+        });
+        new Thread(task).start();
+
+        //      if(result.get("Result").equals("OK")){
+//            Parent root = null;
+//            try {
+//                root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Scene scene = new Scene(root);
+//            Stage primaryStage = new Stage();
+//            primaryStage.initStyle(StageStyle.UNDECORATED);
+//
+//
+//            service.restart();
+//            service.setOnSucceeded(event -> {
+//                primaryStage.hide();
+//
+//            });
 
 
-        System.out.println("Clicked!");
+        primaryStage.setScene(scene);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Request Response");
+        alert.setHeaderText("All done!");
+        alert.setContentText("Everything is good! A new scheduling is now available!");
+        alert.showAndWait();
+
+        resetAllTables();
+        //     }else{
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Request Response");
+//            alert.setHeaderText("ERROR!");
+//            alert.setContentText("Some error occurred!");
+//            alert.showAndWait();
+//   //     }
+//
+//        System.out.println("Clicked!");
     }
 
     ObservableList<TaskModel> listaTaskuriForUser = FXCollections.observableArrayList();
@@ -979,28 +1242,47 @@ public class viewProjectLvl3Controller implements Initializable {
             );
 
     public void resetAllTables() {
-        setTableTaskNotScheduled();
+
+        tableTaskNotScheduled.getSelectionModel().clearSelection();
+        resourcesTable.getSelectionModel().clearSelection();
+        resourceAllocationTable.getSelectionModel().clearSelection();
+        tablePeople.getSelectionModel().clearSelection();
+
+
+        fillWithZeroWhenResourceIsNotUsed();
+        calculateCompletionTime();
+        resourceAllocNameLabel.setText("");
+
+        /**To do get lista TaskUnscheduled*/
+        ObservableList<TaskRealModel> listaTasksReal = FXCollections.observableArrayList();
+        for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
+            if (task.getStartTime() < 0) {
+                listaTasksReal.add(task);
+            }
+        }
+        tableTaskNotScheduled.setItems(listaTasksReal);
+
         setSchedulingTable();
 
         /**Set Add New Task Tab*/
         setFieldForNewTaskTab();
 
         /**Set modify Resource Tab*/
-        setResourceModifyTab();
+        setResourceTable();
 
         /**Resource Allocation Tab*/
-        setViewResourceAllocationTab();
-
-        /**Teams Tab*/
-        setTeamsTab();
+        setResourceAllocTable();
+        selectedResourceLabel.setVisible(false);
+        dateResAllocLabel.setVisible(false);
+        dateForResourceAlloc.setVisible(false);
+        regionSelectedResource.setVisible(false);
 
         /**People Tab*/
-        setPeopleTab();
+        setTablePeople();
+        setTasksTablePeoplePage();
 
 
-        /**Check Positions**/
-        fillWithZeroWhenResourceIsNotUsed();
-        calculateCompletionTime();
+        allocResScrollPane.setContent(null);
     }
 
     public void setFieldForNewTaskTab() {
@@ -1220,4 +1502,38 @@ public class viewProjectLvl3Controller implements Initializable {
             }
         }
     }
+
+    Service<ProjectModel> service = new Service<ProjectModel>() {
+        @Override
+        protected Task<ProjectModel> createTask() {
+            return new Task<ProjectModel>() {
+                @Override
+                protected ProjectModel call() throws Exception {
+                    SenderText data = new SenderText();
+                    int id = Integer.parseInt(data.getData());
+
+                    Client client = Client.getInstance();
+                    JSONObject tosend = new JSONObject();
+
+                    tosend.put("Type", "Get Project");
+                    tosend.put("IDproject", id);
+
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+                    gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+                    Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+                    client.sendText(tosend.toString());
+                    String response = client.receiveText();
+
+
+                    ProjectModel project = gson.fromJson(response, ProjectModel.class);
+                    projectLocal = project;
+
+                    return project;
+                }
+            };
+
+        }
+    };
 }

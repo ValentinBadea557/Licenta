@@ -2,10 +2,12 @@ package ro.mta.server.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.json.JSONObject;
 import ro.mta.server.Database;
 import ro.mta.server.entities.Companie;
 import ro.mta.server.entities.Resource;
+import ro.mta.server.entities.Schedule;
 
 import java.sql.*;
 
@@ -145,6 +147,95 @@ public class ResourceDAO implements IResourceDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public String modifyResourceForProject(int idProject, int idRes, int newQuantity) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "update Resurse_Proiecte " +
+                "set Cantitate=" + newQuantity + " " +
+                "where ID_Proiect=" + idProject + " and ID_Resursa=" + idRes + " ;";
+
+        JSONObject response = new JSONObject();
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            response.put("Result", "OK");
+
+            Schedule sch = new Schedule();
+            sch.setTheSchedulingForEntireProject(idProject);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.put("Result", "Fail");
+        }
+
+
+        return response.toString();
+    }
+
+    @Override
+    public String modifyResourceForTask(int idTaskReal, int idRes, int newQuantity) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "Select * from Taskuri_Reale " +
+                "where ID=" + idTaskReal;
+
+        JSONObject response = new JSONObject();
+
+        int idTask = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+
+            while (rs.next()) {
+                idTask = rs.getInt(5);
+                System.out.println("ID TASK : " + idTask);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sql1 = "Update Resurse_Taskuri " +
+                "Set Cantitate=" + newQuantity + " " +
+                "Where ID_Task=" + idTask + " and ID_Resursa=" + idRes;
+
+        Statement stmt = null;
+        try {
+            stmt = con.createStatement();
+            stmt.execute(sql1);
+            response.put("Result", "OK");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.put("Result", "Fail");
+        }
+
+        return response.toString();
+    }
+
+    @Override
+    public String modifyTaskDuration(int idTaskReal, int durationToDecrease) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "Update Taskuri_Reale " +
+                "Set Durata=Durata-" + durationToDecrease + " " +
+                "Where ID=" + idTaskReal;
+        JSONObject response = new JSONObject();
+        try {
+            Statement stmt = con.createStatement();
+            stmt = con.createStatement();
+            stmt.execute(sql);
+            response.put("Result", "OK");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.put("Result", "Fail");
+        }
+
+        return response.toString();
     }
 
     @Override

@@ -2,11 +2,16 @@ package ro.mta.server.entities;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import ro.mta.server.Database;
 import ro.mta.server.GsonDateFormat.LocalDateDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateSerializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeDeserializer;
 import ro.mta.server.GsonDateFormat.LocalDateTimeSerializer;
+import ro.mta.server.dao.ProjectDAO;
 import ro.mta.server.dao.ResourceDAO;
 import ro.mta.server.dao.UserDAO;
 
@@ -50,63 +55,126 @@ public class Schedule {
 
     }
 
-    public void checkIfItIsFeasbileWithMoreResources(int idTaskReal, int idProject, LocalDate dataDeCercetat) {
+    public String taskRecommandations(int idTaskReal, int idProject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        TaskReal currentTask = new TaskReal();
+        ProjectDAO prj = new ProjectDAO();
+        currentTask = prj.getTaskRealBasedOnID(idTaskReal);
+        LocalDate dataDeCercetat = currentTask.getDay();
+
         getListOfResources(idProject);
         getListOfRealTasks(idProject, dataDeCercetat);
         getListOfPeople(idProject, dataDeCercetat);
         translateUsersIntoResources();
         fillWithZeroWhenResourceIsNotUsed();
 
-        TaskReal taskDeCercetat = new TaskReal();
+
+        JSONArray jsonVector = new JSONArray();
         for (TaskReal task : listaTaskuri) {
             if (task.getID() == idTaskReal) {
-                taskDeCercetat = task;
-            }
-        }
-        ArrayList<Resource> resurse = new ArrayList<>();
-        for (Resource rs : listaResurse) {
-            if (taskDeCercetat.getQuantityOfResourceRequest(rs.getID()) > 0 && rs.getID() > 0) {
-                System.out.println(rs.getDenumire());
-                resurse.add(rs);
-            }
-        }
-
-        for (int i = 0; i < 15; i++)
-            for (Resource rs : resurse) {
-                for (Resource r : listaResurse) {
-                    if (rs.getID() == r.getID()) {
-                        r.setCantitate(r.getCantitate() + 1);
-                        startScheduling();
+                for (Resource rs : listaResurse) {
+                    JSONObject jsonObject = new JSONObject();
+                    if (task.getQuantityOfResourceRequest(rs.getID()) > rs.getCantitate()) {
+                        System.out.println(task.getName() + " are nevoie de " + task.getQuantityOfResourceRequest(rs.getID()) + " dar avem doar " + rs.getCantitate());
+                        jsonObject.put("IDtask", task.getID());
+                        jsonObject.put("IDresursa", rs.getID());
+                        jsonObject.put("RequestedQuantity", task.getQuantityOfResourceRequest(rs.getID()));
+                        jsonObject.put("MaximQuantity", rs.getCantitate());
+                        jsonObject.put("ResourceName", rs.getDenumire());
+                        jsonVector.put(jsonObject);
                     }
                 }
             }
+        }
+        JSONObject response = new JSONObject();
 
+        if (jsonVector.length() != 0) {
+            System.out.println(jsonVector.toString());
+            response.put("Response", "Modify Number Of Resources Alloc");
+            response.put("Modificari", jsonVector);
+        } else {
+
+            getAllDates(idProject);
+            for (LocalDate dataCalendaristica : listaDateCalendaristice) {
+                if(dataCalendaristica.equals(currentTask.getDay())){
+                    getListOfResources(idProject);
+                    getListOfRealTasks(idProject, dataCalendaristica);
+                    getListOfPeople(idProject, dataCalendaristica);
+                    translateUsersIntoResources();
+                    fillWithZeroWhenResourceIsNotUsed();
+                    TaskReal toBeDeleted = new TaskReal();
+                    for (TaskReal task : listaTaskuri) {
+                        for (Resource rs : listaResurse) {
+                            System.out.println(task.getQuantityOfResourceRequest(rs.getID()) + " " + rs.getCantitate());
+                            if (task.getQuantityOfResourceRequest(rs.getID()) > rs.getCantitate()) {
+                                toBeDeleted = task;
+                            }
+                        }
+                    }
+                    listaTaskuri.remove(toBeDeleted);
+                    setNullStartPointForTask(toBeDeleted.getID());
+                    listaTaskuriImposibleToSchedule.add(toBeDeleted);
+                    startScheduling();
+                }
+            }
+
+            for (TaskReal task : listaTaskuri) {
+                if (task.getID() == idTaskReal) {
+                    System.out.println(task.toString());
+                    JSONObject responseTime=new JSONObject();
+                    responseTime.put("IDtask",task.getID());
+                    responseTime.put("Deadline",task.getCompletionTime());
+                    responseTime.put("ToBeSubstracted",task.getCompletionTime()-24);
+                    responseTime.put("CurrentDuration",task.getDuration());
+
+                    response.put("Response", "Modify Duration");
+                    response.put("Modificari", responseTime);
+                }
+            }
+        }
+
+
+        return response.toString();
     }
 
 
     public void setTheSchedulingForEntireProject(int idProject) {
 
         getAllDates(idProject);
-
-
-//        for(Resource r:listaResurse){
-//            System.out.println(r.getDenumire()+" cantitate:"+r.getCantitate());
-//        }
+        for (Resource r : listaResurse) {
+            System.out.println(r.getDenumire() + " cantitate:" + r.getCantitate());
+        }
 
         int i = 1;
         for (LocalDate dataCalendaristica : listaDateCalendaristice) {
             i++;
             System.out.println("Data curenta:" + dataCalendaristica + " Size rs:" + listaResurse.size());
-            //  printDetailsAboutRes();
+            printDetailsAboutRes();
 
-            getListOfResources(5013);
-            getListOfRealTasks(5013, dataCalendaristica);
-            listaTaskuri.get(0).printResourceUsage();
-            getListOfPeople(5013, dataCalendaristica);
+            getListOfResources(idProject);
+            getListOfRealTasks(idProject, dataCalendaristica);
+            getListOfPeople(idProject, dataCalendaristica);
             translateUsersIntoResources();
             fillWithZeroWhenResourceIsNotUsed();
             printDetailsAboutRes();
 
+            TaskReal toBeDeleted = new TaskReal();
+            for (TaskReal task : listaTaskuri) {
+                for (Resource rs : listaResurse) {
+                    System.out.println(task.getQuantityOfResourceRequest(rs.getID()) + " " + rs.getCantitate());
+                    if (task.getQuantityOfResourceRequest(rs.getID()) > rs.getCantitate()) {
+                        toBeDeleted = task;
+                    }
+                }
+            }
+
+            listaTaskuri.remove(toBeDeleted);
+            setNullStartPointForTask(toBeDeleted.getID());
+            listaTaskuriImposibleToSchedule.add(toBeDeleted);
 
             if (startScheduling()) {
                 for (TaskReal task : listaTaskuri) {
@@ -153,7 +221,10 @@ public class Schedule {
         Database db = new Database();
         Connection con = db.getConn();
 
-        String sql = "select distinct TR.Zi from Taskuri_Reale TR";
+        String sql = "select distinct TR.Zi from Taskuri_Reale TR " +
+                "inner join Taskuri T\n" +
+                "on TR.ID_Task=T.ID_Task\n" +
+                "where T.ID_Proiect=" + idProject;
 
         try {
             Statement stmt = con.createStatement();

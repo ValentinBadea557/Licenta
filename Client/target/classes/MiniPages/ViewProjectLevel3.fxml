@@ -312,15 +312,18 @@
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <TextArea fx:id="descriptionResourceText" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2" />
+                              <TextArea fx:id="descriptionResourceText" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font></TextArea>
                               <Label fx:id="resourceNameLabel" GridPane.columnIndex="1">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
                               <Label fx:id="shareableResourceLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
                               <Spinner fx:id="quantitySpinner" GridPane.columnIndex="1" GridPane.rowIndex="4" />

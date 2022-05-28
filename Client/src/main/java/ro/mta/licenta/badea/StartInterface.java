@@ -38,6 +38,7 @@ public class StartInterface extends Application {
                     try {
                         client.sendText(jsonexit.toString());
                     } catch (Exception ex) {
+                        System.out.println("Server DOWN!");
                         ex.printStackTrace();
                     }
 

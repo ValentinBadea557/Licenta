@@ -40,6 +40,7 @@ public class Main {
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
 //        Schedule sch = new Schedule();
+//        sch.setTheSchedulingForEntireProject(6008);
 //        LocalDate d=LocalDate.of(2022,5,15);
 //        sch.checkIfItIsFeasbileWithMoreResources(3224,5013,d);
 //

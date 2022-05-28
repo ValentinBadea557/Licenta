@@ -66,4 +66,15 @@ public class Resource {
         this.cantitate = cantitate;
     }
 
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "ID=" + ID +
+                ", denumire='" + denumire + '\'' +
+                ", cantitate=" + cantitate +
+                ", shareable=" + shareable +
+                ", descriere='" + descriere + '\'' +
+                ", IDcompanie=" + IDcompanie +
+                '}';
+    }
 }

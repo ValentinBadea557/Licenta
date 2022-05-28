@@ -604,6 +604,8 @@ public class UserDAO implements IUserDAO {
         }
         if (!response.has("Response Create")) {
             response.put("Final Response", "ok");
+            Schedule sch = new Schedule();
+            sch.setTheSchedulingForEntireProject(project.getID());
         } else {
             response.put("Final Response", "SQL Exception");
             deleteAllDataAboutAProject(project.getID());

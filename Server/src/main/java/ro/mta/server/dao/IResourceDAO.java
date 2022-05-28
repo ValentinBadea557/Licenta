@@ -9,4 +9,7 @@ public interface IResourceDAO {
     public String getResourcebasedOnID(int id);
     public int getResourceIDbasedOnName(String name);
     public Resource getFullResourceBasedOnID(int idRes);
+    public String modifyResourceForProject(int idProject,int idRes, int newQuantity);
+    public String modifyResourceForTask(int idTaskReal,int idRes,int newQuantity);
+    public String modifyTaskDuration(int idTaskReal,int durationToDecrease);
 }
