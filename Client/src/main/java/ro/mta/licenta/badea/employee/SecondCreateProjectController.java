@@ -81,9 +81,6 @@ public class SecondCreateProjectController implements Initializable {
     private TableColumn<ResourceModel, Integer> quantityResColumn;
 
     @FXML
-    private TableColumn<ResourceModel, Boolean> shareableResColumn;
-
-    @FXML
     private Button addResourceButton;
 
     @Override
@@ -184,6 +181,7 @@ public class SecondCreateProjectController implements Initializable {
 
         SelectedWorkersIDs resourceList = new SelectedWorkersIDs();
         resourceList.clearResourceList();
+        resourceList.listaResProiect.clear();
         resources.clear();
 
         scene = new Scene(root);
@@ -212,12 +210,11 @@ public class SecondCreateProjectController implements Initializable {
         idResColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameResColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
         quantityResColumn.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
-        shareableResColumn.setCellValueFactory(new PropertyValueFactory<>("shareable"));
+
 
         idResColumn.setStyle("-fx-alignment: CENTER ; ");
         nameResColumn.setStyle("-fx-alignment: CENTER ;");
         quantityResColumn.setStyle("-fx-alignment: CENTER ;");
-        shareableResColumn.setStyle("-fx-alignment: CENTER ;");
 
     }
 

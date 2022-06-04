@@ -176,12 +176,13 @@ public class viewProjectsController implements Initializable {
         row = 0;
         column = 0;
         for (int i = 0; i < listaProiecte.size(); i++) {
-            String labelStr = new String("Name : ");
+            String labelStr = new String();
             labelStr += listaProiecte.get(i).getNume();
             Label prjNameLabel = new Label(labelStr);
             prjNameLabel.relocate(20, 20);
             prjNameLabel.setStyle("-fx-text-fill:black; -fx-font-weight: bold ;");
-            prjNameLabel.setFont(new Font("System",15));
+           // prjNameLabel.setFont(new Font("System",15));
+            prjNameLabel.setWrapText(true);
 
             String startStr = new String("Start : ");
             startStr += listaProiecte.get(i).getStarttime().toString();

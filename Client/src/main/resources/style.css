@@ -55,6 +55,12 @@
     -fx-background-color: #98c1d9;
 }
 
+.buttonLight:hover{
+    -fx-color: button-hover-color ;
+    -fx-text-fill:black;
+}
+
+
 .linear-grad-to-top-left{
    -fx-background-color: linear-gradient(to top left, #008060 ,   #00807C);
 }

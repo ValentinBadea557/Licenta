@@ -12,6 +12,8 @@ import ro.mta.server.entities.Resource;
 import ro.mta.server.entities.Schedule;
 import ro.mta.server.entities.User;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -94,6 +96,15 @@ public class HandleUser implements IHandler {
                 this.messageToSend = result;
                 break;
 
+            case "Get Workers assigned to projects":
+                int idC = json.getInt("IDcompanie");
+                LocalDate start = LocalDate.parse(json.getString("Start"));
+                System.out.println(start);
+                LocalDate deadline = LocalDate.parse(json.getString("Deadline"));
+                result = user.getListOfPeopleAssignedToProject(idC, start, deadline);
+                this.messageToSend = result;
+                break;
+
             case "View Resources":
                 ResourceDAO resourceView = new ResourceDAO();
                 int id_company = json.getInt("ID_Companie");
@@ -169,6 +180,12 @@ public class HandleUser implements IHandler {
                 int durationToDecrease = json.getInt("ValueToDecrease");
                 result = rs.modifyTaskDuration(idtask, durationToDecrease);
                 sch.setTheSchedulingForEntireProject(json.getInt("IDproject"));
+                this.messageToSend = result;
+                break;
+
+            case "View Future Tasks":
+                int idUserForFutureTask = json.getInt("idUser");
+                result = user.getFutureTasks(idUserForFutureTask);
                 this.messageToSend = result;
                 break;
         }

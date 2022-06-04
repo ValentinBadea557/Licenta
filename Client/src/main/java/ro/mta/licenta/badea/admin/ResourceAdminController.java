@@ -27,13 +27,6 @@ public class ResourceAdminController implements Initializable {
     @FXML
     private TextField ResourceName;
 
-
-    @FXML
-    private RadioButton ShareableNo;
-
-    @FXML
-    private RadioButton ShareableYes;
-
     @FXML
     private Spinner<Integer> SpinnerQuantity;
 
@@ -55,21 +48,12 @@ public class ResourceAdminController implements Initializable {
     @FXML
     private TableColumn<ResourceModel, Integer> quantityColumn;
 
-    @FXML
-    private TableColumn<ResourceModel, Boolean> shareableColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         updateTableView();
 
-        /** group for radio buttons*/
-        final ToggleGroup group = new ToggleGroup();
-        ShareableNo.setToggleGroup(group);
-        ShareableNo.setSelected(true);
-
-        ShareableYes.setToggleGroup(group);
-        ShareableYes.setSelected(false);
         /** set spinner */
         SpinnerValueFactory<Integer> spinner = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100);
         spinner.setValue(1);
@@ -80,7 +64,6 @@ public class ResourceAdminController implements Initializable {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("denumire"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
-        shareableColumn.setCellValueFactory(new PropertyValueFactory<>("shareable"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("descriere"));
 
         ResourcesTable.setItems(resurseModels);
@@ -143,17 +126,10 @@ public class ResourceAdminController implements Initializable {
             String name = ResourceName.getText().toString();
             int number = SpinnerQuantity.getValue();
             String description = ResourceDescription.getText().toString();
-            boolean s = false;
-            if (ShareableYes.isSelected()) {
-                s = true;
-            } else if (ShareableNo.isSelected()) {
-                s = false;
-            }
 
             ResourceModel newResource = new ResourceModel();
             newResource.setDenumire(name);
             newResource.setCantitate(number);
-            newResource.setShareable(s);
             newResource.setDescriere(description);
             newResource.setIDcompanie(client.getCurrentUser().getCompany().getID());
 
@@ -170,7 +146,14 @@ public class ResourceAdminController implements Initializable {
 
             JSONObject responseJson = new JSONObject(response);
             if (responseJson.get("Response").toString().equals("ok")) {
+                ResourceName.clear();
+                ResourceDescription.clear();
+
                 updateTableView();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Result");
+                alert.setContentText("The resource was added into database!");
+                alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error!");

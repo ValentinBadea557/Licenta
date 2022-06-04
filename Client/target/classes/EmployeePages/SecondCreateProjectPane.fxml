@@ -64,9 +64,8 @@
       <TableView fx:id="resourceTable" layoutX="59.0" layoutY="373.0" prefHeight="120.0" prefWidth="294.0">
         <columns>
           <TableColumn fx:id="idResColumn" prefWidth="55.0" text="ID" />
-          <TableColumn fx:id="nameResColumn" prefWidth="95.0" text="Name" />
-            <TableColumn fx:id="quantityResColumn" prefWidth="65.0" text="Quantity" />
-            <TableColumn fx:id="shareableResColumn" prefWidth="72.0" text="Shareable" />
+          <TableColumn fx:id="nameResColumn" prefWidth="153.0" text="Name" />
+            <TableColumn fx:id="quantityResColumn" prefWidth="77.0" text="Quantity" />
         </columns>
       </TableView>
       <Button fx:id="addResourceButton" layoutX="183.0" layoutY="332.0" mnemonicParsing="false" onAction="#addResourceAction">

@@ -3,6 +3,7 @@ package ro.mta.licenta.badea.miniPagesControllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -279,8 +280,6 @@ public class viewProjectLvl3Controller implements Initializable {
 
         primaryStage.initStyle(StageStyle.UNDECORATED);
         try {
-            // client.sendText(tosend.toString());
-
 
             Service<ProjectModel> service = new Service<ProjectModel>() {
                 @Override
@@ -325,21 +324,12 @@ public class viewProjectLvl3Controller implements Initializable {
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.showAndWait();
 
-
-            //primaryStage.close();
-
-//            String response = client.receiveText();
-//
-//            project = gson.fromJson(response, ProjectModel.class);
-//            this.projectLocal = project;
-
-
-            //System.out.println(gson.toJson(projectLocal));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+        gridScheduling.getChildren().clear();
         /**Start setting pages**/
         /**Overview Tab*/
         setOverviewPage();
@@ -648,7 +638,7 @@ public class viewProjectLvl3Controller implements Initializable {
                 taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                 taskBtn.setMaxHeight(Double.MAX_VALUE);
 
-                System.out.println("Current task: " + task.getID() + " " + positionMap.get(task.getID()));
+                System.out.println("Current task: " + task.getID() + " "+task.getName()+" " + positionMap.get(task.getID()));
                 grid.add(taskBtn, task.getStartTime() + 1, positionMap.get(task.getID()) + 1,
                         task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
             }
@@ -769,6 +759,7 @@ public class viewProjectLvl3Controller implements Initializable {
 
         tableTaskNotScheduled.setItems(listaTasksReal);
 
+
         tableTaskNotScheduled.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelection, newSelection) -> {
             int idSelected = tableTaskNotScheduled.getSelectionModel().getSelectedItem().getID();
             System.out.println("ID selectat:" + idSelected);
@@ -847,7 +838,6 @@ public class viewProjectLvl3Controller implements Initializable {
 
                     task.setOnSucceeded(event -> {
                         if (task.getValue().get("Result").equals("OK")) {
-                            System.out.println("AICI");
                             service.restart();
                             service.setOnSucceeded(eventService -> {
                                 primaryStage.hide();
@@ -873,7 +863,14 @@ public class viewProjectLvl3Controller implements Initializable {
                     alert3.setContentText("Everything is good! A new scheduling is now available!");
                     alert3.showAndWait();
 
-                    resetAllTables();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            tableTaskNotScheduled.getSelectionModel().clearSelection();
+                            resetAllTables();
+                        }
+                    });
+                   // resetAllTables();
 
 
                 } else if (result.isPresent() && result.get() == ButtonType.NO) {
@@ -958,13 +955,22 @@ public class viewProjectLvl3Controller implements Initializable {
                     alert3.setContentText("Everything is good! A new scheduling is now available!");
                     alert3.showAndWait();
 
-                    resetAllTables();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            resetAllTables();
+                        }
+                    });
+                   // resetAllTables();
+
+
                 } else {
                     System.out.println("No");
                 }
             }
 
         });
+
     }
 
     public void setTablePeople() {
@@ -1243,15 +1249,17 @@ public class viewProjectLvl3Controller implements Initializable {
 
     public void resetAllTables() {
 
-        tableTaskNotScheduled.getSelectionModel().clearSelection();
-        resourcesTable.getSelectionModel().clearSelection();
-        resourceAllocationTable.getSelectionModel().clearSelection();
-        tablePeople.getSelectionModel().clearSelection();
+        gridScheduling.getChildren().clear();
+//        tableTaskNotScheduled.getSelectionModel().clearSelection();
+//        resourcesTable.getSelectionModel().clearSelection();
+//        resourceAllocationTable.getSelectionModel().clearSelection();
+//        tablePeople.getSelectionModel().clearSelection();
 
 
         fillWithZeroWhenResourceIsNotUsed();
         calculateCompletionTime();
         resourceAllocNameLabel.setText("");
+
 
         /**To do get lista TaskUnscheduled*/
         ObservableList<TaskRealModel> listaTasksReal = FXCollections.observableArrayList();
@@ -1262,13 +1270,13 @@ public class viewProjectLvl3Controller implements Initializable {
         }
         tableTaskNotScheduled.setItems(listaTasksReal);
 
+
         setSchedulingTable();
 
-        /**Set Add New Task Tab*/
-        setFieldForNewTaskTab();
 
         /**Set modify Resource Tab*/
         setResourceTable();
+
 
         /**Resource Allocation Tab*/
         setResourceAllocTable();
@@ -1277,12 +1285,16 @@ public class viewProjectLvl3Controller implements Initializable {
         dateForResourceAlloc.setVisible(false);
         regionSelectedResource.setVisible(false);
 
+
         /**People Tab*/
         setTablePeople();
         setTasksTablePeoplePage();
 
 
+
         allocResScrollPane.setContent(null);
+
+
     }
 
     public void setFieldForNewTaskTab() {
@@ -1533,7 +1545,6 @@ public class viewProjectLvl3Controller implements Initializable {
                     return project;
                 }
             };
-
         }
     };
 }

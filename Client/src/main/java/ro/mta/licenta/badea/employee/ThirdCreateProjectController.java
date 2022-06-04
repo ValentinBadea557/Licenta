@@ -99,6 +99,32 @@ public class ThirdCreateProjectController implements Initializable {
     @FXML
     private Pane lastPane;
 
+    public void setCalendarInterval(LocalDate start, LocalDate end) {
+
+        startDateField.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(end) || item.isBefore(start));
+                    }
+                });
+
+        deadlineDateField.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(end) || item.isBefore(start));
+                    }
+                });
+
+        startDateField.setValue(start);
+        deadlineDateField.setValue(end);
+
+
+    }
+
     public void createTaskAction(ActionEvent actionEvent) {
         /**Check every field*/
 
@@ -307,6 +333,10 @@ public class ThirdCreateProjectController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ProjectTemporalModel p = new ProjectTemporalModel();
         System.out.println(p.getListaResurse());
+
+        /**Set calendar Interval*/
+        setCalendarInterval(p.getStarttime(), p.getDeadline());
+
 
         /**Set combo box editable*/
         periodicityField.setEditable(true);

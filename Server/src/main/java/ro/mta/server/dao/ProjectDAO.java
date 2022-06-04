@@ -156,7 +156,7 @@ public class ProjectDAO {
                 int idOrigin = rs.getInt(5);
 
                 task.setOriginTask(getTask(rs.getInt(6)));
-
+                task.setStartTime(rs.getInt(7));
             }
 
             return task;

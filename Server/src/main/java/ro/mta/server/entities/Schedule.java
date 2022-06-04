@@ -100,7 +100,7 @@ public class Schedule {
 
             getAllDates(idProject);
             for (LocalDate dataCalendaristica : listaDateCalendaristice) {
-                if(dataCalendaristica.equals(currentTask.getDay())){
+                if (dataCalendaristica.equals(currentTask.getDay())) {
                     getListOfResources(idProject);
                     getListOfRealTasks(idProject, dataCalendaristica);
                     getListOfPeople(idProject, dataCalendaristica);
@@ -125,11 +125,11 @@ public class Schedule {
             for (TaskReal task : listaTaskuri) {
                 if (task.getID() == idTaskReal) {
                     System.out.println(task.toString());
-                    JSONObject responseTime=new JSONObject();
-                    responseTime.put("IDtask",task.getID());
-                    responseTime.put("Deadline",task.getCompletionTime());
-                    responseTime.put("ToBeSubstracted",task.getCompletionTime()-24);
-                    responseTime.put("CurrentDuration",task.getDuration());
+                    JSONObject responseTime = new JSONObject();
+                    responseTime.put("IDtask", task.getID());
+                    responseTime.put("Deadline", task.getCompletionTime());
+                    responseTime.put("ToBeSubstracted", task.getCompletionTime() - 24);
+                    responseTime.put("CurrentDuration", task.getDuration());
 
                     response.put("Response", "Modify Duration");
                     response.put("Modificari", responseTime);
@@ -301,6 +301,8 @@ public class Schedule {
 
         boolean isSolved = true;
         boolean continueAlgorithm = false;
+
+
         while (!continueAlgorithm) {
             continueAlgorithm = algorithm();
             recalculateCompletion();
@@ -506,14 +508,19 @@ public class Schedule {
 
         /** Sort on starttime*/
         Collections.sort(listaTaskuri);
-//        for (int z = 0; z < listaTaskuri.size(); z++) {
-//            System.out.print(listaTaskuri.get(z).getName() + " ");
-//        }
-//        System.out.println();
 
-        /**Print StartTimes and Completions*/
-        //    printStartTimesAndCompletions();
-
+        /**To be tested**/
+        for (TaskReal taskToBeDeleted : listaTaskuri) {
+            for (Resource r : listaResurse) {
+                if (taskToBeDeleted.getQuantityOfResourceRequest(r.getID()) > r.getCantitate()) {
+                    listaTaskuriImposibleToSchedule.add(taskToBeDeleted);
+                }
+            }
+        }
+        for (TaskReal taskToBeDeleted : listaTaskuriImposibleToSchedule) {
+            listaTaskuri.remove(taskToBeDeleted);
+        }
+        /**To be tested**/
 
         /**list of completions times*/
         List<Integer> listWithoutDuplicates = listaCompletion.stream().distinct().collect(Collectors.toList());

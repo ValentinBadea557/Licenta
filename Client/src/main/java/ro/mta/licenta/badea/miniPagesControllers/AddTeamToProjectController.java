@@ -48,8 +48,36 @@ public class AddTeamToProjectController implements Initializable {
         this.customerSelectCallback = callback ;
     }
 
+    public void setCalendarInterval(LocalDate start,LocalDate end){
+
+        starttimeDateField.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(end ) || item.isBefore(start));
+                    }
+                });
+
+        deadlineField.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isAfter(end) || item.isBefore(start));
+                    }
+                });
+
+        starttimeDateField.setValue(start);
+        deadlineField.setValue(end);
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        ProjectTemporalModel p=new ProjectTemporalModel();
+        setCalendarInterval(p.getStarttime(),p.getDeadline());
 
         /**Get list of employees*/
         SelectedWorkersIDs lista= new SelectedWorkersIDs();

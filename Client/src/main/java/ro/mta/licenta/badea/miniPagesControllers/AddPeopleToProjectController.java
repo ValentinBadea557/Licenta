@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.models.CompanyModel;
@@ -64,7 +65,7 @@ public class AddPeopleToProjectController implements Initializable {
 
         JSONObject jsonRequest = new JSONObject();
         jsonRequest.put("Type", "View Employees not Admins");
-        jsonRequest.put("ID_Companie",client.getCurrentUser().getCompany().getID());
+        jsonRequest.put("ID_Companie", client.getCurrentUser().getCompany().getID());
         String response = null;
         try {
             client.sendText(jsonRequest.toString());
@@ -75,6 +76,42 @@ public class AddPeopleToProjectController implements Initializable {
 
         CompanyModel company = gson.fromJson(response, CompanyModel.class);
         ArrayList<EmployeeModel> listaUseri = company.getListaPersonal();
+
+        /**GET PEOPLE WHO are assigned into projects*/
+        ProjectTemporalModel p = new ProjectTemporalModel();
+        JSONObject json = new JSONObject();
+        System.out.println(p.getStarttime());
+        json.put("Type", "Get Workers assigned to projects");
+        json.put("IDcompanie", client.getCurrentUser().getCompany().getID());
+        json.put("Start", p.getStarttime());
+        json.put("Deadline", p.getDeadline());
+        System.out.println(gson.toJson(json.toString()));
+
+        try {
+            client.sendText(json.toString());
+            String response2 = client.receiveText();
+            JSONObject r2 = new JSONObject(response2);
+            System.out.println(response2);
+
+            JSONArray arr = new JSONArray();
+            arr = r2.getJSONArray("Vector");
+            System.out.println(arr);
+            ArrayList<Integer> listaAssigned = new ArrayList<>();
+            for (int i = 0; i < arr.length(); i++) {
+                listaAssigned.add((Integer) arr.get(i));
+            }
+
+
+            for (int i : listaAssigned) {
+                listaUseri.removeIf(n -> (n.getID() == i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /***/
+
         for (int i = 0; i < listaUseri.size(); i++) {
             String fullName = listaUseri.get(i).getFirstname() + " " + listaUseri.get(i).getLastname();
             WorkerModel aux = new WorkerModel(listaUseri.get(i).getID(), fullName);
@@ -150,7 +187,6 @@ public class AddPeopleToProjectController implements Initializable {
 
         int newTotalValues = workers.size();
         totalNrLabel.setText(String.valueOf(newTotalValues));
-
 
 
     }

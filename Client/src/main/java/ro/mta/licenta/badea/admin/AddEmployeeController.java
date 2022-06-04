@@ -57,6 +57,16 @@ public class AddEmployeeController implements Initializable {
 
     }
 
+    public void cleanFields(){
+        usernameField.clear();
+        passwordField.clear();
+        firstNameField.clear();
+        lastNameField.clear();
+        phoneField.clear();
+        addressField.clear();
+        emailField.clear();
+    }
+
     public void addEmployee(ActionEvent actionEvent) throws Exception {
         /**check empty fields*/
         boolean isempty = false;
@@ -104,6 +114,7 @@ public class AddEmployeeController implements Initializable {
         }
 
         if (isempty) {
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Incomplete fields");
             alert.setContentText("You must complete all fields!!");
@@ -151,6 +162,7 @@ public class AddEmployeeController implements Initializable {
             JSONObject json=new JSONObject(jsonReturned);
             String result=json.getString("Response Add User");
             if(result.equals("ok")){
+                cleanFields();
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Employee added!");
                 alert.setContentText("Successful add!");

@@ -23,16 +23,21 @@ public class ProjectTemporalModel {
     private static ArrayList<ResourceModel> listaResurse = new ArrayList<>();
 
     public void clearAllList() {
-        if (this != null) {
-            if (!listaOameni.isEmpty())
-                listaOameni.clear();
-            if (!listaEchipe.isEmpty())
-                listaEchipe.clear();
-            if (!listaResurse.isEmpty())
-                listaResurse.clear();
-            if (!listaTaskuri.isEmpty())
-                listaTaskuri.clear();
+
+        if (!listaOameni.isEmpty())
+            listaOameni.clear();
+        if (!listaEchipe.isEmpty())
+            listaEchipe.clear();
+
+        if (!listaResurse.isEmpty()){
+            listaResurse.clear();
+            System.out.println("Curat lista resurse new project!\n");
+            System.out.println(listaResurse.size());
         }
+
+        if (!listaTaskuri.isEmpty())
+            listaTaskuri.clear();
+
     }
 
     public static void setListaResurse(ArrayList<ResourceModel> listaResurse) {

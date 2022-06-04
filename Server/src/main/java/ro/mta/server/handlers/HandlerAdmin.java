@@ -80,6 +80,12 @@ public class HandlerAdmin implements IHandler {
                 returned = resDao.addResource(name, cantitate, shareable, descriere, idCompanie);
                 this.messageToSend = returned;
                 break;
+
+            case "ViewProjects all":
+                int idCompany = json.getInt("IDcompany");
+                returned = userInstance.viewProjectsAsAdmin(idCompany);
+                this.messageToSend = returned;
+                break;
             case "View Resources":
                 ResourceDAO resourceView = new ResourceDAO();
                 int id_company = json.getInt("ID_Companie");

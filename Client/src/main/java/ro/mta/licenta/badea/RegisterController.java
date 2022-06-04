@@ -183,7 +183,7 @@ public class RegisterController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        backtologinbutton.setStyle("button-hover-color: #293241;");
-        registerButton.setStyle("button-hover-color: #293241;");
+        backtologinbutton.setStyle("button-hover-color:  #e0fbfc;");
+        registerButton.setStyle("button-hover-color:  #e0fbfc;");
     }
 }

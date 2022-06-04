@@ -3,6 +3,7 @@ package ro.mta.server.dao;
 import ro.mta.server.entities.*;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -28,13 +29,14 @@ public interface IUserDAO {
     public int getIDofNormalTask(Task task);
     public String viewProjects(int idUser);
     public String getEveryInfoAboutProject(int idProject);
-
+    public String getListOfPeopleAssignedToProject(int idCompanie, LocalDate start,LocalDate deadline);
     public int deleteAllDataAboutAProject(int idProject);
+    public String getFutureTasks(int idUser);
 
     /**Functions used by admins*/
     public String addUserPlusCompany(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);
     public String addOnlyUser(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);
     public String AdministratorViewAllEmployees(int IDuseradmin);
-
+    public String viewProjectsAsAdmin(int idCompany);
 
 }

@@ -73,39 +73,60 @@ public class CreateProjectOneController implements Initializable {
 
     @FXML
     void addCoworkersAction(ActionEvent actionEvent) throws Exception {
-        root = FXMLLoader.load(getClass().getResource("/MiniPages/AddPeoplePage.fxml"));
-        SelectedWorkersIDs lista = new SelectedWorkersIDs();
-
-        lista.finalList.clear();
-        lista.listaIDs.clear();
-        lista.listaEmployees.clear();
-        workers.clear();
-
-        scene = new Scene(root);
-        Stage primaryStage = new Stage();
-        primaryStage.setTitle("Add coworker");
-        primaryStage.setScene(scene);
-        primaryStage.initModality(Modality.APPLICATION_MODAL);
-        primaryStage.showAndWait();
-        /** Wait for the second stage to close*/
-
-        /** Copy the observable list*/
-        for (int i = 0; i < lista.finalList.size(); i++) {
-            workers.add(lista.finalList.get(i));
+        ProjectTemporalModel p = new ProjectTemporalModel();
+        boolean isempty = false;
+        if (startDateField.getValue() == null ) {
+            isempty = true;
+            startDateField.setStyle("-fx-border-color:red");
+        } else {
+            startDateField.setStyle("-fx-border-color:none");
+        }
+        if (deadlineDateField.getValue() == null) {
+            isempty = true;
+            deadlineDateField.setStyle("-fx-border-color:red");
+        } else {
+            deadlineDateField.setStyle("-fx-border-color:none");
         }
 
-        /**Create a second list only with Names to populate the list view*/
-        ObservableList<String> listaNume = FXCollections.observableArrayList();
-        for (int i = 0; i < workers.size(); i++) {
-            listaNume.add(workers.get(i).getFullName());
-        }
-        listCoworkers.setItems(listaNume);
+        if(!isempty){
+            p.setStarttime(startDateField.getValue());
+            p.setDeadline(deadlineDateField.getValue());
 
-        ProjectTemporalModel project = new ProjectTemporalModel();
+            root = FXMLLoader.load(getClass().getResource("/MiniPages/AddPeoplePage.fxml"));
+            SelectedWorkersIDs lista = new SelectedWorkersIDs();
 
-        for (int i = 0; i < lista.getSizeOfEmployeesList(); i++) {
-            project.addEmployee(lista.getListaEmployees().get(i));
+            lista.finalList.clear();
+            lista.listaIDs.clear();
+            lista.listaEmployees.clear();
+            workers.clear();
+
+            scene = new Scene(root);
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Add coworker");
+            primaryStage.setScene(scene);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.showAndWait();
+            /** Wait for the second stage to close*/
+
+            /** Copy the observable list*/
+            for (int i = 0; i < lista.finalList.size(); i++) {
+                workers.add(lista.finalList.get(i));
+            }
+
+            /**Create a second list only with Names to populate the list view*/
+            ObservableList<String> listaNume = FXCollections.observableArrayList();
+            for (int i = 0; i < workers.size(); i++) {
+                listaNume.add(workers.get(i).getFullName());
+            }
+            listCoworkers.setItems(listaNume);
+
+            ProjectTemporalModel project = new ProjectTemporalModel();
+
+            for (int i = 0; i < lista.getSizeOfEmployeesList(); i++) {
+                project.addEmployee(lista.getListaEmployees().get(i));
+            }
         }
+
 
 
     }
@@ -133,9 +154,32 @@ public class CreateProjectOneController implements Initializable {
         nextPageButton.setStyle("button-hover-color: #98c1d9; ");
 
         ProjectTemporalModel project = new ProjectTemporalModel();
-        project = null;
+        project.clearAllList();
+
+        setDatePicker();
     }
 
+    public void setDatePicker(){
+        startDateField.setValue(LocalDate.now());
+        deadlineDateField.setValue(LocalDate.now().plusDays(1));
+
+        deadlineDateField.setDayCellFactory(d ->
+                new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setDisable(item.isBefore(startDateField.getValue()) || item.isEqual(startDateField.getValue()));
+
+                    }
+                });
+
+        startDateField.valueProperty().addListener((ov, oldValue, newValue) -> {
+
+            if (newValue.isAfter(deadlineDateField.getValue())){
+                deadlineDateField.setValue(newValue.plusDays(1));
+            }
+        });
+    }
 
     public void nextPageAction(ActionEvent actionEvent) throws Exception {
         boolean isempty = false;

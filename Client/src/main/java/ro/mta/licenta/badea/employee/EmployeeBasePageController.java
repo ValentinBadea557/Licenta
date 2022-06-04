@@ -185,6 +185,15 @@ public class EmployeeBasePageController implements Initializable {
     }
 
     public void personalInfoAction(ActionEvent actionEvent) throws IOException {
+        topPersonalInfoButton.setStyle(" -fx-border-color: #660099;\n" +
+                "    -fx-border-width: 0px 0px 3px 0px;");
+        topHomeButton.setStyle("-fx-border-color: none");
+        topActiveProjectsButton.setStyle("-fx-border-color: none");
+        topCreateProjectButton.setStyle("-fx-border-color: none");
+
+        Parent fxml = FXMLLoader.load(getClass().getResource("/EmployeePages/PersonalInfoPage.fxml"));
+        employeeStackPane.getChildren().removeAll();
+        employeeStackPane.getChildren().setAll(fxml);
     }
 
 
