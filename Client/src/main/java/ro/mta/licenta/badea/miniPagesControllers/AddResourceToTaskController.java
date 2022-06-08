@@ -99,7 +99,8 @@ public class AddResourceToTaskController implements Initializable {
         tableResource.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                selectedNameLabel.setText(tableResource.getSelectionModel().getSelectedItem().getDenumire());
+                if (tableResource.getSelectionModel().getSelectedItem() != null)
+                    selectedNameLabel.setText(tableResource.getSelectionModel().getSelectedItem().getDenumire());
             }
         });
 
@@ -114,9 +115,9 @@ public class AddResourceToTaskController implements Initializable {
 
         ResourceModel selectedResource;
         selectedResource = tableResource.getSelectionModel().getSelectedItem();
-        Gson gson=new Gson();
+        Gson gson = new Gson();
 
-        ResourceModel copyResource = gson.fromJson(gson.toJson(selectedResource),ResourceModel.class);
+        ResourceModel copyResource = gson.fromJson(gson.toJson(selectedResource), ResourceModel.class);
 
 
         if (quantitySpinner.getValue() > selectedResource.getCantitate()) {

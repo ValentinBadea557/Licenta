@@ -70,7 +70,6 @@ public class Main {
         try {
             SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5000);
-
             // ServerSocket ss = new ServerSocket(5000);
 
             // client request
@@ -79,6 +78,9 @@ public class Main {
                 try {
                     // socket object to receive incoming client requests
                     s = serverSocket.accept();
+
+                   // SSLSocket test= (SSLSocket) s;
+
                     System.out.println("A new client is connected : " + s);
                     // obtaining input and out streams
                     DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -180,7 +182,7 @@ class ClientHandler extends Thread {
     void sendMessage(String msg) {
         try {
             dos.writeUTF(msg);
-
+            System.out.println("Am trimis:"+msg.length());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -280,7 +282,7 @@ class ClientHandler extends Thread {
 
 
         }
-
+        closeConnection(); /*adaugat recent**/
         System.out.println("Socketul " + s + " a fost inchis!\n");
     }
 

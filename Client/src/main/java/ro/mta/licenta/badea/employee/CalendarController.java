@@ -195,9 +195,9 @@ public class CalendarController implements Initializable {
                     header.setTranslateY(ty);
                 }
             };
-            gridPane.heightProperty().addListener(headerUpdater);
-            scrollPane.viewportBoundsProperty().addListener(headerUpdater);
-            scrollPane.vvalueProperty().addListener(headerUpdater);
+            gridPane.heightProperty().addListener(headerUpdaterUp);
+            scrollPane.viewportBoundsProperty().addListener(headerUpdaterUp);
+            scrollPane.vvalueProperty().addListener(headerUpdaterUp);
 
 
             //scrollPane.setStyle("-fx-background-color:#98c1d9");

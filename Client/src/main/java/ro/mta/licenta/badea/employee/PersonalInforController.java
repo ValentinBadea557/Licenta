@@ -3,8 +3,10 @@ package ro.mta.licenta.badea.employee;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 
 import java.net.URL;
@@ -32,7 +34,7 @@ public class PersonalInforController implements Initializable {
     private TextField phoneTextField;
 
     @FXML
-    void modfiyInformationAction(ActionEvent event) {
+    void modfiyInformationAction(ActionEvent event) throws Exception {
         boolean isempty = false;
         if (addressTextField.getText().isEmpty()) {
             isempty = true;
@@ -53,14 +55,41 @@ public class PersonalInforController implements Initializable {
             emailTextField.setStyle("-fx-border-color:none");
         }
 
-        
+        System.out.println(emailTextField.getText()+" "+addressTextField.getText()+" "+phoneTextField.getText());
 
+        Client client=Client.getInstance();
+
+        JSONObject request = new JSONObject();
+        request.put("Type","Update Personal Info");
+        request.put("IDuser",client.getCurrentUser().getID());
+        request.put("Address",addressTextField.getText());
+        request.put("Phone",phoneTextField.getText());
+        request.put("Email",emailTextField.getText());
+
+        client.sendText(request.toString());
+        String response=client.receiveText();
+        JSONObject res=new JSONObject(response);
+        if(res.get("Response").equals("OK")){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Result");
+            alert.setContentText("All information was set!");
+            alert.showAndWait();
+
+            client.getCurrentUser().setPhone(phoneTextField.getText());
+            client.getCurrentUser().setAddress(addressTextField.getText());
+            client.getCurrentUser().setEmail(emailTextField.getText());
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("SQL Error");
+            alert.setContentText("Some error occured! Try again later!");
+            alert.showAndWait();
+        }
 
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Client client=Client.getInstance();
+        Client client = Client.getInstance();
         firstnameTextField.setText(client.getCurrentUser().getFirstname());
         lastnameTextField.setText(client.getCurrentUser().getLastname());
         addressTextField.setText(client.getCurrentUser().getAddress());

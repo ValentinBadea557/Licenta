@@ -131,6 +131,12 @@ public class HandleUser implements IHandler {
                 this.messageToSend = result;
                 break;
 
+            case "Get Lista Taskuri Reale Project":
+                id_project = json.getInt("IDproject");
+                result = proiect.getTaskuriRealeProject(id_project);
+                this.messageToSend = result;
+                break;
+
             case "Add new task to project":
 
                 json.remove("Type");
@@ -186,6 +192,15 @@ public class HandleUser implements IHandler {
             case "View Future Tasks":
                 int idUserForFutureTask = json.getInt("idUser");
                 result = user.getFutureTasks(idUserForFutureTask);
+                this.messageToSend = result;
+                break;
+
+            case "Update Personal Info":
+                int idUserUpdateInfo = json.getInt("IDuser");
+                String addressUpdateInfo = json.getString("Address");
+                String phoneUpdateInfo = json.getString("Phone");
+                String emailUpdateInfo = json.getString("Email");
+                result = user.updateInfo(idUserUpdateInfo, addressUpdateInfo, phoneUpdateInfo, emailUpdateInfo);
                 this.messageToSend = result;
                 break;
         }

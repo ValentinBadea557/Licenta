@@ -3,7 +3,9 @@ package ro.mta.licenta.badea.miniPagesControllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -45,6 +48,7 @@ import ro.mta.licenta.badea.temporalUse.SenderText;
 
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,6 +89,9 @@ public class viewProjectLvl3Controller implements Initializable {
 
     @FXML
     private GridPane gridAllocResource;
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private TableColumn<EmployeeModel, Integer> idPeopleColumn;
@@ -245,6 +252,10 @@ public class viewProjectLvl3Controller implements Initializable {
     @FXML
     private Button clearTaskButton;
 
+    @FXML
+    void clearTaskAction(ActionEvent event) {
+        clearCreateTaskFields();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -256,10 +267,10 @@ public class viewProjectLvl3Controller implements Initializable {
         int id = Integer.parseInt(data.getData());
 
         Client client = Client.getInstance();
-        JSONObject tosend = new JSONObject();
-
-        tosend.put("Type", "Get Project");
-        tosend.put("IDproject", id);
+//        JSONObject tosend = new JSONObject();
+//
+//        tosend.put("Type", "Get Project");
+//        tosend.put("IDproject", id);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
@@ -307,6 +318,21 @@ public class viewProjectLvl3Controller implements Initializable {
 
                             ProjectModel project = gson.fromJson(response, ProjectModel.class);
                             projectLocal = project;
+
+                            /***/
+                            JSONObject getRealTask = new JSONObject();
+                            getRealTask.put("Type", "Get Lista Taskuri Reale Project");
+                            getRealTask.put("IDproject", id);
+                            client.sendText(getRealTask.toString());
+                            String receiveTasks = client.receiveText();
+
+                            Type ArrayListRealTasks = new TypeToken<ArrayList<TaskRealModel>>() {
+                            }.getType();
+                            ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receiveTasks, ArrayListRealTasks);
+
+                            projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
+                            System.out.println(gson.toJson(projectLocal));
+                            /***/
 
                             return project;
                         }
@@ -360,6 +386,17 @@ public class viewProjectLvl3Controller implements Initializable {
 
     }
 
+    public void clearCreateTaskFields() {
+        createNewTaskName.clear();
+        createNewTaskStart.getEditor().clear();
+        createNewTaskDeadline.getEditor().clear();
+        resourcesToNewTaskTable.getItems().clear();
+        predecesorNewTaskComboBox.getEditor().clear();
+        predecesorNewTaskComboBox.setValue(null);
+        assignToNewTaskComboBox.getEditor().clear();
+        assignToNewTaskComboBox.setValue(null);
+
+    }
 
     public void setTeamsTab() {
         ImageView img = new ImageView("/Images/employees.png");
@@ -638,7 +675,7 @@ public class viewProjectLvl3Controller implements Initializable {
                 taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                 taskBtn.setMaxHeight(Double.MAX_VALUE);
 
-                System.out.println("Current task: " + task.getID() + " "+task.getName()+" " + positionMap.get(task.getID()));
+                System.out.println("Current task: " + task.getID() + " " + task.getName() + " " + positionMap.get(task.getID()));
                 grid.add(taskBtn, task.getStartTime() + 1, positionMap.get(task.getID()) + 1,
                         task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
             }
@@ -663,54 +700,71 @@ public class viewProjectLvl3Controller implements Initializable {
         /**Hours*/
         gridScheduling.setVgap(5);
         gridScheduling.setHgap(5);
-        int numRows = 7;
-        int numColumns = 25;
-        for (int row = 0; row < numRows; row++) {
-            RowConstraints rc = new RowConstraints();
-            rc.setFillHeight(true);
-            rc.setVgrow(Priority.ALWAYS);
-            gridScheduling.getRowConstraints().add(rc);
-        }
-        for (int col = 0; col < numColumns; col++) {
-            ColumnConstraints cc = new ColumnConstraints();
-            cc.setFillWidth(true);
-            cc.setHgrow(Priority.ALWAYS);
-            gridScheduling.getColumnConstraints().add(cc);
-        }
+//        int numRows = 7;
+//        int numColumns = 25;
+//        for (int row = 0; row < numRows; row++) {
+//            RowConstraints rc = new RowConstraints();
+//            rc.setFillHeight(true);
+//            rc.setVgrow(Priority.ALWAYS);
+//            gridScheduling.getRowConstraints().add(rc);
+//        }
+//        for (int col = 0; col < numColumns; col++) {
+//            ColumnConstraints cc = new ColumnConstraints();
+//            cc.setFillWidth(true);
+//            cc.setHgrow(Priority.ALWAYS);
+//            gridScheduling.getColumnConstraints().add(cc);
+//        }
+//
+//        int currentRow = 0;
+//        int currentColumn = 1;
+//        int hour = 8;
+//
+//        for (int i = 0; i < 24; i++) {
+//            Button button = new Button(hour + "-" + (hour + 1));
+//            button.setStyle("-fx-background-color:#e6b800; " +
+//                    "-fx-text-fill:black;");
+//            hour++;
+//            if (hour == 24) {
+//                hour = 0;
+//            }
+//            button.setMaxWidth(Double.MAX_VALUE);
+//            button.setMinWidth(Control.USE_PREF_SIZE);
+//            gridScheduling.add(button, currentColumn, currentRow);
+//
+//            currentColumn++;
+//        }
+//
+//        currentRow = 1;
+//        currentColumn = 0;
+//        for (int i = 0; i < 10; i++) {
+//            Button button1 = new Button(currentDate.plusDays(i).toString());
+//            button1.setStyle("-fx-background-color:#e6b800; " +
+//                    "-fx-text-fill:black;");
+//            // printTasksForCurrentUserOnSelectedDay(currentDate.plusDays(i));
+//
+//            gridScheduling.add(button1, currentColumn, currentRow);
+//            button1.setMinWidth(Control.USE_PREF_SIZE);
+//            button1.setMaxWidth(Double.MAX_VALUE);
+//            button1.setMinHeight(Region.USE_PREF_SIZE);
+//
+//
+//            int idClient = Client.getInstance().getCurrentUser().getID();
+//            for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
+//                if (task.getDay().isEqual(currentDate.plusDays(i)) && idClient == task.getOriginTask().getExecutant().getID() && task.getStartTime() >= 0) {
+//                    Button taskBtn = new Button(task.getName());
+//                    taskBtn.setStyle("-fx-background-color:#E0FBFC;" +
+//                            "-fx-border-color:black");
+//                    taskBtn.setMinWidth(Control.USE_PREF_SIZE);
+//                    taskBtn.setMaxWidth(Double.MAX_VALUE);
+//                    gridScheduling.add(taskBtn, task.getStartTime() + 1, currentRow, task.getDuration(), 1);
+//                }
+//            }
+//            currentRow++;
+//        }
 
-        int currentRow = 0;
-        int currentColumn = 1;
-        int hour = 8;
-
-        for (int i = 0; i < 24; i++) {
-            Button button = new Button(hour + "-" + (hour + 1));
-            button.setStyle("-fx-background-color:#e6b800; " +
-                    "-fx-text-fill:black;");
-            hour++;
-            if (hour == 24) {
-                hour = 0;
-            }
-            button.setMaxWidth(Double.MAX_VALUE);
-            button.setMinWidth(Control.USE_PREF_SIZE);
-            gridScheduling.add(button, currentColumn, currentRow);
-
-            currentColumn++;
-        }
-
-        currentRow = 1;
-        currentColumn = 0;
+        int currentRow = 1;
+        int currentColumn = 0;
         for (int i = 0; i < 10; i++) {
-            Button button1 = new Button(currentDate.plusDays(i).toString());
-            button1.setStyle("-fx-background-color:#e6b800; " +
-                    "-fx-text-fill:black;");
-            // printTasksForCurrentUserOnSelectedDay(currentDate.plusDays(i));
-
-            gridScheduling.add(button1, currentColumn, currentRow);
-            button1.setMinWidth(Control.USE_PREF_SIZE);
-            button1.setMaxWidth(Double.MAX_VALUE);
-            button1.setMinHeight(Region.USE_PREF_SIZE);
-
-
             int idClient = Client.getInstance().getCurrentUser().getID();
             for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
                 if (task.getDay().isEqual(currentDate.plusDays(i)) && idClient == task.getOriginTask().getExecutant().getID() && task.getStartTime() >= 0) {
@@ -724,8 +778,103 @@ public class viewProjectLvl3Controller implements Initializable {
             }
             currentRow++;
         }
+        Node[] verticalHeaders=new Node[]{
+                createEmptyButton(),
+                createHeaderNode(0),
+                createHeaderNode(1),
+                createHeaderNode(2),
+                createHeaderNode(3),
+                createHeaderNode(4),
+                createHeaderNode(5),
+                createHeaderNode(6),
+                createHeaderNode(7),
+                createHeaderNode(8),
+                createHeaderNode(9),
+                createHeaderNode(10)
+        };
+
+        Node[] horizontalHeaders=new Node[]{
+                createHeaderNode("07-08"),
+                createHeaderNode("08-09"),
+                createHeaderNode("09-10"),
+                createHeaderNode("10-11"),
+                createHeaderNode("11-12"),
+                createHeaderNode("12-13"),
+                createHeaderNode("13-14"),
+                createHeaderNode("14-15"),
+                createHeaderNode("15-16"),
+                createHeaderNode("16-17"),
+                createHeaderNode("17-18"),
+                createHeaderNode("18-19"),
+                createHeaderNode("19-20"),
+                createHeaderNode("20-21"),
+                createHeaderNode("21-22"),
+                createHeaderNode("22-23"),
+                createHeaderNode("23-00"),
+                createHeaderNode("00-01"),
+                createHeaderNode("01-02"),
+                createHeaderNode("02-03"),
+                createHeaderNode("03-04"),
+                createHeaderNode("04-05"),
+                createHeaderNode("05-06"),
+                createHeaderNode("06-07")
+        };
 
 
+        gridScheduling.addColumn(0,verticalHeaders);
+        gridScheduling.addRow(0,horizontalHeaders);
+
+        InvalidationListener headerUpdater = o -> {
+            final double tx = (gridScheduling.getWidth() - scrollPane.getViewportBounds().getWidth()) * scrollPane.getHvalue();
+
+            for (Node header : verticalHeaders) {
+                header.setTranslateX(tx);
+            }
+        };
+        gridScheduling.widthProperty().addListener(headerUpdater);
+        scrollPane.viewportBoundsProperty().addListener(headerUpdater);
+        scrollPane.hvalueProperty().addListener(headerUpdater);
+
+        InvalidationListener headerUpdaterUp = o -> {
+            final double ty = (gridScheduling.getHeight() - scrollPane.getViewportBounds().getHeight()) * scrollPane.getVvalue();
+
+            for (Node header : horizontalHeaders) {
+                header.setTranslateY(ty);
+            }
+        };
+        gridScheduling.heightProperty().addListener(headerUpdaterUp);
+        scrollPane.viewportBoundsProperty().addListener(headerUpdaterUp);
+        scrollPane.vvalueProperty().addListener(headerUpdaterUp);
+
+
+    }
+    private  static Button createEmptyButton(){
+        Button button1 = new Button();
+        button1.setVisible(false);
+        button1.setMinWidth(Control.USE_PREF_SIZE);
+        button1.setMaxWidth(Double.MAX_VALUE);
+        button1.setMinHeight(Region.USE_PREF_SIZE);
+        return button1;
+    }
+
+    private static Button createHeaderNode(String str) {
+        Button button1 = new Button(str);
+        button1.setStyle("-fx-background-color:#e6b800; " +
+                "-fx-text-fill:black;");
+        button1.setMinWidth(Control.USE_PREF_SIZE);
+        button1.setMaxWidth(Double.MAX_VALUE);
+        button1.setMinHeight(Region.USE_PREF_SIZE);
+        return button1;
+    }
+
+    private static Button createHeaderNode(int i) {
+        Button button1 = new Button(LocalDate.now().plusDays(i).toString());
+        button1.setStyle("-fx-background-color:#e6b800; " +
+                "-fx-text-fill:black;");
+        button1.setMinWidth(Control.USE_PREF_SIZE);
+        button1.setMaxWidth(Double.MAX_VALUE);
+        button1.setMinHeight(Region.USE_PREF_SIZE);
+        return button1;
     }
 
     public void printTasksForCurrentUserOnSelectedDay(LocalDate day) {
@@ -739,6 +888,7 @@ public class viewProjectLvl3Controller implements Initializable {
             }
         }
     }
+
 
     public void setTableTaskNotScheduled() {
         idColumnTaskNotSch.setCellValueFactory(new PropertyValueFactory<>("ID"));
@@ -761,214 +911,217 @@ public class viewProjectLvl3Controller implements Initializable {
 
 
         tableTaskNotScheduled.getSelectionModel().selectedIndexProperty().addListener((obs, oldSelection, newSelection) -> {
-            int idSelected = tableTaskNotScheduled.getSelectionModel().getSelectedItem().getID();
-            System.out.println("ID selectat:" + idSelected);
-            Client client = Client.getInstance();
-            JSONObject tosend = new JSONObject();
-            tosend.put("Type", "Request Recommendations");
-            tosend.put("idTaskReal", idSelected);
-            tosend.put("idProject", projectLocal.getID());
-            tosend.put("dataCurenta", tableTaskNotScheduled.getSelectionModel().getSelectedItem().getDay());
+            Integer returnErrorCode = -1;
+            if (!returnErrorCode.equals(newSelection)) {
 
-            String receive = null;
-            try {
-                client.sendText(tosend.toString());
+                int idSelected = tableTaskNotScheduled.getSelectionModel().getSelectedItem().getID();
+                System.out.println("ID selectat:" + idSelected);
+                Client client = Client.getInstance();
+                JSONObject tosend = new JSONObject();
+                tosend.put("Type", "Request Recommendations");
+                tosend.put("idTaskReal", idSelected);
+                tosend.put("idProject", projectLocal.getID());
+                tosend.put("dataCurenta", tableTaskNotScheduled.getSelectionModel().getSelectedItem().getDay());
 
-                receive = client.receiveText();
-                System.out.println(receive);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                String receive = null;
+                try {
+                    client.sendText(tosend.toString());
 
-            JSONObject response = new JSONObject(receive);
-            if (response.get("Response").equals("Modify Number Of Resources Alloc")) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Server Response");
-                alert.setHeaderText("Suggestion");
-
-                String modificari = new String();
-                JSONArray array = response.getJSONArray("Modificari");
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject obj = array.getJSONObject(i);
-                    System.out.println(obj.toString());
-                    modificari += "Current task requests " + obj.get("RequestedQuantity") + " " + obj.get("ResourceName") + " " +
-                            "but only " + obj.get("MaximQuantity") + " available\n";
+                    receive = client.receiveText();
+                    System.out.println(receive);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                modificari += "\n Do you want to change the amount of resource requested by task?";
 
-                alert.setContentText(modificari);
-                alert.getDialogPane().getButtonTypes().clear();
-                alert.getDialogPane().getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+                JSONObject response = new JSONObject(receive);
+                if (response.get("Response").equals("Modify Number Of Resources Alloc")) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Server Response");
+                    alert.setHeaderText("Suggestion");
 
-                Optional<ButtonType> result = alert.showAndWait();
-
-                if (result.isPresent() && result.get() == ButtonType.YES) {
-
-                    Parent root = null;
-                    try {
-                        root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String modificari = new String();
+                    JSONArray array = response.getJSONArray("Modificari");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+                        System.out.println(obj.toString());
+                        modificari += "Current task requests " + obj.get("RequestedQuantity") + " " + obj.get("ResourceName") + " " +
+                                "but only " + obj.get("MaximQuantity") + " available\n";
                     }
+                    modificari += "\n Do you want to change the amount of resource requested by task?";
 
-                    Scene scene = new Scene(root);
-                    Stage primaryStage = new Stage();
-                    primaryStage.initStyle(StageStyle.UNDECORATED);
+                    alert.setContentText(modificari);
+                    alert.getDialogPane().getButtonTypes().clear();
+                    alert.getDialogPane().getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-                    Task<JSONObject> task = new Task<JSONObject>() {
-                        @Override
-                        protected JSONObject call() throws Exception {
-                            JSONObject send = new JSONObject();
-                            send.put("Type", "Modify Resources");
-                            send.put("IDproject", projectLocal.getID());
-                            send.put("Modificari", array);
+                    Optional<ButtonType> result = alert.showAndWait();
 
-                            try {
-                                client.sendText(send.toString());
-                                String responseModify = client.receiveText();
+                    if (result.isPresent() && result.get() == ButtonType.YES) {
 
-                                JSONObject responseModifyQuantity = new JSONObject(responseModify);
-                                return responseModifyQuantity;
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        Parent root = null;
+                        try {
+                            root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        Scene scene = new Scene(root);
+                        Stage primaryStage = new Stage();
+                        primaryStage.initStyle(StageStyle.UNDECORATED);
+
+                        Task<JSONObject> task = new Task<JSONObject>() {
+                            @Override
+                            protected JSONObject call() throws Exception {
+                                JSONObject send = new JSONObject();
+                                send.put("Type", "Modify Resources");
+                                send.put("IDproject", projectLocal.getID());
+                                send.put("Modificari", array);
+
+                                try {
+                                    client.sendText(send.toString());
+                                    String responseModify = client.receiveText();
+
+                                    JSONObject responseModifyQuantity = new JSONObject(responseModify);
+                                    return responseModifyQuantity;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
                             }
-                            return null;
-                        }
-                    };
+                        };
 
-                    task.setOnSucceeded(event -> {
-                        if (task.getValue().get("Result").equals("OK")) {
-                            service.restart();
-                            service.setOnSucceeded(eventService -> {
-                                primaryStage.hide();
+                        task.setOnSucceeded(event -> {
+                            if (task.getValue().get("Result").equals("OK")) {
+                                service.restart();
+                                service.setOnSucceeded(eventService -> {
+                                    primaryStage.hide();
 
-                            });
-                        } else {
-                            Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                            alert2.setTitle("Request Response");
-                            alert2.setHeaderText("ERROR!");
-                            alert2.setContentText("Some error occurred!");
-                            alert2.showAndWait();
-                        }
-                    });
-                    new Thread(task).start();
+                                });
+                            } else {
+                                Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                                alert2.setTitle("Request Response");
+                                alert2.setHeaderText("ERROR!");
+                                alert2.setContentText("Some error occurred!");
+                                alert2.showAndWait();
+                            }
+                        });
+                        new Thread(task).start();
 
-                    primaryStage.setScene(scene);
-                    primaryStage.initModality(Modality.APPLICATION_MODAL);
-                    primaryStage.showAndWait();
+                        primaryStage.setScene(scene);
+                        primaryStage.initModality(Modality.APPLICATION_MODAL);
+                        primaryStage.showAndWait();
 
-                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
-                    alert3.setTitle("Request Response");
-                    alert3.setHeaderText("All done!");
-                    alert3.setContentText("Everything is good! A new scheduling is now available!");
-                    alert3.showAndWait();
+                        Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                        alert3.setTitle("Request Response");
+                        alert3.setHeaderText("All done!");
+                        alert3.setContentText("Everything is good! A new scheduling is now available!");
+                        alert3.showAndWait();
 
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            tableTaskNotScheduled.getSelectionModel().clearSelection();
-                            resetAllTables();
-                        }
-                    });
-                   // resetAllTables();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                tableTaskNotScheduled.getSelectionModel().clearSelection();
+                                resetAllTables();
+                            }
+                        });
+                        // resetAllTables();
 
 
-                } else if (result.isPresent() && result.get() == ButtonType.NO) {
-                    System.out.println("Cancel");
+                    } else if (result.isPresent() && result.get() == ButtonType.NO) {
+                        System.out.println("Cancel");
 
-                }
-            } else if (response.get("Response").equals("Modify Duration")) {
-                System.out.println(response);
-                Alert alertaDuration = new Alert(Alert.AlertType.INFORMATION);
-                alertaDuration.setTitle("Server Response");
-                alertaDuration.setHeaderText("Suggestion");
-                String content = new String();
-                JSONObject obj = response.getJSONObject("Modificari");
-                System.out.println(obj);
-                content += "Current task exceed the timeline with " + obj.get("ToBeSubstracted") + " hours.\n";
-                content += "\nWould you like to decrease the duration of the task?";
-                alertaDuration.setContentText(content);
-                alertaDuration.getDialogPane().getButtonTypes().clear();
-                alertaDuration.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-
-                Optional<ButtonType> result = alertaDuration.showAndWait();
-
-                if (result.isPresent() && result.get() == ButtonType.YES) {
-                    Parent root = null;
-                    try {
-                        root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } else if (response.get("Response").equals("Modify Duration")) {
+                    System.out.println(response);
+                    Alert alertaDuration = new Alert(Alert.AlertType.INFORMATION);
+                    alertaDuration.setTitle("Server Response");
+                    alertaDuration.setHeaderText("Suggestion");
+                    String content = new String();
+                    JSONObject obj = response.getJSONObject("Modificari");
+                    System.out.println(obj);
+                    content += "Current task exceed the timeline with " + obj.get("ToBeSubstracted") + " hours.\n";
+                    content += "\nWould you like to decrease the duration of the task?";
+                    alertaDuration.setContentText(content);
+                    alertaDuration.getDialogPane().getButtonTypes().clear();
+                    alertaDuration.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
-                    Scene scene = new Scene(root);
-                    Stage primaryStage = new Stage();
-                    primaryStage.initStyle(StageStyle.UNDECORATED);
+                    Optional<ButtonType> result = alertaDuration.showAndWait();
 
-                    Task<JSONObject> task = new Task<JSONObject>() {
-                        @Override
-                        protected JSONObject call() throws Exception {
-                            JSONObject send = new JSONObject();
-                            send.put("Type", "Decrease Duration");
-                            send.put("IDtask", obj.get("IDtask"));
-                            send.put("IDproject",projectLocal.getID());
-                            send.put("ValueToDecrease", obj.get("ToBeSubstracted"));
+                    if (result.isPresent() && result.get() == ButtonType.YES) {
+                        Parent root = null;
+                        try {
+                            root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                            try {
-                                client.sendText(send.toString());
-                                String responseModifyDuration = client.receiveText();
+                        Scene scene = new Scene(root);
+                        Stage primaryStage = new Stage();
+                        primaryStage.initStyle(StageStyle.UNDECORATED);
 
-                                JSONObject JsonresponseModifyDuration = new JSONObject(responseModifyDuration);
-                                return JsonresponseModifyDuration;
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        Task<JSONObject> task = new Task<JSONObject>() {
+                            @Override
+                            protected JSONObject call() throws Exception {
+                                JSONObject send = new JSONObject();
+                                send.put("Type", "Decrease Duration");
+                                send.put("IDtask", obj.get("IDtask"));
+                                send.put("IDproject", projectLocal.getID());
+                                send.put("ValueToDecrease", obj.get("ToBeSubstracted"));
+
+                                try {
+                                    client.sendText(send.toString());
+                                    String responseModifyDuration = client.receiveText();
+
+                                    JSONObject JsonresponseModifyDuration = new JSONObject(responseModifyDuration);
+                                    return JsonresponseModifyDuration;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
                             }
-                            return null;
-                        }
-                    };
+                        };
 
-                    task.setOnSucceeded(event -> {
-                        if (task.getValue().get("Result").equals("OK")) {
-                            System.out.println("AICI");
-                            service.restart();
-                            service.setOnSucceeded(eventService -> {
-                                primaryStage.hide();
+                        task.setOnSucceeded(event -> {
+                            if (task.getValue().get("Result").equals("OK")) {
+                                System.out.println("AICI");
+                                service.restart();
+                                service.setOnSucceeded(eventService -> {
+                                    primaryStage.hide();
 
-                            });
-                        } else {
-                            Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                            alert2.setTitle("Request Response");
-                            alert2.setHeaderText("ERROR!");
-                            alert2.setContentText("Some error occurred!");
-                            alert2.showAndWait();
-                        }
-                    });
-                    new Thread(task).start();
+                                });
+                            } else {
+                                Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                                alert2.setTitle("Request Response");
+                                alert2.setHeaderText("ERROR!");
+                                alert2.setContentText("Some error occurred!");
+                                alert2.showAndWait();
+                            }
+                        });
+                        new Thread(task).start();
 
-                    primaryStage.setScene(scene);
-                    primaryStage.initModality(Modality.APPLICATION_MODAL);
-                    primaryStage.showAndWait();
+                        primaryStage.setScene(scene);
+                        primaryStage.initModality(Modality.APPLICATION_MODAL);
+                        primaryStage.showAndWait();
 
-                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
-                    alert3.setTitle("Request Response");
-                    alert3.setHeaderText("All done!");
-                    alert3.setContentText("Everything is good! A new scheduling is now available!");
-                    alert3.showAndWait();
+                        Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                        alert3.setTitle("Request Response");
+                        alert3.setHeaderText("All done!");
+                        alert3.setContentText("Everything is good! A new scheduling is now available!");
+                        alert3.showAndWait();
 
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            resetAllTables();
-                        }
-                    });
-                   // resetAllTables();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                resetAllTables();
+                            }
+                        });
+                        // resetAllTables();
 
 
-                } else {
-                    System.out.println("No");
+                    } else {
+                        System.out.println("No");
+                    }
                 }
             }
-
         });
 
     }
@@ -1122,6 +1275,20 @@ public class viewProjectLvl3Controller implements Initializable {
                 String receive = client.receiveText();
                 this.projectLocal = gson.fromJson(receive, ProjectModel.class);
                 System.out.println(gson.toJson(projectLocal));
+
+                /***/
+                JSONObject tosend3 = new JSONObject();
+                tosend3.put("Type", "Get Lista Taskuri Reale Project");
+                tosend3.put("IDproject", projectLocal.getID());
+                client.sendText(tosend3.toString());
+                String receive2 = client.receiveText();
+
+                Type ArrayListRealTasks = new TypeToken<ArrayList<TaskRealModel>>() {
+                }.getType();
+                ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receive2, ArrayListRealTasks);
+
+                projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
+                /****/
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Project Created!");
@@ -1289,7 +1456,6 @@ public class viewProjectLvl3Controller implements Initializable {
         /**People Tab*/
         setTablePeople();
         setTasksTablePeoplePage();
-
 
 
         allocResScrollPane.setContent(null);
@@ -1541,6 +1707,17 @@ public class viewProjectLvl3Controller implements Initializable {
 
                     ProjectModel project = gson.fromJson(response, ProjectModel.class);
                     projectLocal = project;
+
+                    JSONObject tosend3 = new JSONObject();
+                    tosend3.put("Type", "Get Lista Taskuri Reale Project");
+                    tosend3.put("IDproject", projectLocal.getID());
+                    client.sendText(tosend3.toString());
+                    String receive2 = client.receiveText();
+
+                    Type ArrayListRealTasks = new TypeToken<ArrayList<TaskRealModel>>() {
+                    }.getType();
+                    ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receive2, ArrayListRealTasks);
+                    projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
 
                     return project;
                 }

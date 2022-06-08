@@ -1042,6 +1042,28 @@ public class UserDAO implements IUserDAO {
         return gson.toJson(listaTaskuriReale);
     }
 
+    @Override
+    public String updateInfo(int idUser, String addr, String phone, String email) {
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql="update Date_Personale\n" +
+                "set Adresa='"+addr+"', Telefon='"+phone+"',Email='"+email+"'\n" +
+                "where ID_User="+idUser;
+
+        JSONObject response=new JSONObject();
+        try {
+            Statement stmt = con.createStatement();
+            stmt.execute(sql);
+            response.put("Response","OK");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.put("Response","error");
+        }
+
+        return response.toString();
+    }
+
 
     /***Functions used by administrators**/
     @Override

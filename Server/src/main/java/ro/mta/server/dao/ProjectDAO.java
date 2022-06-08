@@ -17,6 +17,23 @@ import java.util.ArrayList;
 public class ProjectDAO {
     public Project project;
 
+    public String getTaskuriRealeProject(int idProject){
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        ArrayList<TaskReal> lista=getRealTasks(idProject);
+        String result=gson.toJson(lista);
+
+
+        return result;
+
+    }
+
     public String getProject(int IDproject) {
         Database db = new Database();
         Connection con = db.getConn();
@@ -55,7 +72,7 @@ public class ProjectDAO {
                 project.setListaOameni(getUsersOfProject(IDproject));
                 project.setListaTaskuri(getListaTaskuri(IDproject));
                 project.setListaResurseCurente(getListaResurseFolosite(IDproject));
-                project.setListaTaskuriReale(getRealTasks(IDproject));
+               // project.setListaTaskuriReale(getRealTasks(IDproject));
             }
             returned = gson.toJson(project);
 
@@ -66,7 +83,6 @@ public class ProjectDAO {
             e.printStackTrace();
         }
 
-        System.out.println(returned);
         return returned;
     }
 
@@ -121,7 +137,6 @@ public class ProjectDAO {
             e.printStackTrace();
         }
 
-        System.out.println(gson.toJson(localList));
         return localList;
     }
 
