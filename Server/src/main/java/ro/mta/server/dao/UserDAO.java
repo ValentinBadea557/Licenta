@@ -386,7 +386,7 @@ public class UserDAO implements IUserDAO {
                 "on U.ID_User=A.ID_User " +
                 "inner join Date_Personale DP " +
                 "on U.ID_User=DP.ID_User " +
-                "where A.ID_Admin is null and ID_Companie="+ID_company;
+                "where A.ID_Admin is null and ID_Companie=" + ID_company;
 
         Companie company = new Companie();
         String result = null;
@@ -787,6 +787,7 @@ public class UserDAO implements IUserDAO {
         Database db = new Database();
         Connection con = db.getConn();
 
+        System.out.println("Caut rolul:"+ role);
         String sql = "Select * from Roluri " +
                 "Where Denumire='" + role + "'; ";
         int id = 0;
@@ -801,6 +802,7 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
         }
 
+        System.out.println("ID:"+id);
         if (id != 0) {
             return id;
         } else {
@@ -814,6 +816,7 @@ public class UserDAO implements IUserDAO {
                 ResultSetMetaData meta = rs.getMetaData();
                 while (rs.next()) {
                     id = rs.getInt(1);
+                    System.out.println("ID ret: "+id);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -870,7 +873,7 @@ public class UserDAO implements IUserDAO {
         String sql = "select distinct P.ID_Proiect,P.Denumire,P.Descriere,P.Finished,P.Starttime_Proiect,P.Deadline_Proiect from Proiecte P " +
                 "inner join Proiecte_Useri PU " +
                 "on P.ID_Proiect=PU.ID_Proiect " +
-                "Where PU.ID_USER=" + idUser + " OR P.ID_Coordonator=" + idUser;
+                "Where PU.ID_USER=" + idUser ;
 
         String returned = null;
         JSONObject errorjson = new JSONObject();
@@ -933,7 +936,7 @@ public class UserDAO implements IUserDAO {
                 "(P.Starttime_Proiect<='" + start + "' and P.Deadline_Proiect>='" + deadline + "') or\n" +
                 "(P.Starttime_Proiect>='" + start + "' and P.Deadline_Proiect<='" + deadline + "'))";
 
-        JSONObject response=new JSONObject();
+        JSONObject response = new JSONObject();
         try {
             ArrayList<Integer> listaIds = new ArrayList<>();
             Statement stmt = con.createStatement();
@@ -943,11 +946,11 @@ public class UserDAO implements IUserDAO {
                 listaIds.add(rs.getInt(1));
                 System.out.println(rs.getInt(1));
             }
-            response.put("Result","OK");
-            response.put("Vector",listaIds);
+            response.put("Result", "OK");
+            response.put("Vector", listaIds);
         } catch (SQLException e) {
             e.printStackTrace();
-            response.put("Result","not ok");
+            response.put("Result", "not ok");
         }
         return response.toString();
     }
@@ -1011,31 +1014,31 @@ public class UserDAO implements IUserDAO {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        String sql="select * from Taskuri_Reale TR\n" +
+        String sql = "select * from Taskuri_Reale TR\n" +
                 "inner join Taskuri T\n" +
                 "on TR.ID_Task=T.ID_Task\n" +
                 "inner join Taskuri_Useri TU\n" +
                 "on TU.ID_Task=T.ID_Task\n" +
-                "where TR.Zi>=GETDATE() and TR.Zi<=GETDATE()+10\n" +
-                "and TU.ID_User="+idUser;
+                "where TR.Zi>=CAST(CURRENT_TIMESTAMP AS DATE) and TR.Zi<=GETDATE()+10\n" +
+                "and TU.ID_User=" + idUser;
 
-        ArrayList<Integer> listaIDuri=new ArrayList<>();
-        JSONObject response=new JSONObject();
+        ArrayList<Integer> listaIDuri = new ArrayList<>();
+        JSONObject response = new JSONObject();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             ResultSetMetaData meta = rs.getMetaData();
             while (rs.next()) {
-               listaIDuri.add(rs.getInt(1));
+                listaIDuri.add(rs.getInt(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            response.put("Result","not ok");
+            response.put("Result", "not ok");
         }
 
-        ArrayList<TaskReal> listaTaskuriReale=new ArrayList<>();
-        ProjectDAO prj=new ProjectDAO();
-        for(int i:listaIDuri){
+        ArrayList<TaskReal> listaTaskuriReale = new ArrayList<>();
+        ProjectDAO prj = new ProjectDAO();
+        for (int i : listaIDuri) {
             listaTaskuriReale.add(prj.getTaskRealBasedOnID(i));
         }
 
@@ -1047,21 +1050,53 @@ public class UserDAO implements IUserDAO {
         Database db = new Database();
         Connection con = db.getConn();
 
-        String sql="update Date_Personale\n" +
-                "set Adresa='"+addr+"', Telefon='"+phone+"',Email='"+email+"'\n" +
-                "where ID_User="+idUser;
+        String sql = "update Date_Personale\n" +
+                "set Adresa='" + addr + "', Telefon='" + phone + "',Email='" + email + "'\n" +
+                "where ID_User=" + idUser;
 
-        JSONObject response=new JSONObject();
+        JSONObject response = new JSONObject();
         try {
             Statement stmt = con.createStatement();
             stmt.execute(sql);
-            response.put("Response","OK");
+            response.put("Response", "OK");
         } catch (SQLException e) {
             e.printStackTrace();
-            response.put("Response","error");
+            response.put("Response", "error");
         }
 
         return response.toString();
+    }
+
+    @Override
+    public String getLvlOfPriority(int idUser, int idProject) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        String sql = "select P.Nivel from Proiecte_Useri PU\n" +
+                "inner join Permisiuni P\n" +
+                "on PU.ID_Permisiune=P.ID_Permisiune\n" +
+                "where ID_Proiect=" + idProject + "and ID_USER=" + idUser;
+
+        JSONObject resultJSON = new JSONObject();
+        String result = null;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            ResultSetMetaData meta = rs.getMetaData();
+            while (rs.next()) {
+                result = rs.getString(1);
+                System.out.println("LVL PERMISION: " + result);
+            }
+
+            resultJSON.put("Result", result);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultJSON.toString();
     }
 
 
@@ -1131,7 +1166,7 @@ public class UserDAO implements IUserDAO {
                 "on U.ID_User=PU.ID_USER\n" +
                 "inner join Companii C\n" +
                 "on U.ID_Companie=C.ID_Companie\n" +
-                "where C.ID_Companie="+idCompany;
+                "where C.ID_Companie=" + idCompany;
 
         String returned = null;
         JSONObject errorjson = new JSONObject();
@@ -1147,7 +1182,7 @@ public class UserDAO implements IUserDAO {
                 proiectTemp.setFinished(rs.getInt(4));
                 proiectTemp.setStarttime(rs.getDate(5).toLocalDate());
                 proiectTemp.setDeadline(rs.getDate(6).toLocalDate());
-                int coor=rs.getInt(7);
+                int coor = rs.getInt(7);
                 proiectTemp.setCoordonator(getUserbasedOnID(coor));
                 listaProiecteAdmin.add(proiectTemp);
             }

@@ -63,6 +63,7 @@ public class CalendarController implements Initializable {
             Type userListType = new TypeToken<ArrayList<TaskRealModel>>(){}.getType();
             ArrayList<TaskRealModel> listaTaskuri = gson.fromJson(response, userListType);
 
+            System.out.println(gson.toJson(listaTaskuri));
             /**Set Date*/
             LocalDate currentDate = LocalDate.now();
 
@@ -73,52 +74,7 @@ public class CalendarController implements Initializable {
 
             gridPane.setVgap(5);
             gridPane.setHgap(3);
-//            int numRows = 8;
-//            int numColumns = 25;
-//            for (int row = 0; row < numRows; row++) {
-//                RowConstraints rc = new RowConstraints();
-//                rc.setFillHeight(true);
-//                rc.setVgrow(Priority.ALWAYS);
-//                gridPane.getRowConstraints().add(rc);
-//            }
-//            for (int col = 0; col < numColumns; col++) {
-//                ColumnConstraints cc = new ColumnConstraints();
-//                cc.setFillWidth(true);
-//                cc.setHgrow(Priority.ALWAYS);
-//                gridPane.getColumnConstraints().add(cc);
-//            }
-//
-//            int currentRow = 0;
-//            int currentColumn = 1;
-//            int hour = 8;
-//
-//            for (int i = 0; i < 24; i++) {
-//                Button button = new Button(hour + "-" + (hour + 1));
-//                hour++;
-//                if (hour == 24) {
-//                    hour = 0;
-//                }
-//                button.setStyle("-fx-background-color:#e6b800; " +
-//                        "-fx-text-fill:black;");
-//                button.setMaxWidth(Double.MAX_VALUE);
-//                button.setMinWidth(Control.USE_PREF_SIZE);
-//                gridPane.add(button, currentColumn, currentRow);
-//
-//                currentColumn++;
-//            }
-//
-//            currentRow = 1;
-//            currentColumn = 0;
-//            for (int i = 0; i < 11; i++) {
-//                Button button1 = new Button(currentDate.plusDays(i).toString());
-//                button1.setStyle("-fx-background-color:#e6b800; " +
-//                        "-fx-text-fill:black;");
-//                gridPane.add(button1, currentColumn, currentRow);
-//                button1.setMinWidth(Control.USE_PREF_SIZE);
-//                button1.setMaxWidth(Double.MAX_VALUE);
-//                button1.setMinHeight(Region.USE_PREF_SIZE);
-//                currentRow++;
-//            }
+
 
             for(TaskRealModel task:listaTaskuri){
                 Button taskBtn=new Button(task.getName());

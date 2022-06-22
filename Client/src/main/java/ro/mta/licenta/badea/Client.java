@@ -28,7 +28,7 @@ public class Client {
     private String fullPathToKeyStore = ".\\lib\\keystore";
     private String serverIP = "127.0.0.1";
     private String password = "valentin";
-    int serverPort = 5000;
+    int serverPort = 5061;
 
     private KeyManagerFactory kmf;
     private TrustManagerFactory tmf;
@@ -135,7 +135,7 @@ public class Client {
     private boolean CreateSSLContext() {
         boolean retval = true;
         try {
-            sslContext = SSLContext.getInstance("TLSv1.3");
+            sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
         } catch (Exception ex) {

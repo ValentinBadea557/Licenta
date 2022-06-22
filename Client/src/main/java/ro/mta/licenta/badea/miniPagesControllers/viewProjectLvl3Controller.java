@@ -388,8 +388,6 @@ public class viewProjectLvl3Controller implements Initializable {
 
     public void clearCreateTaskFields() {
         createNewTaskName.clear();
-        createNewTaskStart.getEditor().clear();
-        createNewTaskDeadline.getEditor().clear();
         resourcesToNewTaskTable.getItems().clear();
         predecesorNewTaskComboBox.getEditor().clear();
         predecesorNewTaskComboBox.setValue(null);
@@ -460,11 +458,7 @@ public class viewProjectLvl3Controller implements Initializable {
                 this.selectedResource = newSelection;
                 resourceNameLabel.setText(newSelection.getDenumire());
                 descriptionResourceText.setText(newSelection.getDescriere());
-                if (newSelection.isShareable()) {
-                    shareableResourceLabel.setText("True");
-                } else {
-                    shareableResourceLabel.setText("False");
-                }
+
                 spinner.setValue(newSelection.getCantitate());
                 quantitySpinner.setValueFactory(spinner);
 
@@ -506,7 +500,8 @@ public class viewProjectLvl3Controller implements Initializable {
                     @Override
                     public void changed(ObservableValue<? extends LocalDate> observableValue, LocalDate localDate, LocalDate t1) {
                         if (!setResourceAllocGrid(newSelection, t1)) {
-                            dateForResourceAlloc.setValue(previousDate);
+                            setGridAllocResourceEmpty(newSelection);
+                            //dateForResourceAlloc.setValue(previousDate);
                         } else {
                             previousDate = dateForResourceAlloc.getValue();
                         }
@@ -544,8 +539,7 @@ public class viewProjectLvl3Controller implements Initializable {
         nameResourceColumn.setStyle("-fx-alignment: CENTER ; ");
         quantityResourceColumn.setCellValueFactory(new PropertyValueFactory<>("cantitate"));
         quantityResourceColumn.setStyle("-fx-alignment: CENTER ; ");
-        shareableResourceColumn.setCellValueFactory(new PropertyValueFactory<>("shareable"));
-        shareableResourceColumn.setStyle("-fx-alignment: CENTER ; ");
+
 
         ObservableList<ResourceModel> listaResurse = FXCollections.observableArrayList();
 
@@ -571,6 +565,56 @@ public class viewProjectLvl3Controller implements Initializable {
         resourceAllocationTable.setItems(listaResurse);
     }
 
+    public void setGridAllocResourceEmpty(ResourceModel rs){
+        allocResScrollPane.setContent(null);
+        GridPane grid = new GridPane();
+        grid.setHgap(5);
+        grid.setVgap(5);
+        int currentRow = 0;
+        int currentColumn = 1;
+        int hour = 8;
+
+        Button empty = new Button("Quantity\\Timeline");
+        empty.setStyle("-fx-background-color:#e6b800; " +
+                "-fx-text-fill:black;");
+        empty.setMaxWidth(Double.MAX_VALUE);
+        empty.setMinWidth(Control.USE_PREF_SIZE);
+        grid.add(empty, 0, 0);
+        for (int i = 0; i < 24; i++) {
+            Button button = new Button(hour + "-" + (hour + 1));
+            hour++;
+            if (hour == 24) {
+                hour = 0;
+            }
+            button.setStyle("-fx-background-color:#e6b800; " +
+                    "-fx-text-fill:black;");
+            button.setMaxWidth(Double.MAX_VALUE);
+            button.setMinWidth(Control.USE_PREF_SIZE);
+            button.setMaxHeight(Double.MAX_VALUE);
+            grid.add(button, currentColumn, currentRow);
+
+            currentColumn++;
+        }
+
+        currentRow = 1;
+        currentColumn = 0;
+        int max = rs.getCantitate();
+        for (int i = 0; i < max; i++) {
+            Button quantity = new Button(String.valueOf(max - i));
+            quantity.setStyle("-fx-background-color:#e6b800; " +
+                    "-fx-text-fill:black;");
+            quantity.setMaxWidth(Double.MAX_VALUE);
+            quantity.setMinWidth(Control.USE_PREF_SIZE);
+            quantity.setMaxHeight(Double.MAX_VALUE);
+            grid.add(quantity, currentColumn, currentRow);
+            currentRow++;
+
+        }
+
+        allocResScrollPane.setFitToHeight(true);
+        allocResScrollPane.setContent(grid);
+    }
+
     public boolean setResourceAllocGrid(ResourceModel rs, LocalDate day) {
 
         ArrayList<TaskRealModel> listaTaskuriRealePerDay = new ArrayList<>();
@@ -578,6 +622,7 @@ public class viewProjectLvl3Controller implements Initializable {
         for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
             if (task.getDay().equals(day) && task.getStartTime() >= 0 && task.getQuantityOfResourceRequest(rs.getId()) > 0) {
                 listaTaskuriRealePerDay.add(task);
+                System.out.println("Add");
             }
         }
         System.out.println("Size day:" + listaTaskuriRealePerDay.size());
@@ -591,42 +636,42 @@ public class viewProjectLvl3Controller implements Initializable {
             int currentColumn = 1;
             int hour = 8;
 
-            Button empty = new Button("Quantity\\Timeline");
-            empty.setStyle("-fx-background-color:#e6b800; " +
-                    "-fx-text-fill:black;");
-            empty.setMaxWidth(Double.MAX_VALUE);
-            empty.setMinWidth(Control.USE_PREF_SIZE);
-            grid.add(empty, 0, 0);
-            for (int i = 0; i < 24; i++) {
-                Button button = new Button(hour + "-" + (hour + 1));
-                hour++;
-                if (hour == 24) {
-                    hour = 0;
-                }
-                button.setStyle("-fx-background-color:#e6b800; " +
-                        "-fx-text-fill:black;");
-                button.setMaxWidth(Double.MAX_VALUE);
-                button.setMinWidth(Control.USE_PREF_SIZE);
-                button.setMaxHeight(Double.MAX_VALUE);
-                grid.add(button, currentColumn, currentRow);
-
-                currentColumn++;
-            }
-
-            currentRow = 1;
-            currentColumn = 0;
-            int max = rs.getCantitate();
-            for (int i = 0; i < max; i++) {
-                Button quantity = new Button(String.valueOf(max - i));
-                quantity.setStyle("-fx-background-color:#e6b800; " +
-                        "-fx-text-fill:black;");
-                quantity.setMaxWidth(Double.MAX_VALUE);
-                quantity.setMinWidth(Control.USE_PREF_SIZE);
-                quantity.setMaxHeight(Double.MAX_VALUE);
-                grid.add(quantity, currentColumn, currentRow);
-                currentRow++;
-
-            }
+//            Button empty = new Button("Quantity\\Timeline");
+//            empty.setStyle("-fx-background-color:#e6b800; " +
+//                    "-fx-text-fill:black;");
+//            empty.setMaxWidth(Double.MAX_VALUE);
+//            empty.setMinWidth(Control.USE_PREF_SIZE);
+//            grid.add(empty, 0, 0);
+//            for (int i = 0; i < 24; i++) {
+//                Button button = new Button(hour + "-" + (hour + 1));
+//                hour++;
+//                if (hour == 24) {
+//                    hour = 0;
+//                }
+//                button.setStyle("-fx-background-color:#e6b800; " +
+//                        "-fx-text-fill:black;");
+//                button.setMaxWidth(Double.MAX_VALUE);
+//                button.setMinWidth(Control.USE_PREF_SIZE);
+//                button.setMaxHeight(Double.MAX_VALUE);
+//                grid.add(button, currentColumn, currentRow);
+//
+//                currentColumn++;
+//            }
+//
+//            currentRow = 1;
+//            currentColumn = 0;
+//            int max = rs.getCantitate();
+//            for (int i = 0; i < max; i++) {
+//                Button quantity = new Button(String.valueOf(max - i));
+//                quantity.setStyle("-fx-background-color:#e6b800; " +
+//                        "-fx-text-fill:black;");
+//                quantity.setMaxWidth(Double.MAX_VALUE);
+//                quantity.setMinWidth(Control.USE_PREF_SIZE);
+//                quantity.setMaxHeight(Double.MAX_VALUE);
+//                grid.add(quantity, currentColumn, currentRow);
+//                currentRow++;
+//
+//            }
 
             positionMap.clear();
             calculatePositions(rs, listaTaskuriRealePerDay);
@@ -680,87 +725,92 @@ public class viewProjectLvl3Controller implements Initializable {
                         task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
             }
 
+            Node[] verticalHeaders = new Node[rs.getCantitate()+1];
+
+            int max = rs.getCantitate();
+            verticalHeaders[0]=createHeaderNode("Quantity/Timeline");
+            for (int i = 0; i < max; i++) {
+                    verticalHeaders[i+1]=createHeaderNode(String.valueOf(max-i));
+
+
+            }
+            Node[] horizontalHeaders = new Node[]{
+                    createHeaderNode("07-08"),
+                    createHeaderNode("08-09"),
+                    createHeaderNode("09-10"),
+                    createHeaderNode("10-11"),
+                    createHeaderNode("11-12"),
+                    createHeaderNode("12-13"),
+                    createHeaderNode("13-14"),
+                    createHeaderNode("14-15"),
+                    createHeaderNode("15-16"),
+                    createHeaderNode("16-17"),
+                    createHeaderNode("17-18"),
+                    createHeaderNode("18-19"),
+                    createHeaderNode("19-20"),
+                    createHeaderNode("20-21"),
+                    createHeaderNode("21-22"),
+                    createHeaderNode("22-23"),
+                    createHeaderNode("23-00"),
+                    createHeaderNode("00-01"),
+                    createHeaderNode("01-02"),
+                    createHeaderNode("02-03"),
+                    createHeaderNode("03-04"),
+                    createHeaderNode("04-05"),
+                    createHeaderNode("05-06"),
+                    createHeaderNode("06-07")
+            };
+
+
+            grid.addColumn(0, verticalHeaders);
+            grid.addRow(0, horizontalHeaders);
+
+
+            InvalidationListener headerUpdaterUp = o -> {
+                final double ty = (grid.getHeight() - allocResScrollPane.getViewportBounds().getHeight()) * allocResScrollPane.getVvalue();
+
+                for (Node header : horizontalHeaders) {
+                    header.setTranslateY(ty);
+                }
+            };
+            grid.heightProperty().addListener(headerUpdaterUp);
+            allocResScrollPane.viewportBoundsProperty().addListener(headerUpdaterUp);
+            allocResScrollPane.vvalueProperty().addListener(headerUpdaterUp);
+
+            InvalidationListener headerUpdater = o -> {
+                final double tx = (grid.getWidth() - allocResScrollPane.getViewportBounds().getWidth()) * allocResScrollPane.getHvalue();
+
+                for (Node header : verticalHeaders) {
+                    header.setTranslateX(tx);
+                }
+            };
+            gridScheduling.widthProperty().addListener(headerUpdater);
+            allocResScrollPane.viewportBoundsProperty().addListener(headerUpdater);
+            allocResScrollPane.hvalueProperty().addListener(headerUpdater);
+
+
+
             grid.setStyle("-fx-margin:2px");
             allocResScrollPane.setFitToHeight(true);
             allocResScrollPane.setContent(grid);
             return true;
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
-            alert.setContentText("There is no task for selected day!");
-            alert.showAndWait();
-
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Info");
+//            alert.setContentText("There is no task for selected day!");
+//            alert.showAndWait();
+            setGridAllocResourceEmpty(rs);
             return false;
         }
     }
 
     public void setSchedulingTable() {
         LocalDate currentDate = LocalDate.now();
+
         /**Fill grid*/
         /**Hours*/
         gridScheduling.setVgap(5);
         gridScheduling.setHgap(5);
-//        int numRows = 7;
-//        int numColumns = 25;
-//        for (int row = 0; row < numRows; row++) {
-//            RowConstraints rc = new RowConstraints();
-//            rc.setFillHeight(true);
-//            rc.setVgrow(Priority.ALWAYS);
-//            gridScheduling.getRowConstraints().add(rc);
-//        }
-//        for (int col = 0; col < numColumns; col++) {
-//            ColumnConstraints cc = new ColumnConstraints();
-//            cc.setFillWidth(true);
-//            cc.setHgrow(Priority.ALWAYS);
-//            gridScheduling.getColumnConstraints().add(cc);
-//        }
-//
-//        int currentRow = 0;
-//        int currentColumn = 1;
-//        int hour = 8;
-//
-//        for (int i = 0; i < 24; i++) {
-//            Button button = new Button(hour + "-" + (hour + 1));
-//            button.setStyle("-fx-background-color:#e6b800; " +
-//                    "-fx-text-fill:black;");
-//            hour++;
-//            if (hour == 24) {
-//                hour = 0;
-//            }
-//            button.setMaxWidth(Double.MAX_VALUE);
-//            button.setMinWidth(Control.USE_PREF_SIZE);
-//            gridScheduling.add(button, currentColumn, currentRow);
-//
-//            currentColumn++;
-//        }
-//
-//        currentRow = 1;
-//        currentColumn = 0;
-//        for (int i = 0; i < 10; i++) {
-//            Button button1 = new Button(currentDate.plusDays(i).toString());
-//            button1.setStyle("-fx-background-color:#e6b800; " +
-//                    "-fx-text-fill:black;");
-//            // printTasksForCurrentUserOnSelectedDay(currentDate.plusDays(i));
-//
-//            gridScheduling.add(button1, currentColumn, currentRow);
-//            button1.setMinWidth(Control.USE_PREF_SIZE);
-//            button1.setMaxWidth(Double.MAX_VALUE);
-//            button1.setMinHeight(Region.USE_PREF_SIZE);
-//
-//
-//            int idClient = Client.getInstance().getCurrentUser().getID();
-//            for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
-//                if (task.getDay().isEqual(currentDate.plusDays(i)) && idClient == task.getOriginTask().getExecutant().getID() && task.getStartTime() >= 0) {
-//                    Button taskBtn = new Button(task.getName());
-//                    taskBtn.setStyle("-fx-background-color:#E0FBFC;" +
-//                            "-fx-border-color:black");
-//                    taskBtn.setMinWidth(Control.USE_PREF_SIZE);
-//                    taskBtn.setMaxWidth(Double.MAX_VALUE);
-//                    gridScheduling.add(taskBtn, task.getStartTime() + 1, currentRow, task.getDuration(), 1);
-//                }
-//            }
-//            currentRow++;
-//        }
 
         int currentRow = 1;
         int currentColumn = 0;
@@ -778,7 +828,7 @@ public class viewProjectLvl3Controller implements Initializable {
             }
             currentRow++;
         }
-        Node[] verticalHeaders=new Node[]{
+        Node[] verticalHeaders = new Node[]{
                 createEmptyButton(),
                 createHeaderNode(0),
                 createHeaderNode(1),
@@ -793,7 +843,7 @@ public class viewProjectLvl3Controller implements Initializable {
                 createHeaderNode(10)
         };
 
-        Node[] horizontalHeaders=new Node[]{
+        Node[] horizontalHeaders = new Node[]{
                 createHeaderNode("07-08"),
                 createHeaderNode("08-09"),
                 createHeaderNode("09-10"),
@@ -821,8 +871,8 @@ public class viewProjectLvl3Controller implements Initializable {
         };
 
 
-        gridScheduling.addColumn(0,verticalHeaders);
-        gridScheduling.addRow(0,horizontalHeaders);
+        gridScheduling.addColumn(0, verticalHeaders);
+        gridScheduling.addRow(0, horizontalHeaders);
 
         InvalidationListener headerUpdater = o -> {
             final double tx = (gridScheduling.getWidth() - scrollPane.getViewportBounds().getWidth()) * scrollPane.getHvalue();
@@ -848,7 +898,8 @@ public class viewProjectLvl3Controller implements Initializable {
 
 
     }
-    private  static Button createEmptyButton(){
+
+    private static Button createEmptyButton() {
         Button button1 = new Button();
         button1.setVisible(false);
         button1.setMinWidth(Control.USE_PREF_SIZE);
@@ -1176,7 +1227,7 @@ public class viewProjectLvl3Controller implements Initializable {
     }
 
     @FXML
-    void createNewTaskAction(ActionEvent event) throws Exception {
+    void createNewTaskAction(ActionEvent eventAction) throws Exception {
         boolean isempty = false;
         if (createNewTaskName.getText() == null || createNewTaskName.getText().trim().isEmpty()) {
             isempty = true;
@@ -1258,50 +1309,105 @@ public class viewProjectLvl3Controller implements Initializable {
             String stringJson = gson.toJson(task);
             System.out.println("***\n" + stringJson);
 
-            Client client = Client.getInstance();
-            JSONObject tosend = new JSONObject(stringJson);
-            tosend.put("Type", "Add new task to project");
 
-            client.sendText(tosend.toString());
+            /****/
+            Task<JSONObject> thread1 = new Task<JSONObject>() {
+                @Override
+                protected JSONObject call() throws Exception {
+                    System.out.println("IN THREAD\n");
+                    Client client = Client.getInstance();
+                    JSONObject tosend = new JSONObject(stringJson);
+                    tosend.put("Type", "Add new task to project");
 
-            String result = client.receiveText();
-            JSONObject response = new JSONObject(result);
+                    client.sendText(tosend.toString());
 
-            if (response.get("Final Response").equals("ok")) {
-                JSONObject tosend2 = new JSONObject();
-                tosend2.put("Type", "Get Project");
-                tosend2.put("IDproject", projectLocal.getID());
-                client.sendText(tosend2.toString());
-                String receive = client.receiveText();
-                this.projectLocal = gson.fromJson(receive, ProjectModel.class);
-                System.out.println(gson.toJson(projectLocal));
+                    String result = client.receiveText();
+                    JSONObject response = new JSONObject(result);
 
-                /***/
-                JSONObject tosend3 = new JSONObject();
-                tosend3.put("Type", "Get Lista Taskuri Reale Project");
-                tosend3.put("IDproject", projectLocal.getID());
-                client.sendText(tosend3.toString());
-                String receive2 = client.receiveText();
+                    JSONObject tosend2 = new JSONObject();
+                    tosend.put("Type", "Get Project");
+                    tosend.put("IDproject", projectLocal.getID());
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
+                    gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
+                    Gson gson = gsonBuilder.setPrettyPrinting().create();
+                    client.sendText(tosend.toString());
+                    String response2 = client.receiveText();
+                    ProjectModel project = gson.fromJson(response2, ProjectModel.class);
+                    projectLocal = project;
 
-                Type ArrayListRealTasks = new TypeToken<ArrayList<TaskRealModel>>() {
-                }.getType();
-                ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receive2, ArrayListRealTasks);
+                    JSONObject getRealTask = new JSONObject();
+                    getRealTask.put("Type", "Get Lista Taskuri Reale Project");
+                    getRealTask.put("IDproject", projectLocal.getID());
+                    client.sendText(getRealTask.toString());
+                    String receiveTasks = client.receiveText();
 
-                projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
-                /****/
+                    Type ArrayListRealTasks = new TypeToken<ArrayList<TaskRealModel>>() {
+                    }.getType();
+                    ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receiveTasks, ArrayListRealTasks);
 
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Project Created!");
-                alert.setContentText("Task was inserted and a new scheduling is available!");
-                alert.showAndWait();
+                    projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
+                    return response;
+                }
+            };
 
-                resetAllTables();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error!");
-                alert.setContentText("SQL Exception occured!");
-                alert.showAndWait();
+            new Thread(thread1).start();
+
+            Parent root = null;
+            try {
+                root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            Scene scene = new Scene(root);
+            Stage primaryStage = new Stage();
+            primaryStage.initStyle(StageStyle.UNDECORATED);
+
+
+            thread1.setOnSucceeded(event -> {
+                System.out.println("Threadul a primit rasp: " + thread1.getValue().get("Final Response"));
+                if (thread1.getValue().get("Final Response").equals("ok")) {
+                    primaryStage.hide();
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            Alert alertTaskAdded = new Alert(Alert.AlertType.CONFIRMATION);
+                            alertTaskAdded.setTitle("Request result");
+                            alertTaskAdded.setHeaderText("Result");
+                            alertTaskAdded.setContentText("Task was inserted and a new scheduling is available!");
+                            alertTaskAdded.showAndWait();
+                        }
+                    });
+
+
+                    predecesorNewTaskComboBox.getEditor().clear();
+                    //setFieldForNewTaskTab();
+
+                    listaTaskuriTotale.clear();
+                    for (TaskModel task1 : projectLocal.getListaTaskuri()) {
+                        listaTaskuriTotale.add(task1.getName());
+                    }
+                    predecesorNewTaskComboBox.setItems(listaTaskuriTotale);
+
+                    clearCreateTaskFields();
+                    resetAllTables();
+                } else {
+                    primaryStage.hide();
+                    Alert alerterr = new Alert(Alert.AlertType.ERROR);
+                    alerterr.setTitle("Request Response");
+                    alerterr.setHeaderText("ERROR!");
+                    alerterr.setContentText("Some error occurred!");
+                    alerterr.showAndWait();
+                }
+            });
+
+
+            primaryStage.setScene(scene);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.showAndWait();
+
 
         }
 
@@ -1362,25 +1468,6 @@ public class viewProjectLvl3Controller implements Initializable {
         });
         new Thread(task).start();
 
-        //      if(result.get("Result").equals("OK")){
-//            Parent root = null;
-//            try {
-//                root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            Scene scene = new Scene(root);
-//            Stage primaryStage = new Stage();
-//            primaryStage.initStyle(StageStyle.UNDECORATED);
-//
-//
-//            service.restart();
-//            service.setOnSucceeded(event -> {
-//                primaryStage.hide();
-//
-//            });
-
 
         primaryStage.setScene(scene);
         primaryStage.initModality(Modality.APPLICATION_MODAL);
@@ -1393,15 +1480,7 @@ public class viewProjectLvl3Controller implements Initializable {
         alert.showAndWait();
 
         resetAllTables();
-        //     }else{
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Request Response");
-//            alert.setHeaderText("ERROR!");
-//            alert.setContentText("Some error occurred!");
-//            alert.showAndWait();
-//   //     }
-//
-//        System.out.println("Clicked!");
+
     }
 
     ObservableList<TaskModel> listaTaskuriForUser = FXCollections.observableArrayList();

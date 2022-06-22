@@ -38,7 +38,7 @@ public class AddRolesToWorkersController implements Initializable {
     private Label resultLabel;
 
     ObservableList<String> levels =
-            FXCollections.observableArrayList("Level 1", "Level 2", "Level 3");
+            FXCollections.observableArrayList("Level 1", "Level 2");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -68,8 +68,7 @@ public class AddRolesToWorkersController implements Initializable {
 
         /**Set tooltip for roles*/
         toolTipPermission.setText("Level 1 : Only see task without permission to modify anything " +
-                "Level 2 : Permission to modify tasks inside the team                   " +
-                "Level 3 : Permission to modify tasks in the whole project");
+                "Level 2 : Permission to modify tasks in the whole project");
         toolTipPermission.setPrefWidth(365);
         toolTipPermission.setWrapText(true);
         levelField.setTooltip(toolTipPermission);

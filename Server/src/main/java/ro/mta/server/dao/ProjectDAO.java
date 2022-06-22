@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ProjectDAO {
     public Project project;
 
-    public String getTaskuriRealeProject(int idProject){
+    public String getTaskuriRealeProject(int idProject) {
         Database db = new Database();
         Connection con = db.getConn();
 
@@ -26,8 +26,8 @@ public class ProjectDAO {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
 
-        ArrayList<TaskReal> lista=getRealTasks(idProject);
-        String result=gson.toJson(lista);
+        ArrayList<TaskReal> lista = getRealTasks(idProject);
+        String result = gson.toJson(lista);
 
 
         return result;
@@ -72,7 +72,7 @@ public class ProjectDAO {
                 project.setListaOameni(getUsersOfProject(IDproject));
                 project.setListaTaskuri(getListaTaskuri(IDproject));
                 project.setListaResurseCurente(getListaResurseFolosite(IDproject));
-               // project.setListaTaskuriReale(getRealTasks(IDproject));
+                // project.setListaTaskuriReale(getRealTasks(IDproject));
             }
             returned = gson.toJson(project);
 
@@ -197,7 +197,7 @@ public class ProjectDAO {
                 "on RP.ID_Resursa=R.ID_Resursa\n" +
                 "inner join Proiecte P\n" +
                 "on P.ID_Proiect=RP.ID_Proiect\n" +
-                "Where P.ID_Proiect="+IDproject;
+                "Where P.ID_Proiect=" + IDproject;
 
         ArrayList<Resource> listaResurse = new ArrayList<>();
 

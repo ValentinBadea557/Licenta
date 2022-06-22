@@ -181,7 +181,7 @@ public class viewProjectsController implements Initializable {
             Label prjNameLabel = new Label(labelStr);
             prjNameLabel.relocate(20, 20);
             prjNameLabel.setStyle("-fx-text-fill:black; -fx-font-weight: bold ;");
-           // prjNameLabel.setFont(new Font("System",15));
+            // prjNameLabel.setFont(new Font("System",15));
             prjNameLabel.setWrapText(true);
 
             String startStr = new String("Start : ");
@@ -234,12 +234,29 @@ public class viewProjectsController implements Initializable {
 
                     data.setData(String.valueOf(btn.getId()));
 
+                    JSONObject getLv = new JSONObject();
+                    getLv.put("Type", "Get lvl priority");
+                    getLv.put("IDproject", btn.getId());
+                    getLv.put("IDuser", client.getCurrentUser().getID());
+
+                    System.out.println(getLv.toString());
                     try {
-                        root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel3.fxml"));
+                        client.sendText(getLv.toString());
+                        String result = client.receiveText();
+                        JSONObject receive = new JSONObject(result);
+
+                        System.out.println(result);
+                        if (receive.get("Result").equals("Level 1")){
+                            root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel1.fxml"));
+                        }
+                        else if(receive.get("Result").equals("Level 2")){
+                            root = FXMLLoader.load(getClass().getResource("/MiniPages/ViewProjectLevel3.fxml"));
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    // root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
 
                     Scene scene = new Scene(root);
                     Stage primaryStage = new Stage();
@@ -262,11 +279,11 @@ public class viewProjectsController implements Initializable {
 
         }
 
-        gp.relocate(20,20);
+        gp.relocate(20, 20);
         gp.setGridLinesVisible(false);
 
 
-        scrollPaneViewProjects.setPadding(new Insets(20,20,0,20));
+        scrollPaneViewProjects.setPadding(new Insets(20, 20, 0, 20));
         scrollPaneViewProjects.setContent(gp);
 
 

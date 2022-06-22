@@ -1,8 +1,10 @@
 package ro.mta.licenta.badea.employee;
 
 import com.google.gson.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import ro.mta.licenta.badea.Client;
 import ro.mta.licenta.badea.GsonDateFormat.LocalDateDeserializer;
@@ -25,6 +28,7 @@ import ro.mta.licenta.badea.temporalUse.ProjectTemporalModel;
 import ro.mta.licenta.badea.temporalUse.SelectedWorkersIDs;
 import ro.mta.licenta.badea.temporalUse.WorkerModel;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -251,12 +255,10 @@ public class ThirdCreateProjectController implements Initializable {
     }
 
     public void finishAction(ActionEvent actionEvent) throws Exception {
-        System.out.println("N:" + taskuriNormale.size());
 
         ProjectModel project = new ProjectModel();
         ProjectTemporalModel tempProject = new ProjectTemporalModel();
         Client client = Client.getInstance();
-
 
         project.setCoordonator(client.getCurrentUser());
         project.setNume(tempProject.getNumeProiect());
@@ -276,33 +278,88 @@ public class ThirdCreateProjectController implements Initializable {
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateDeserializer());
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         String projectJson = gson.toJson(project);
-        System.out.println("***\n" + projectJson);
 
+        Task<JSONObject> task = new Task<JSONObject>() {
+            @Override
+            protected JSONObject call() throws Exception {
+                JSONObject tosend = new JSONObject(projectJson);
+                tosend.put("Type", "Create new Project");
 
-        JSONObject tosend = new JSONObject(projectJson);
-        tosend.put("Type", "Create new Project");
-
-
-        client.sendText(tosend.toString());
-
-
-        String receive = client.receiveText();
-        JSONObject response = new JSONObject(receive);
-
-        System.out.println(response.toString());
-        if (response.get("Final Response").equals("ok")) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Project Created!");
-            alert.setContentText("All information was inserted into Database!");
-            alert.showAndWait();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error!");
-            alert.setContentText("SQL Exception occured!");
-            alert.showAndWait();
+                client.sendText(tosend.toString());
+                String receive = client.receiveText();
+                JSONObject response = new JSONObject(receive);
+                return response;
+            }
+        };
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/MiniPages/LoadingPage.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Scene scene = new Scene(root);
+        Stage primaryStage = new Stage();
+        primaryStage.initStyle(StageStyle.UNDECORATED);
 
-        tempProject.clearAllList();
+        new Thread(task).start();
+        task.setOnSucceeded(event -> {
+            if (task.getValue().get("Final Response").equals("ok")) {
+                primaryStage.hide();
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Project Created!");
+                        alert.setContentText("All information was inserted into Database!");
+                        alert.showAndWait();
+                    }
+
+                });
+            } else {
+                primaryStage.hide();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Info!");
+                        alert.setContentText("Something went wrong! Please submit again.");
+                        alert.showAndWait();
+                    }
+                });
+            }
+
+            tempProject.clearAllList();
+        });
+
+        primaryStage.setScene(scene);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.showAndWait();
+//        JSONObject tosend = new JSONObject(projectJson);
+//        tosend.put("Type", "Create new Project");
+//
+//
+//        client.sendText(tosend.toString());
+//
+//
+//        String receive = client.receiveText();
+//        JSONObject response = new JSONObject(receive);
+
+
+//        System.out.println(response.toString());
+//        if (response.get("Final Response").equals("ok")) {
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setTitle("Project Created!");
+//            alert.setContentText("All information was inserted into Database!");
+//            alert.showAndWait();
+//        } else {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error!");
+//            alert.setContentText("SQL Exception occured!");
+//            alert.showAndWait();
+//        }
+
+        //  tempProject.clearAllList();
     }
 
     public void allocResourceAction(ActionEvent actionEvent) throws Exception {

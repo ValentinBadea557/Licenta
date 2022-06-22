@@ -33,33 +33,13 @@ public class Main {
     private static final String fullPathToTrustStore = ".\\lib\\truststore";
     private static final String fullPathToKeyStore = ".\\lib\\keystore";
     private final String serverIP = "127.0.0.1";
-    private static final String password = "valentin";
+     private static final String password = "valentin";
+    //private static final String password = "abcd1234";
     private static KeyManagerFactory kmf;
     private static TrustManagerFactory tmf;
 
     public static void main(String[] args) throws CertificateException, IOException, NoSuchAlgorithmException {
 
-
-
-//        Schedule sch = new Schedule();
-//        sch.setTheSchedulingForEntireProject(6008);
-//        LocalDate d=LocalDate.of(2022,5,15);
-//        sch.checkIfItIsFeasbileWithMoreResources(3224,5013,d);
-//
-//        System.exit(123);
-//        sch.setTheSchedulingForEntireProject(5013);
-//        LocalDate date = LocalDate.of(2022, Month.MAY, 22);
-//
-//        sch.getListOfRealTasks(5013, date);
-//        sch.getListOfPeople(5013);
-//        sch.printUseri();
-//        sch.getListOfResources(5013);
-//        sch.translateUsersIntoResources();
-//        sch.fillWithZeroWhenResourceIsNotUsed();
-//        sch.printDetailsAboutRes();
-//
-//        sch.startScheduling();
- //
 
         boolean status;
         status = CreateKeyTrustManagerFactory();
@@ -69,7 +49,7 @@ public class Main {
 
         try {
             SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
-            SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5000);
+            SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5061);
             // ServerSocket ss = new ServerSocket(5000);
 
             // client request
@@ -78,8 +58,7 @@ public class Main {
                 try {
                     // socket object to receive incoming client requests
                     s = serverSocket.accept();
-
-                   // SSLSocket test= (SSLSocket) s;
+                    System.out.println("Socket:" + s);
 
                     System.out.println("A new client is connected : " + s);
                     // obtaining input and out streams
@@ -122,7 +101,7 @@ public class Main {
             tmf = TrustManagerFactory.getInstance("SunX509");
             tmf.init(ksKeys);
 
-        } catch (KeyStoreException | FileNotFoundException | UnrecoverableKeyException e) {
+        } catch (Exception ex) {
             retval = false;
         }
         System.out.println("CreateKeyTrustManagerFactory returned: " + retval);
@@ -182,7 +161,7 @@ class ClientHandler extends Thread {
     void sendMessage(String msg) {
         try {
             dos.writeUTF(msg);
-            System.out.println("Am trimis:"+msg.length());
+            System.out.println("Am trimis:" + msg.length());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -192,6 +171,9 @@ class ClientHandler extends Thread {
     @Override
     public void run() {
         System.out.println("Am intrat in run\n");
+        System.out.println("Socket in run:" + this.s);
+        System.out.println("input:" + this.dis);
+        System.out.println("output:" + this.dos);
 
 
         boolean logged = false;

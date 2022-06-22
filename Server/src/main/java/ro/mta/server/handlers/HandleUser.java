@@ -125,6 +125,15 @@ public class HandleUser implements IHandler {
                 this.messageToSend = result;
                 break;
 
+            case "Get lvl priority":
+                System.out.println(json.toString());
+                int idProjectForlvl=json.getInt("IDproject");
+                int idUserForlvl=json.getInt("IDuser");
+                result=user.getLvlOfPriority(idUserForlvl,idProjectForlvl);
+                System.out.println(result);
+                this.messageToSend=result;
+                break;
+
             case "Get Project":
                 int id_project = json.getInt("IDproject");
                 result = proiect.getProject(id_project);

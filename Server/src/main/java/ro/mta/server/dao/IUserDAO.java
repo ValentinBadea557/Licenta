@@ -33,6 +33,7 @@ public interface IUserDAO {
     public int deleteAllDataAboutAProject(int idProject);
     public String getFutureTasks(int idUser);
     public String updateInfo(int idUser,String addr,String phone,String email);
+    public String getLvlOfPriority(int idUser,int idProject);
 
     /**Functions used by admins*/
     public String addUserPlusCompany(String username,String parola,String nume_companie,String Nume,String Prenume,String Adrs,String Telefon,String mail, int admin);
