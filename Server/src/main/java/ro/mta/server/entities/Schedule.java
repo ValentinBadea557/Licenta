@@ -106,33 +106,44 @@ public class Schedule {
                     getListOfPeople(idProject, dataCalendaristica);
                     translateUsersIntoResources();
                     fillWithZeroWhenResourceIsNotUsed();
-                    TaskReal toBeDeleted = new TaskReal();
+
+                    ArrayList<TaskReal> toBeDeleted = new ArrayList<>();
                     for (TaskReal task : listaTaskuri) {
                         for (Resource rs : listaResurse) {
                             System.out.println(task.getQuantityOfResourceRequest(rs.getID()) + " " + rs.getCantitate());
                             if (task.getQuantityOfResourceRequest(rs.getID()) > rs.getCantitate()) {
-                                toBeDeleted = task;
+                                toBeDeleted.add(task);
                             }
                         }
                     }
-                    listaTaskuri.remove(toBeDeleted);
-                    setNullStartPointForTask(toBeDeleted.getID());
-                    listaTaskuriImposibleToSchedule.add(toBeDeleted);
+                    for (TaskReal task : toBeDeleted) {
+                        listaTaskuri.remove(task);
+                        setNullStartPointForTask(task.getID());
+                        listaTaskuriImposibleToSchedule.add(task);
+                    }
+
                     startScheduling();
                 }
             }
 
             for (TaskReal task : listaTaskuri) {
                 if (task.getID() == idTaskReal) {
-                    System.out.println(task.toString());
-                    JSONObject responseTime = new JSONObject();
-                    responseTime.put("IDtask", task.getID());
-                    responseTime.put("Deadline", task.getCompletionTime());
-                    responseTime.put("ToBeSubstracted", task.getCompletionTime() - 24);
-                    responseTime.put("CurrentDuration", task.getDuration());
+                    int startpoint=task.getStartTime();
 
-                    response.put("Response", "Modify Duration");
-                    response.put("Modificari", responseTime);
+                    if (startpoint<24 && task.getCompletionTime()>24) {
+                        System.out.println(task.toString());
+                        JSONObject responseTime = new JSONObject();
+                        responseTime.put("IDtask", task.getID());
+                        responseTime.put("Deadline", task.getCompletionTime());
+                        responseTime.put("ToBeSubstracted", task.getCompletionTime() - 24);
+                        responseTime.put("CurrentDuration", task.getDuration());
+
+                        response.put("Response", "Modify Duration");
+                        response.put("Modificari", responseTime);
+                    }else {
+                        response.put("Response", "No possibility for scheduling");
+                    }
+
                 }
             }
         }
@@ -162,19 +173,24 @@ public class Schedule {
             fillWithZeroWhenResourceIsNotUsed();
             printDetailsAboutRes();
 
-            TaskReal toBeDeleted = new TaskReal();
+            ArrayList<TaskReal> toBeDeleted = new ArrayList<>();
             for (TaskReal task : listaTaskuri) {
                 for (Resource rs : listaResurse) {
                     System.out.println(task.getQuantityOfResourceRequest(rs.getID()) + " " + rs.getCantitate());
                     if (task.getQuantityOfResourceRequest(rs.getID()) > rs.getCantitate()) {
-                        toBeDeleted = task;
+                        toBeDeleted.add(task);
+
                     }
                 }
             }
-
-            listaTaskuri.remove(toBeDeleted);
-            setNullStartPointForTask(toBeDeleted.getID());
-            listaTaskuriImposibleToSchedule.add(toBeDeleted);
+            for (TaskReal task : toBeDeleted) {
+                listaTaskuri.remove(task);
+                setNullStartPointForTask(task.getID());
+                listaTaskuriImposibleToSchedule.add(task);
+            }
+//            listaTaskuri.remove(toBeDeleted);
+//            setNullStartPointForTask(toBeDeleted.getID());
+//            listaTaskuriImposibleToSchedule.add(toBeDeleted);
 
             if (startScheduling()) {
                 for (TaskReal task : listaTaskuri) {

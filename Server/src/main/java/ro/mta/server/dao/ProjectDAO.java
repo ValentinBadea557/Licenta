@@ -122,8 +122,11 @@ public class ProjectDAO {
                 Timestamp day = rs.getTimestamp(4);
                 task.setDay(day.toLocalDateTime().toLocalDate());
 
+                Task aux=new Task();
+                aux.setID(rs.getInt(5));
+                task.setOriginTask(aux);
 
-                task.setOriginTask(getTask(rs.getInt(5)));
+              //  task.setOriginTask(getTask(rs.getInt(5)));
                 task.setParentID(rs.getInt(6));
 
                 task.setStartTime(rs.getInt(7));

@@ -50,7 +50,6 @@ public class Main {
         try {
             SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(5061);
-            // ServerSocket ss = new ServerSocket(5000);
 
             // client request
             while (true) {

@@ -267,10 +267,6 @@ public class viewProjectLvl3Controller implements Initializable {
         int id = Integer.parseInt(data.getData());
 
         Client client = Client.getInstance();
-//        JSONObject tosend = new JSONObject();
-//
-//        tosend.put("Type", "Get Project");
-//        tosend.put("IDproject", id);
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateSerializer());
@@ -331,7 +327,10 @@ public class viewProjectLvl3Controller implements Initializable {
                             ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receiveTasks, ArrayListRealTasks);
 
                             projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
-                            System.out.println(gson.toJson(projectLocal));
+
+
+                            /***/
+                            setOriginTasks();
                             /***/
 
                             return project;
@@ -621,8 +620,9 @@ public class viewProjectLvl3Controller implements Initializable {
         System.out.println("Current day :" + day + " size project: " + projectLocal.getListaTaskuriReale().size());
         for (TaskRealModel task : projectLocal.getListaTaskuriReale()) {
             if (task.getDay().equals(day) && task.getStartTime() >= 0 && task.getQuantityOfResourceRequest(rs.getId()) > 0) {
+                System.out.println(task.getName()+" res: "+task.getQuantityOfResourceRequest(rs.getId())+" "+task.getStartTime()+" "+task.getCompletionTime());
                 listaTaskuriRealePerDay.add(task);
-                System.out.println("Add");
+
             }
         }
         System.out.println("Size day:" + listaTaskuriRealePerDay.size());
@@ -636,48 +636,12 @@ public class viewProjectLvl3Controller implements Initializable {
             int currentColumn = 1;
             int hour = 8;
 
-//            Button empty = new Button("Quantity\\Timeline");
-//            empty.setStyle("-fx-background-color:#e6b800; " +
-//                    "-fx-text-fill:black;");
-//            empty.setMaxWidth(Double.MAX_VALUE);
-//            empty.setMinWidth(Control.USE_PREF_SIZE);
-//            grid.add(empty, 0, 0);
-//            for (int i = 0; i < 24; i++) {
-//                Button button = new Button(hour + "-" + (hour + 1));
-//                hour++;
-//                if (hour == 24) {
-//                    hour = 0;
-//                }
-//                button.setStyle("-fx-background-color:#e6b800; " +
-//                        "-fx-text-fill:black;");
-//                button.setMaxWidth(Double.MAX_VALUE);
-//                button.setMinWidth(Control.USE_PREF_SIZE);
-//                button.setMaxHeight(Double.MAX_VALUE);
-//                grid.add(button, currentColumn, currentRow);
-//
-//                currentColumn++;
-//            }
-//
-//            currentRow = 1;
-//            currentColumn = 0;
-//            int max = rs.getCantitate();
-//            for (int i = 0; i < max; i++) {
-//                Button quantity = new Button(String.valueOf(max - i));
-//                quantity.setStyle("-fx-background-color:#e6b800; " +
-//                        "-fx-text-fill:black;");
-//                quantity.setMaxWidth(Double.MAX_VALUE);
-//                quantity.setMinWidth(Control.USE_PREF_SIZE);
-//                quantity.setMaxHeight(Double.MAX_VALUE);
-//                grid.add(quantity, currentColumn, currentRow);
-//                currentRow++;
-//
-//            }
 
             positionMap.clear();
             calculatePositions(rs, listaTaskuriRealePerDay);
             System.out.println("Taskuri pe ziua curenta: " + listaTaskuriRealePerDay.size());
-
             System.out.println(positionMap.size());
+
             for (Integer key : positionMap.keySet()) {
                 for (TaskRealModel taskk : listaTaskuriRealePerDay) {
                     if (taskk.getID() == key)
@@ -720,9 +684,13 @@ public class viewProjectLvl3Controller implements Initializable {
                 taskBtn.setMinWidth(Control.USE_PREF_SIZE);
                 taskBtn.setMaxHeight(Double.MAX_VALUE);
 
-                System.out.println("Current task: " + task.getID() + " " + task.getName() + " " + positionMap.get(task.getID()));
-                grid.add(taskBtn, task.getStartTime() + 1, positionMap.get(task.getID()) + 1,
+                System.out.println("Current task: "  + task.getName() + " " + positionMap.get(task.getID())+" "+
+                        task.getQuantityOfResourceRequest(rs.getId())+ " duration:"+task.getDuration());
+
+                grid.add(taskBtn, (task.getStartTime() + 1), (positionMap.get(task.getID()) + 1),
                         task.getDuration(), task.getQuantityOfResourceRequest(rs.getId()));
+
+                System.out.println("added");
             }
 
             Node[] verticalHeaders = new Node[rs.getCantitate()+1];
@@ -789,16 +757,13 @@ public class viewProjectLvl3Controller implements Initializable {
             allocResScrollPane.hvalueProperty().addListener(headerUpdater);
 
 
-
+           // grid.setGridLinesVisible(true);
             grid.setStyle("-fx-margin:2px");
             allocResScrollPane.setFitToHeight(true);
             allocResScrollPane.setContent(grid);
             return true;
         } else {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("Info");
-//            alert.setContentText("There is no task for selected day!");
-//            alert.showAndWait();
+
             setGridAllocResourceEmpty(rs);
             return false;
         }
@@ -1171,6 +1136,12 @@ public class viewProjectLvl3Controller implements Initializable {
                     } else {
                         System.out.println("No");
                     }
+                }else if(response.get("Response").equals("No possibility for scheduling")){
+                    Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                    alert3.setTitle("Server Response");
+                    alert3.setHeaderText("INFO");
+                    alert3.setContentText("This task can not be scheduled!");
+                    alert3.showAndWait();
                 }
             }
         });
@@ -1347,6 +1318,8 @@ public class viewProjectLvl3Controller implements Initializable {
                     ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receiveTasks, ArrayListRealTasks);
 
                     projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
+
+                    setOriginTasks();
                     return response;
                 }
             };
@@ -1600,8 +1573,6 @@ public class viewProjectLvl3Controller implements Initializable {
             positionMat[i] = new String[getMakespan(listaTaskuri)];
         }
 
-        // System.out.println("Incepe pozitionarea!");
-
         for (int i = 0; i < res.getCantitate(); i++) {
             //   System.out.println();
             for (int j = 0; j < getMakespan(listaTaskuri); j++) {
@@ -1655,14 +1626,14 @@ public class viewProjectLvl3Controller implements Initializable {
 
     //placed time splot = index task
     public void RecursiveFunction(int timeslot, int placedTimeslot, String[][] m, int noTaskPut, ResourceModel res, ArrayList<TaskRealModel> listaTaskuri) {
-        // System.out.println("Taskuri aranjate:"+noTaskPut);
+
         if (found == 1)
             return;
         if (noTaskPut == listaTaskuri.size()) {
-            //   System.out.println("Am pus :" + noTaskPut);
-            //   System.out.println("FINISH");
+               System.out.println("Am pus :" + noTaskPut);
+               System.out.println("FINISH");
             printMatrix(m, res.getCantitate(), getMakespan(listaTaskuri));
-            // System.out.println("AICI");
+
             found = 1;
             return;
         }
@@ -1681,7 +1652,7 @@ public class viewProjectLvl3Controller implements Initializable {
                 int start = task.getStartTime();
                 int durata = task.getDuration();
 
-                // System.out.println("Testez pentru :" + task.getName());
+                 System.out.println("Testez pentru :" + task.getName());
                 boolean result = checkSpace(rand, start, nrResurse, durata, m);
                 if (result) {
                     for (int linie = rand; linie < rand + nrResurse; linie++) {
@@ -1692,7 +1663,7 @@ public class viewProjectLvl3Controller implements Initializable {
                             m[linie][coloana] = task.getName();
                         }
                     }
-                    //   printMatrix(m,res.getCantitate(),getMakespan(listaTaskuri));
+                       printMatrix(m,res.getCantitate(),getMakespan(listaTaskuri));
 
                     RecursiveFunction(timeslot, placedTimeslot + 1, m, noTaskPut + 1, res, listaTaskuri);
                     if (found == 1)
@@ -1760,6 +1731,16 @@ public class viewProjectLvl3Controller implements Initializable {
         }
     }
 
+    public void setOriginTasks(){
+       for(TaskRealModel task:projectLocal.getListaTaskuriReale()){
+           for(TaskModel t:projectLocal.getListaTaskuri()){
+               if(task.getOriginTask().getID()==t.getID()){
+                   task.setOriginTask(t);
+               }
+           }
+       }
+    }
+
     Service<ProjectModel> service = new Service<ProjectModel>() {
         @Override
         protected Task<ProjectModel> createTask() {
@@ -1798,6 +1779,7 @@ public class viewProjectLvl3Controller implements Initializable {
                     ArrayList<TaskRealModel> listaTaskuriRealeProject = gson.fromJson(receive2, ArrayListRealTasks);
                     projectLocal.setListaTaskuriReale(listaTaskuriRealeProject);
 
+                    setOriginTasks();
                     return project;
                 }
             };
